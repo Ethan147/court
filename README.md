@@ -13,3 +13,7 @@
 ```
 docker run -d --name db_court --network mynetwork -e POSTGRES_USER=emiller -e POSTGRES_PASSWORD=$(pass postgres/court) -e POSTGRES_DB=court postgres
 ```
+
+## Connect to a setup docker
+
+- `docker exec -it db_court psql -U emiller court`
