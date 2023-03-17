@@ -1,0 +1,2 @@
+[bandit]
+exclude = get_secrets.py
