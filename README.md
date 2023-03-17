@@ -4,6 +4,17 @@
   - tied to ethan.mill147@gmail.com
 - pass insert `postgresql/court`
 
+## Poery setup reference
+
+- remove existing env
+  - `poetry shell`
+  - `poetry env remove`
+- startup new env
+  - `poetry install` (first time)
+- activate shell
+  - `poetry env list`
+  - `source /home/ethan/.cache/pypoetry/virtualenvs/court-9sax_Dbr-py3.10/bin/activate`
+
 ## Local setup for docker
 
 1. `docker pull postgres`
