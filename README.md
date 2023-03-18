@@ -44,7 +44,7 @@ def get_local_db_port() -> int:
     2. spring up docker container
 
 ```
-docker run -d --name db_court -e POSTGRES_USER=emiller -e POSTGRES_PASSWORD=$(pass postgres/court) -e POSTGRES_DB=court postgres
+docker run -d --name db_court -e POSTGRES_USER=emiller -e POSTGRES_PASSWORD=$(pass postgres/court) -e POSTGRES_DB=court -p 5433:5433 postgres
 ```
 
 - Connect to the running instance
@@ -54,3 +54,9 @@ docker run -d --name db_court -e POSTGRES_USER=emiller -e POSTGRES_PASSWORD=$(pa
     - `docker exec db_court service postgresql start`
 - Check the docker postgres service status
     - `docker exec db_court service postgresql status`
+
+
+# TODO
+- Still getting (court-py3.10) ethan@ethan-desktop:~/court$ docker exec -it db_court psql -U emiller
+psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5433" failed: FATAL:  Peer authentication failed for user "emiller"
+    - There was a port-issue, but that might be solved. Issue might be user authentication.
