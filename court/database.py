@@ -1,9 +1,10 @@
-from contextlib import _GeneratorContextManager, contextmanager
+from contextlib import contextmanager
 from typing import Generator
 
 from sqlalchemy import create_engine
 from sqlalchemy.engine.base import Engine
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.sql import text
 
 from get_secrets import get_db_pass, get_local_db_port
 
@@ -37,11 +38,6 @@ def db_session() -> Generator:
     finally:
         session.close()
 
-# session = db_session()
-
-
-engine = _get_engine()
-conn = engine.connect()
-
-result = conn.execute("select * from information_schema.schemata").fetchall()
-print(result)
+with db_session() as session:
+    result = session.execute(text("select * from information_schema.schemata")).fetchall()
+    print(result)
