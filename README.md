@@ -34,7 +34,7 @@ def get_local_db_port() -> int:
 - startup new env
     - `poetry install` (first time)
 - activate shell
-    - `poetry env list`
+    - `poetry shell`
     - `source /home/ethan/.cache/pypoetry/virtualenvs/court-9sax_Dbr-py3.10/bin/activate`
 
 ## docker cheat sheet
@@ -44,7 +44,7 @@ def get_local_db_port() -> int:
     2. spring up docker container
 
 ```
-docker run -d --name db_court -e POSTGRES_USER=emiller -e POSTGRES_PASSWORD=$(pass postgres/court) -e POSTGRES_DB=court -p 5433:5433 postgres
+docker run -d --name db_court -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=court -p 5433:5433 postgres
 ```
 
 - Connect to the running instance
