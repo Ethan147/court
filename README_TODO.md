@@ -6,5 +6,6 @@
 - [ ] cursor in database.py
 
 ## Short term
-- [ ] alembic setup & test
+- [x] dbmate setup
+- [ ] dbmate unit test setup (if applicable)
 - [ ] unit test coverage report (start this early, maybe as part of pre-commit)

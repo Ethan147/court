@@ -13,5 +13,5 @@ conn = psycopg2.connect(
 conn.autocommit = True
 
 with conn.cursor() as curs:
-    curs.execute("select * from information_schema.schemata")
+    curs.execute("select * from public.account")
     print(curs.fetchall())
