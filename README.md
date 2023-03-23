@@ -1,12 +1,13 @@
 ## Poetry setup reference
 
 - remove existing env
-    - `poetry shell`
+    - `poetry env list`
     - `poetry env remove <env_name>`
 - startup new env
     - `poetry install` (first time)
 - activate shell
     - `poetry shell`
+    - `source "$( poetry env list --full-path | grep Activated | cut -d' ' -f1 )/bin/activate"`
 
 ## docker cheat sheet
 
