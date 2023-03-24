@@ -1,8 +1,24 @@
 ## Env variables
 
-- The following are required for test-setup
-```
+- 12 factor app compliant, gathered in `env_configurations.py`
 
+
+## ~/.zshrc setup
+
+- Some quality of life additions
+```
+# This doesn't work (keep experimenting)
+function poetry_activate {
+    eval "$( poetry env list --full-path | grep Activated | cut -d' ' -f1 )/bin/activate"
+}
+
+function test_env_init {
+    export DB_NAME='court'
+    export DB_HOST='172.0.0.2'
+    export DB_PORT=5432
+    export DB_PASS='postgres'
+    export DB_USER='postgres'
+}
 ```
 
 ## Poetry setup reference

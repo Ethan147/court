@@ -1,13 +1,12 @@
 import psycopg2
-
-from get_secrets import get_test_pass, get_test_username
+from env_configuration import db_host, db_name, db_pass, db_port, db_user
 
 conn = psycopg2.connect(
-    database="court",
-    user=get_test_username(),
-    password=get_test_pass(),
-    host='127.0.0.2',
-    port='5432',
+    database=db_name,
+    user=db_user,
+    password=db_pass,
+    host=db_host,
+    port=db_port,
 )
 
 conn.autocommit = True
