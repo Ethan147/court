@@ -6,7 +6,7 @@
 ## ~/.zshrc setup
 
 - Some quality of life additions
-```
+```bash
 # This doesn't work (keep experimenting)
 function poetry_activate {
     eval "$( poetry env list --full-path | grep Activated | cut -d' ' -f1 )/bin/activate"
