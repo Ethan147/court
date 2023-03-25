@@ -1,23 +1,26 @@
 from typing import Any, Optional
 
-import psycopg2
+from psycopg2 import pool
 from psycopg2.extensions import connection, cursor
 
 from court.utils.env_conf import db_host, db_name, db_pass, db_port, db_user
 
+pool = pool.ThreadedConnectionPool(
+    minconn=1,
+    maxconn=10,
+    database=db_name,
+    user=db_user,
+    password=db_pass,
+    host=db_host,
+    port=db_port
+)
 
 def get_connection() -> connection:
-    conn = psycopg2.connect(
-      database=db_name,
-      user=db_user,
-      password=db_pass,
-      host=db_host,
-      port=db_port,
-    )
-    return conn
+    return pool.getconn()
 
 
 class Cursor:
+    """Base cursor for use across application"""
     def __init__(self) -> None:
         self.conn = get_connection()
 
@@ -30,10 +33,11 @@ class Cursor:
             exc_val: Optional[Any],
             exc_tb: Optional[Any]) -> None:
         self.conn.commit()
-        self.conn.close()
+        pool.putconn(self.conn)
 
 
 class CursorTest:
+    """Cursor for use by all test cases"""
     def __init__(self) -> None:
         self.conn = get_connection()
 
@@ -46,4 +50,4 @@ class CursorTest:
             exc_val: Optional[Any],
             exc_tb: Optional[Any]) -> None:
         self.conn.rollback()
-        self.conn.close()
+        pool.putconn(self.conn)
