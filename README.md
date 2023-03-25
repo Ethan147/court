@@ -1,6 +1,6 @@
 ## Env variables
 
-- 12 factor app compliant, gathered in `env_configurations.py`
+- 12 factor app compliant, gathered in `env_config.py`
 
 
 ## ~/.zshrc setup
@@ -20,6 +20,10 @@ function test_env_init {
     export DB_USER='postgres'
 }
 ```
+
+## Unit testing
+
+- all done via python unittest `python -m unittest`
 
 ## Poetry setup reference
 
