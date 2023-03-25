@@ -14,7 +14,7 @@ function poetry_activate {
 
 function test_env_init {
     export DB_NAME='court'
-    export DB_HOST='172.0.0.2'
+    export DB_HOST='127.0.0.2'
     export DB_PORT=5432
     export DB_PASS='postgres'
     export DB_USER='postgres'
