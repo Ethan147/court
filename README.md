@@ -18,6 +18,7 @@ function test_env_init {
     export DB_PORT=5432
     export DB_PASS='postgres'
     export DB_USER='postgres'
+    export DATABASE_URL=postgres://postgres:postgres@127.0.0.1:5432/court?sslmode=disable
 }
 ```
 

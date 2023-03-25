@@ -9,6 +9,7 @@
 - [x] dbmate setup
 - [x] db connection via .env variables (12 factor)
 - [x] decide on and setup a unit testing solution
-- [ ] dbmate unit test setup (if applicable)
+- [x] dbmate unit test setup (if applicable)
+- [ ] dbmate output suppression, make test account for number of migrations
 - [ ] unit test coverage report (start this early, maybe as part of pre-commit)
 - [ ] start setting up flask
