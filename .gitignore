@@ -50,3 +50,6 @@ Thumbs.db
 
 # Local run secrets
 .env
+
+# Additions
+.coverage

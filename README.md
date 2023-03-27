@@ -63,3 +63,10 @@ sudo chmod +x /usr/local/bin/dbmate
 - migrations
     - `dbmate up`
     - `dbmate rollback`
+
+
+## test coverage reports
+Coverage reports must be run manually.
+
+- `coverage run -m unittest discover`
+- `coverage report`
