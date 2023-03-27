@@ -1,3 +1,4 @@
+import glob
 import subprocess
 import unittest
 from unittest.mock import MagicMock, patch
@@ -40,8 +41,20 @@ class TestConnection(unittest.TestCase):
 
     @patch('sys.stdout', new_callable=MagicMock)
     def test_dbmate_down_then_up(self, magic_mock:MagicMock) -> None:
-        subprocess.run(["dbmate", "down"])
-        subprocess.run(["dbmate", "down"])
+        """Test that dbmate migrations work properly & don't raise errors"""
+
+        def _number_of_migration_files() -> int:
+            files = []
+            migrations_dir = "db/migrations/*.sql"
+            for name in glob.glob(migrations_dir):
+                files.append(name)
+
+            return len(files)
+
+        sql_migration_count = _number_of_migration_files()
+
+        for _ in range(sql_migration_count):
+            subprocess.run(["dbmate", "down"], stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
 
         # After a full spin-down, only schema_migrations remains
         with CursorTest() as curs:
@@ -52,9 +65,9 @@ class TestConnection(unittest.TestCase):
 
         self.assertEqual(tables, [('schema_migrations',)])
 
-        subprocess.run(["dbmate", "up"])
-        subprocess.run(["dbmate", "up"])
-
+        # After a full spin-up, the account tables exists
+        for _ in range(sql_migration_count):
+            subprocess.run(["dbmate", "up"], stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
 
         with CursorTest() as curs:
             curs.execute(
