@@ -7,7 +7,7 @@
 
 ## Short term
 
-- [ ] basic db operations with falsk & psycopg2
+- [x] basic db operations with flask & psycopg2
 - [ ] unit test flask endpoints
 - [ ] coverage report to cover flask endpoints
 
