@@ -8,6 +8,8 @@
 ## Short term
 
 - [ ] basic db operations with falsk & psycopg2
+- [ ] unit test flask endpoints
+- [ ] coverage report to cover flask endpoints
 
 ---
 
