@@ -8,6 +8,7 @@
 ## Short term
 
 - [x] basic db operations with flask & psycopg2
+- [ ] move to an application factory with flask
 - [ ] unit test flask endpoints
 - [ ] coverage report to cover flask endpoints
 
