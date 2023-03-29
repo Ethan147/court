@@ -7,8 +7,6 @@
 
 ## Short term
 
-- [x] basic db operations with flask & psycopg2
-- [ ] move to an application factory with flask
 - [ ] unit test flask endpoints
 - [ ] coverage report to cover flask endpoints
 
@@ -23,3 +21,5 @@
 - [x] dbmate output suppression, make test account for number of migrations
 - [x] unit test coverage report (start this early, maybe as part of pre-commit)
 - [x] start setting up flask
+- [x] basic db operations with flask & psycopg2
+- [x] move to an application factory with flask
