@@ -17,25 +17,30 @@ class TestConnection(unittest.TestCase):
                 insert into public.account
                     (first_name, last_name, tennis, pickleball, racquetball)
                 values
-                    ('first', 'last', true, false, false);
+                    ('first', 'd1990638-e2e1-4d66-aaaa-424349bfeabd', true, false, false);
                 """
             )
             curs.execute(
                 """
-                select
-                    first_name, last_name, tennis, pickleball, racquetball
+                select first_name, last_name, tennis, pickleball, racquetball
                 from public.account
+                where first_name = 'first' and last_name = 'd1990638-e2e1-4d66-aaaa-424349bfeabd'
                 """
                 )
             account_entry = curs.fetchall()
             self.assertEqual(
                 account_entry,
-                [("first", "last", True, False, False)]
+                [("first", "d1990638-e2e1-4d66-aaaa-424349bfeabd", True, False, False)]
             )
 
         # Confirm that CursorTest data does not persist
         with Cursor() as curs:
-            curs.execute('select * from public.account')
+            curs.execute(
+                """
+                select * from public.account
+                where first_name = 'first' and last_name = 'd1990638-e2e1-4d66-aaaa-424349bfeabd'
+                """
+                )
             account_entry = curs.fetchall()
             self.assertEqual(account_entry, [])
 

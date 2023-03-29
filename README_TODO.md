@@ -7,7 +7,8 @@
 
 ## Short term
 
-- [ ] unit test flask endpoints
+- [x] unit test flask endpoints
+- [ ] fix brittle flask endpoint coverage
 - [ ] coverage report to cover flask endpoints
 
 ---
