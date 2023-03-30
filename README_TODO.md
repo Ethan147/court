@@ -1,6 +1,7 @@
 ## Long term
 
 ## Medium term
+
 - [ ] make pool.ThreadedConnectionPool flask-compliant
 
 ## Short term
