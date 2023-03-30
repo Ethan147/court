@@ -1,15 +1,13 @@
 ## Long term
 
 ## Medium term
-- [x] connection pooling in database.py
-- [x] cursor in database.py
 - [ ] make pool.ThreadedConnectionPool flask-compliant
 
 ## Short term
 
-- [x] unit test flask endpoints
-- [ ] fix brittle flask endpoint coverage
+- [ ] reseach: should Expo be the front end package?
 - [ ] coverage report to cover flask endpoints
+- [ ] begin front end setup, based on the result of research
 
 ---
 
@@ -24,3 +22,7 @@
 - [x] start setting up flask
 - [x] basic db operations with flask & psycopg2
 - [x] move to an application factory with flask
+- [x] unit test flask endpoints
+- [x] fix brittle flask endpoint coverage
+- [x] connection pooling in database.py
+- [x] cursor in database.py
