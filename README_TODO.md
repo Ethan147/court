@@ -6,9 +6,8 @@
 
 ## Short term
 
-- [ ] reseach: should Expo be the front end package?
 - [ ] coverage report to cover flask endpoints
-- [ ] begin front end setup, based on the result of research
+- [ ] begin Expo front end setup
 
 ---
 
@@ -27,3 +26,4 @@
 - [x] fix brittle flask endpoint coverage
 - [x] connection pooling in database.py
 - [x] cursor in database.py
+- [x] reseach: should Expo be the front end package? (A: yes, Expo is best/safest for React ecosystem)
