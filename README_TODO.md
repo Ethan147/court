@@ -6,6 +6,12 @@
 
 ## Short term
 
+- [ ] migrate to GitHub
+- [ ] open Trello board, migrate these notes over. Delete this file
+- [ ] nvm->npm->correct version
+(court-py3.10) ➜  court git:(master) ✗ expo init court
+WARNING: expo-cli has not yet been tested against Node.js v19.8.1.
+If you encounter any issues, please report them to https://github.com/expo/expo-cli/issues
 - [ ] coverage report to cover flask endpoints
 - [ ] begin Expo front end setup
 
