@@ -1,3 +1,9 @@
+## Trello board
+
+Anyone with this [trello court link](https://trello.com/invite/b/oS5Fz6bN/ATTI19c9e6c96c15131570252a4aa7a76f805C031F15/court) can join as a member.
+
+---
+
 ## Env variables
 
 - 12 factor app compliant, gathered in `env_config.py`
@@ -76,7 +82,7 @@ Coverage reports must be run manually.
 - `coverage report`
 
 
-## Flask
+## Flask (WIP - to remove)
 
 - `python -m flask run`
 
