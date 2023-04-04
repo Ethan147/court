@@ -17,15 +17,13 @@ function poetry_activate {
     source "$(poetry env info --path)/bin/activate"
 }
 
-function test_env_init {
+function init_env_test {
     export DB_NAME='court'
     export DB_HOST='127.0.0.2'
     export DB_PORT=5432
     export DB_PASS='postgres'
     export DB_USER='postgres'
     export DATABASE_URL=postgres://postgres:postgres@127.0.0.1:5432/court?sslmode=disable
-    export FLASK_DEBUG=1
-    export FLASK_APP=court/app.py
 }
 ```
 
@@ -80,11 +78,6 @@ Coverage reports must be run manually.
 
 - `coverage run -m unittest discover`
 - `coverage report`
-
-
-## Flask (WIP - to remove)
-
-- `python -m flask run`
 
 
 ## expo-setup (WIP)
