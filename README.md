@@ -42,6 +42,15 @@ function init_env_test {
 
 ## docker cheat sheet
 
+- Docker one-time setup
+    - using `Docker version 20.10.17, build 100c70180f` installed with snap
+    - must download [docker-credential-helpers v0.7.0](https://github.com/docker/docker-credential-helpers/releases)
+        - Run the following in `~/Downloads/.`
+            - `wget https://github.com/docker/docker-credential-helpers/releases/download/v0.7.0/docker-credential-secretservice-v0.7.0.linux-amd64`
+            - `mv docker-credential-secretservice-v0.7.0.linux-amd64 docker-credential-secretservice`
+            - `sudo mv docker-credential-secretservice /usr/local/bin/`
+            - `sudo chmod +x /usr/local/bin/docker-credential-secretservice`
+
 - Bring up the docker container
     1. `docker pull postgres`
     2. spring up docker container
@@ -79,6 +88,14 @@ Coverage reports must be run manually.
 - `coverage run -m unittest discover`
 - `coverage report`
 
+
+## lambdas
+`aws sso login --profile <profile_name>`
+
+- to run locally
+    - in one terminal run `sam local start-api --profile <profile>`
+    - in a second, run `curl http://127.0.0.1:3000/hello`
+        - this will return `{"message": "Hello, World!"}`
 
 ## expo-setup (WIP)
 
