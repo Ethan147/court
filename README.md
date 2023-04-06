@@ -97,7 +97,7 @@ Coverage reports must be run manually.
     - in a second, run `curl http://127.0.0.1:3000/hello`
         - this will return `{"message": "Hello, World!"}`
 
-## expo-setup (WIP)
+## expo-setup
 
 - nvm install
     - `curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash`
@@ -105,3 +105,13 @@ Coverage reports must be run manually.
     - `nvm install 16.14.2`
 - install expo
     - `npm install -g expo-cli`
+- instructions (from expo-cli output)
+```
+To run your project, navigate to the directory and run one of the following npm commands.
+
+- cd expo-app
+- npm start # you can open iOS, Android, or web from here, or run them directly with the commands below.
+- npm run android
+- npm run ios # requires an iOS device or macOS for access to an iOS simulator
+- npm run web
+```
