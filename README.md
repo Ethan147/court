@@ -102,6 +102,6 @@ Coverage reports must be run manually.
 - nvm install
     - `curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash`
 - install node
-    - `nvm install v19.8.1`
-- `npm install -g expo-cli`
-    - TODO: there v19 is past what Expo supports as stable release
+    - `nvm install 16.14.2`
+- install expo
+    - `npm install -g expo-cli`
