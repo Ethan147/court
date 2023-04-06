@@ -53,3 +53,22 @@ Thumbs.db
 
 # Additions
 .coverage
+
+# Expo based ignores
+expo_app/node_modules/
+expo_app/.expo/
+expo_app/dist/
+expo_app/npm-debug.*
+expo_app/*.jks
+expo_app/*.p8
+expo_app/*.p12
+expo_app/*.key
+expo_app/*.mobileprovision
+expo_app/*.orig.*
+expo_app/web-build/
+
+# macOS
+expo_app/.DS_Store
+
+# Temporary files created by Metro to check the health of the file watcher
+expo_app/.metro-health-check*
