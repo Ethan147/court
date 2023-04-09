@@ -104,7 +104,7 @@ Coverage reports must be run manually.
 - install node
     - `nvm install 16.14.2`
 - install expo
-    - `npm install -g expo-cli`
+    - `npm install -g expo_cli`
 - instructions (from expo-cli output)
 ```
 To run your project, navigate to the directory and run one of the following npm commands.
