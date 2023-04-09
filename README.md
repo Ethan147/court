@@ -105,6 +105,8 @@ Coverage reports must be run manually.
     - `nvm install 16.14.2`
 - install expo
     - `npm install -g expo-cli`
+- install assocated expo packages
+    - `npx expo install react-native-web@~0.18.10 react-dom@18.2.0 @expo/webpack-config@^18.0.1`
 - instructions (from expo-cli output):
 ```
 To run your project, navigate to the directory and run one of the following npm commands.
