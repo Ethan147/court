@@ -39,7 +39,7 @@ repos:
   rev: v2.7.1
   hooks:
     - id: prettier
-      files: \.(js|jsx|json|css|md)$
+      files: \.(js|jsx|tsx|json|css|md)$
 - repo: https://github.com/pycqa/isort
   rev: 5.12.0
   hooks:
