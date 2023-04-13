@@ -8,21 +8,19 @@ import {
 import { Formik, useFormik, FormikProvider } from "formik";
 import * as Yup from "yup";
 
+import colors from "./colors";
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
     padding: 20,
+    backgroundColor: colors.background,
   },
   error: {
     fontSize: 12,
-    color: "red",
+    color: colors.error,
     marginBottom: 10,
-  },
-  checkboxContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 20,
   },
 });
 
@@ -54,7 +52,11 @@ const MyForm = () => {
           <Text style={styles.error}>{formik.errors.first_name}</Text>
         ) : null}
       </View>
-      <Button mode="contained" onPress={formik.handleSubmit}>
+      <Button
+        mode="contained"
+        onPress={formik.handleSubmit}
+        color={colors.primary}
+      >
         Submit
       </Button>
     </FormikProvider>
