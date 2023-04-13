@@ -8,7 +8,12 @@ import {
 import { Formik, useFormik, FormikProvider } from "formik";
 import * as Yup from "yup";
 
-import colors from "./colors";
+import colors from "./utils/colors";
+
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
 const styles = StyleSheet.create({
   container: {
@@ -21,6 +26,12 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: colors.error,
     marginBottom: 10,
+  },
+  input: {
+    paddingVertical: wp("1%"),
+  },
+  button: {
+    color: colors.primary,
   },
 });
 
@@ -39,7 +50,7 @@ const MyForm = () => {
 
   return (
     <FormikProvider value={formik}>
-      <View>
+      <View style={styles.input}>
         <TextInput
           label="First Name"
           value={formik.values.first_name}
@@ -55,7 +66,7 @@ const MyForm = () => {
       <Button
         mode="contained"
         onPress={formik.handleSubmit}
-        color={colors.primary}
+        color={styles.button.color}
       >
         Submit
       </Button>
