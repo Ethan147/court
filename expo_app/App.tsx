@@ -15,6 +15,11 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 
+const baseFormElem = {
+  paddingVertical: wp("1%"),
+  width: wp("80%"),
+};
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -28,9 +33,10 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   input: {
-    paddingVertical: wp("1%"),
+    ...baseFormElem,
   },
   button: {
+    ...baseFormElem,
     color: colors.primary,
   },
 });
@@ -63,13 +69,15 @@ const MyForm = () => {
           <Text style={styles.error}>{formik.errors.first_name}</Text>
         ) : null}
       </View>
-      <Button
-        mode="contained"
-        onPress={formik.handleSubmit}
-        color={styles.button.color}
-      >
-        Submit
-      </Button>
+      <View style={styles.button}>
+        <Button
+          mode="contained"
+          onPress={formik.handleSubmit}
+          color={styles.button.color}
+        >
+          Submit
+        </Button>
+      </View>
     </FormikProvider>
   );
 };
