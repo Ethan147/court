@@ -27,13 +27,13 @@ const TextInputComp = ({
   value,
   onChangeText,
   onBlur,
-  errors,
+  error,
 }: {
   label?: string;
   value?: string;
   onChangeText?: (text: string) => void;
   onBlur?: (e: NativeSyntheticEvent<TextInputFocusEventData>) => void;
-  errors?: boolean;
+  error?: boolean;
 }) => {
   const windowDimensions = useWindowDimensions();
 
@@ -63,7 +63,7 @@ const TextInputComp = ({
       value={value}
       onChangeText={onChangeText}
       onBlur={onBlur}
-      error={errors}
+      error={error}
       autoCompleteType={undefined}
       style={styles.input}
       theme={customTheme}
