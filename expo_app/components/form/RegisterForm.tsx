@@ -18,9 +18,21 @@ import colors from "../../utils/colors";
 import TextInputComp from "./basic/TextInputComp";
 
 const validationSchema = Yup.object().shape({
-  firstName: Yup.string().required("first name is required"),
-  lastName: Yup.string().required("last name is required"),
-  email: Yup.string().required("email is required"), // todo need special validator for email
+  firstName: Yup.string()
+    .matches(
+      /^[a-zA-Z]+$/,
+      "first name should only contain alphabetic characters"
+    )
+    .required("first name is required"),
+  lastName: Yup.string()
+    .matches(
+      /^[a-zA-Z]+$/,
+      "last name should only contain alphabetic characters"
+    )
+    .required("last name is required"),
+  email: Yup.string()
+    .email("email must be a valid email address")
+    .required("email is required"),
 });
 
 const RegisterForm = () => {
