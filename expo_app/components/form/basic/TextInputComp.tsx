@@ -28,12 +28,14 @@ const TextInputComp = ({
   onChangeText,
   onBlur,
   error,
+  secureTextEntry,
 }: {
   label?: string;
   value?: string;
   onChangeText?: (text: string) => void;
   onBlur?: (e: NativeSyntheticEvent<TextInputFocusEventData>) => void;
   error?: boolean;
+  secureTextEntry?: boolean;
 }) => {
   const windowDimensions = useWindowDimensions();
 
@@ -67,6 +69,7 @@ const TextInputComp = ({
       autoCompleteType={undefined}
       style={styles.input}
       theme={customTheme}
+      secureTextEntry={secureTextEntry}
     />
   );
 };

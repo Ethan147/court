@@ -33,6 +33,13 @@ const validationSchema = Yup.object().shape({
   email: Yup.string()
     .email("email must be a valid email address")
     .required("email is required"),
+  password: Yup.string()
+    .min(8, "password must be at least 8 characters long")
+    .matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+      "password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
+    )
+    .required("password is required"),
 });
 
 const RegisterForm = () => {
@@ -65,7 +72,13 @@ const RegisterForm = () => {
   });
 
   const formik = useFormik({
-    initialValues: { firstName: "", lastName: "", email: "" },
+    initialValues: {
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
     validationSchema,
     onSubmit: (values) => {
       console.log("Submitted values:", values);
@@ -117,6 +130,42 @@ const RegisterForm = () => {
               <Text style={styles.error}>{formik.errors.email}</Text>
             ) : null}
           </View>
+
+          <View style={styles.inputContainer}>
+            <TextInputComp
+              label="password"
+              value={formik.values.password}
+              onChangeText={formik.handleChange("password")}
+              onBlur={formik.handleBlur("password")}
+              error={!!formik.touched.password && !!formik.errors.password}
+              secureTextEntry={true} // masks the text input for security
+            />
+            {formik.touched.password && formik.errors.password ? (
+              <Text style={styles.error}>{formik.errors.password}</Text>
+            ) : null}
+          </View>
+
+          {formik.values.password.length > 0 ? (
+            <View style={styles.inputContainer}>
+              <TextInputComp
+                label="confirm password"
+                value={formik.values.confirmPassword}
+                onChangeText={formik.handleChange("confirmPassword")}
+                onBlur={formik.handleBlur("confirmPassword")}
+                error={
+                  !!formik.touched.confirmPassword &&
+                  !!formik.errors.confirmPassword
+                }
+                secureTextEntry // masks the text input for security
+              />
+              {formik.touched.confirmPassword &&
+              formik.errors.confirmPassword ? (
+                <Text style={styles.error}>
+                  {formik.errors.confirmPassword}
+                </Text>
+              ) : null}
+            </View>
+          ) : null}
         </View>
       </ScrollView>
     </FormikProvider>
