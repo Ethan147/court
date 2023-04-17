@@ -14,12 +14,12 @@ def get_availability_score(user1, user2):
 def mmr_difference(player1, player2):
     return abs(player1.rating - player2.rating)
 
-def match_quality(player1, player2):
+def match_quality(player1, player2, availability_score):
     rating1, rd1 = player1.rating, player1.rd
     rating2, rd2 = player2.rating, player2.rd
     mmr_diff = mmr_difference(player1, player2)
     mmr_diff_score = max(0, 1 - mmr_diff / 250)  # Higher score for smaller MMR difference
-    return mmr_diff_score
+    return availability_score * mmr_diff_score
 
 def matchmake(users):
     matches = []
@@ -43,7 +43,7 @@ def matchmake(users):
                 mmr_diff = mmr_difference(player1, player2)
 
                 if mmr_diff <= 250:
-                    match_quality_value = match_quality(player1, player2)
+                    match_quality_value = match_quality(player1, player2, availability_score)
                     matches.append((user1, user2, availability_score, distance, match_quality_value))
 
     # Sort matches by match quality in descending order
@@ -60,9 +60,3 @@ def matchmake(users):
             matched_user_ids.add(user2_id)
 
     return best_matches
-
-
-
-    # Sort matches by match quality in descending order
-    matches.sort(key=lambda x: x[2], reverse=True)
-    return matches
