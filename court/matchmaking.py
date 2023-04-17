@@ -36,7 +36,8 @@ def matchmake(users):
     # Initialize Glicko-2 players
     players = [glicko2.Player(rating=user.mmr if user.mmr is not None else 1500) for user in users]
 
-    # Iterate over all possible user pairs and calculate match quality
+    # Generate all possible unique matches and calculate their match quality
+    all_matches = []
     for i in range(user_count):
         for j in range(i + 1, user_count):
             user1 = users[i]
@@ -45,13 +46,25 @@ def matchmake(users):
             distance = get_distance(user1, user2)
             availability_score = get_availability_score(user1, user2)
 
-            # If the distance between the users is within 0.25 miles and they have common availability
             if distance <= 0.25 and availability_score > 0:
                 player1 = players[i]
                 player2 = players[j]
 
                 match_quality_value = match_quality(player1, player2)
-                matches.append((user1, user2, match_quality_value))
+                all_matches.append((i, j, match_quality_value))
+
+    # Sort all matches by match quality (descending)
+    all_matches.sort(key=lambda x: x[2], reverse=True)
+
+    # Pick the best unique matches for all users
+    matched_users = set()
+    for i, j, match_quality_value in all_matches:
+        if i not in matched_users and j not in matched_users:
+            matches.append((users[i], users[j], match_quality_value))
+            matched_users.add(i)
+            matched_users.add(j)
+
+    return matches
 
     # Sort matches by match quality in descending order
     matches.sort(key=lambda x: x[2], reverse=True)
