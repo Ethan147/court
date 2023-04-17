@@ -46,17 +46,22 @@ def generate_address():
 # Generate a list of test users with random data
 def generate_test_users(num_users):
     test_users = []
+    unique_addresses = set()
 
-    for i in range(num_users):
+    while len(unique_addresses) < num_users:
+        address = generate_address()
+        if address:
+            unique_addresses.add(address)
+        print(f"Generated {len(unique_addresses)}/{num_users} unique addresses", flush=True)
+
+    for i, location in enumerate(unique_addresses):
         user_id = i + 1
         name = fake.name()
-        ntrp = round(random.uniform(2.5, 5.5), 1) if random.random() < 0.9 else None
+        ntrp = round(random.uniform(1.0, 7.0) * 2) / 2
         availability = random.sample(range(1, 8), random.randint(1, 7))
-        location = generate_address()
-
-        if location:
-            test_users.append(User(user_id, name, availability, location, ntrp))
-
-        print(f"Generated {i + 1}/{num_users} users")
+        test_users.append(User(user_id, name, availability, location, ntrp))
+        print(f"Generated {i + 1}/{num_users} users", flush=True)
 
     return test_users
+
+
