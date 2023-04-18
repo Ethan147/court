@@ -16,6 +16,7 @@ import { Formik, useFormik, FormikProvider } from "formik";
 import * as Yup from "yup";
 import colors from "../../utils/colors";
 import TextInputComp from "./basic/TextInputComp";
+import ToggleButtonGroupComp from "./basic/ToggleButtonGroupComp";
 
 const validationSchema = Yup.object().shape({
   firstName: Yup.string()
@@ -40,6 +41,15 @@ const validationSchema = Yup.object().shape({
       "password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
     )
     .required("password is required"),
+  gender: Yup.string()
+    .oneOf(
+      ["male", "female", "other", "prefer_not_to_say"],
+      "please select a gender"
+    )
+    .required("gender is required"),
+  age: Yup.number()
+    .min(14, "must be at least 14 years old")
+    .required("age is required"),
 });
 
 const RegisterForm = () => {
@@ -78,6 +88,8 @@ const RegisterForm = () => {
       email: "",
       password: "",
       confirmPassword: "",
+      gender: "",
+      age: "",
     },
     validationSchema,
     onSubmit: (values) => {
@@ -129,6 +141,13 @@ const RegisterForm = () => {
             {formik.touched.email && formik.errors.email ? (
               <Text style={styles.error}>{formik.errors.email}</Text>
             ) : null}
+          </View>
+
+          <View style={styles.inputContainer}>
+            <ToggleButtonGroupComp />
+            {/* {formik.touched.email && formik.errors.email ? (
+              <Text style={styles.error}>{formik.errors.email}</Text>
+            ) : null} */}
           </View>
 
           <View style={styles.inputContainer}>
