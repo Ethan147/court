@@ -104,7 +104,67 @@ const RegisterForm = () => {
       alignItems: "center",
       width: "100%",
     },
+    // TextInputComp styling
+    textInputCompContainer: {
+      ...Platform.select({
+        web: {
+          width: windowDimensions.width * 0.65,
+        },
+        ios: {
+          width: wp("65%"),
+        },
+        android: {
+          // todo
+        },
+      }),
+      borderColor: colors.text,
+      selectionColor: colors.primary,
+      backgroundColor: colors.setting,
+    },
+    textInputCompIconContainer: {
+      ...Platform.select({
+        web: {
+          right: windowDimensions.width * 0.017,
+        },
+        ios: {
+          right: wp("1.7%"),
+        },
+        android: {
+          // todo
+        },
+      }),
+      position: "absolute",
+      top: 0,
+      bottom: 0,
+      justifyContent: "center",
+    },
+    textInputCompViewStyle: {
+      flexDirection: "row",
+      alignItems: "center",
+    },
+    textInputCompText: {
+      ...Platform.select({
+        web: {
+          width: windowDimensions.width * 0.65,
+        },
+        ios: {
+          width: wp("65%"),
+        },
+        android: {
+          // todo
+        },
+      }),
+      borderColor: colors.text,
+      selectionColor: colors.primary,
+      backgroundColor: colors.setting,
+    },
   });
+
+  const passTextInputCompStyles = {
+    textInputCompContainer: styles.textInputCompContainer,
+    textInputCompIconContainer: styles.textInputCompIconContainer,
+    textInputCompViewStyle: styles.textInputCompViewStyle,
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -140,6 +200,7 @@ const RegisterForm = () => {
                 onChangeText={formik.handleChange("firstName")}
                 onBlur={formik.handleBlur("firstName")}
                 error={!!formik.touched.firstName && !!formik.errors.firstName}
+                passStyles={passTextInputCompStyles}
               />
               {formik.touched.firstName && formik.errors.firstName ? (
                 <Text style={styles.error}>{formik.errors.firstName}</Text>
@@ -153,6 +214,7 @@ const RegisterForm = () => {
                 onChangeText={formik.handleChange("lastName")}
                 onBlur={formik.handleBlur("lastName")}
                 error={!!formik.touched.lastName && !!formik.errors.lastName}
+                passStyles={passTextInputCompStyles}
               />
               {formik.touched.lastName && formik.errors.lastName ? (
                 <Text style={styles.error}>{formik.errors.lastName}</Text>
@@ -166,6 +228,7 @@ const RegisterForm = () => {
                 onChangeText={formik.handleChange("email")}
                 onBlur={formik.handleBlur("email")}
                 error={!!formik.touched.email && !!formik.errors.email}
+                passStyles={passTextInputCompStyles}
               />
               {formik.touched.email && formik.errors.email ? (
                 <Text style={styles.error}>{formik.errors.email}</Text>
@@ -186,7 +249,8 @@ const RegisterForm = () => {
                 onChangeText={formik.handleChange("password")}
                 onBlur={formik.handleBlur("password")}
                 error={!!formik.touched.password && !!formik.errors.password}
-                secureTextEntry={true} // masks the text input for security
+                secureTextEntry={true}
+                passStyles={passTextInputCompStyles}
               />
               {formik.touched.password && formik.errors.password ? (
                 <Text style={styles.error}>{formik.errors.password}</Text>
@@ -204,7 +268,8 @@ const RegisterForm = () => {
                     !!formik.touched.confirmPassword &&
                     !!formik.errors.confirmPassword
                   }
-                  secureTextEntry // masks the text input for security
+                  secureTextEntry={true}
+                  passStyles={passTextInputCompStyles}
                 />
                 {formik.touched.confirmPassword &&
                 formik.errors.confirmPassword ? (
