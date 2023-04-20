@@ -3,8 +3,9 @@ const colors = {
   primary: "#40916C",
   accent: "#FFD700",
   text: "#333333",
-  textSecondary: "#767676",
   error: "#D32F2F",
+  setting: "#E0E0E0",
+  settingSelect: "#B3B3B3",
 };
 
 export default colors;

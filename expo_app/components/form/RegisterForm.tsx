@@ -14,9 +14,14 @@ import {
 } from "react-native-responsive-screen";
 import { Formik, useFormik, FormikProvider } from "formik";
 import * as Yup from "yup";
+import { LinearGradient } from "expo-linear-gradient";
 import colors from "../../utils/colors";
 import TextInputComp from "./basic/TextInputComp";
 import ToggleButtonGroupComp from "./basic/ToggleButtonGroupComp";
+import theme from "../../utils/theme";
+
+const badPassText =
+  "password must be 8+ characters with at least 1 uppercase, 1 lowercase, 1 number, and 1 special character";
 
 const validationSchema = Yup.object().shape({
   firstName: Yup.string()
@@ -35,10 +40,10 @@ const validationSchema = Yup.object().shape({
     .email("email must be a valid email address")
     .required("email is required"),
   password: Yup.string()
-    .min(8, "password must be at least 8 characters long")
+    .min(8, badPassText)
     .matches(
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-      "password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"
+      badPassText
     )
     .required("password is required"),
   gender: Yup.string()
@@ -65,7 +70,6 @@ const RegisterForm = () => {
       ...Platform.select({
         web: {
           marginBottom: windowDimensions.width * 0.02,
-          width: windowDimensions.width * 0.8,
         },
         ios: {
           marginBottom: wp("2%"),
@@ -75,9 +79,30 @@ const RegisterForm = () => {
           // todo
         },
       }),
+      justifyContent: "center",
+      alignItems: "center",
     },
     error: {
+      ...Platform.select({
+        web: {
+          width: windowDimensions.width * 0.6,
+        },
+        ios: {
+          width: wp("60%"),
+        },
+        android: {
+          // todo
+        },
+      }),
       color: colors.error,
+      // alignSelf: 'flex-start', -- TODO: must left-orient w/ space matching
+      fontSize: theme.font.size.small,
+    },
+    backgroundGradient: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      width: "100%",
     },
   });
 
@@ -103,89 +128,94 @@ const RegisterForm = () => {
         contentContainerStyle={styles.container}
         keyboardShouldPersistTaps="never"
       >
-        <View style={styles.container}>
-          <View style={styles.inputContainer}>
-            <TextInputComp
-              label="first name"
-              value={formik.values.firstName}
-              onChangeText={formik.handleChange("firstName")}
-              onBlur={formik.handleBlur("firstName")}
-              error={!!formik.touched.firstName && !!formik.errors.firstName}
-            />
-            {formik.touched.firstName && formik.errors.firstName ? (
-              <Text style={styles.error}>{formik.errors.firstName}</Text>
-            ) : null}
-          </View>
-
-          <View style={styles.inputContainer}>
-            <TextInputComp
-              label="last name"
-              value={formik.values.lastName}
-              onChangeText={formik.handleChange("lastName")}
-              onBlur={formik.handleBlur("lastName")}
-              error={!!formik.touched.lastName && !!formik.errors.lastName}
-            />
-            {formik.touched.lastName && formik.errors.lastName ? (
-              <Text style={styles.error}>{formik.errors.lastName}</Text>
-            ) : null}
-          </View>
-
-          <View style={styles.inputContainer}>
-            <TextInputComp
-              label="email"
-              value={formik.values.email}
-              onChangeText={formik.handleChange("email")}
-              onBlur={formik.handleBlur("email")}
-              error={!!formik.touched.email && !!formik.errors.email}
-            />
-            {formik.touched.email && formik.errors.email ? (
-              <Text style={styles.error}>{formik.errors.email}</Text>
-            ) : null}
-          </View>
-
-          <View style={styles.inputContainer}>
-            <ToggleButtonGroupComp />
-            {/* {formik.touched.email && formik.errors.email ? (
-              <Text style={styles.error}>{formik.errors.email}</Text>
-            ) : null} */}
-          </View>
-
-          <View style={styles.inputContainer}>
-            <TextInputComp
-              label="password"
-              value={formik.values.password}
-              onChangeText={formik.handleChange("password")}
-              onBlur={formik.handleBlur("password")}
-              error={!!formik.touched.password && !!formik.errors.password}
-              secureTextEntry={true} // masks the text input for security
-            />
-            {formik.touched.password && formik.errors.password ? (
-              <Text style={styles.error}>{formik.errors.password}</Text>
-            ) : null}
-          </View>
-
-          {formik.values.password.length > 0 ? (
+        <LinearGradient
+          colors={[colors.primary, colors.background]}
+          style={styles.backgroundGradient}
+        >
+          <View style={styles.container}>
             <View style={styles.inputContainer}>
               <TextInputComp
-                label="confirm password"
-                value={formik.values.confirmPassword}
-                onChangeText={formik.handleChange("confirmPassword")}
-                onBlur={formik.handleBlur("confirmPassword")}
-                error={
-                  !!formik.touched.confirmPassword &&
-                  !!formik.errors.confirmPassword
-                }
-                secureTextEntry // masks the text input for security
+                label="first name"
+                value={formik.values.firstName}
+                onChangeText={formik.handleChange("firstName")}
+                onBlur={formik.handleBlur("firstName")}
+                error={!!formik.touched.firstName && !!formik.errors.firstName}
               />
-              {formik.touched.confirmPassword &&
-              formik.errors.confirmPassword ? (
-                <Text style={styles.error}>
-                  {formik.errors.confirmPassword}
-                </Text>
+              {formik.touched.firstName && formik.errors.firstName ? (
+                <Text style={styles.error}>{formik.errors.firstName}</Text>
               ) : null}
             </View>
-          ) : null}
-        </View>
+
+            <View style={styles.inputContainer}>
+              <TextInputComp
+                label="last name"
+                value={formik.values.lastName}
+                onChangeText={formik.handleChange("lastName")}
+                onBlur={formik.handleBlur("lastName")}
+                error={!!formik.touched.lastName && !!formik.errors.lastName}
+              />
+              {formik.touched.lastName && formik.errors.lastName ? (
+                <Text style={styles.error}>{formik.errors.lastName}</Text>
+              ) : null}
+            </View>
+
+            <View style={styles.inputContainer}>
+              <TextInputComp
+                label="email"
+                value={formik.values.email}
+                onChangeText={formik.handleChange("email")}
+                onBlur={formik.handleBlur("email")}
+                error={!!formik.touched.email && !!formik.errors.email}
+              />
+              {formik.touched.email && formik.errors.email ? (
+                <Text style={styles.error}>{formik.errors.email}</Text>
+              ) : null}
+            </View>
+
+            <View style={styles.inputContainer}>
+              <ToggleButtonGroupComp />
+              {/* {formik.touched.email && formik.errors.email ? (
+              <Text style={styles.error}>{formik.errors.email}</Text>
+            ) : null} */}
+            </View>
+
+            <View style={styles.inputContainer}>
+              <TextInputComp
+                label="password"
+                value={formik.values.password}
+                onChangeText={formik.handleChange("password")}
+                onBlur={formik.handleBlur("password")}
+                error={!!formik.touched.password && !!formik.errors.password}
+                secureTextEntry={true} // masks the text input for security
+              />
+              {formik.touched.password && formik.errors.password ? (
+                <Text style={styles.error}>{formik.errors.password}</Text>
+              ) : null}
+            </View>
+
+            {formik.values.password.length > 0 ? (
+              <View style={styles.inputContainer}>
+                <TextInputComp
+                  label="confirm password"
+                  value={formik.values.confirmPassword}
+                  onChangeText={formik.handleChange("confirmPassword")}
+                  onBlur={formik.handleBlur("confirmPassword")}
+                  error={
+                    !!formik.touched.confirmPassword &&
+                    !!formik.errors.confirmPassword
+                  }
+                  secureTextEntry // masks the text input for security
+                />
+                {formik.touched.confirmPassword &&
+                formik.errors.confirmPassword ? (
+                  <Text style={styles.error}>
+                    {formik.errors.confirmPassword}
+                  </Text>
+                ) : null}
+              </View>
+            ) : null}
+          </View>
+        </LinearGradient>
       </ScrollView>
     </FormikProvider>
   );

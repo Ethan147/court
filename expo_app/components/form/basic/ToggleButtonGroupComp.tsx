@@ -56,7 +56,7 @@ export const ToggleButtonGroupComp: React.FC<ToggleButtonGroupCompProps> = ({
         },
       }),
       fontSize: theme.font.size.small,
-      color: colors.textSecondary,
+      color: colors.text,
     },
     buttons: {
       flexDirection: "row",
@@ -77,17 +77,20 @@ export const ToggleButtonGroupComp: React.FC<ToggleButtonGroupCompProps> = ({
           // todo
         },
       }),
-      borderColor: colors.textSecondary,
-      borderWidth: 0.5,
       borderRadius: 12,
       justifyContent: "center",
       alignItems: "center",
     },
     buttonText: {
       fontSize: theme.font.size.medium,
+      color: colors.text,
     },
-    selected: {
-      backgroundColor: colors.primary,
+    buttonTextSelected: {
+      fontSize: theme.font.size.medium,
+      color: "white",
+    },
+    selectedButton: {
+      backgroundColor: colors.settingSelect,
     },
   });
 
@@ -107,22 +110,43 @@ export const ToggleButtonGroupComp: React.FC<ToggleButtonGroupCompProps> = ({
       <Text style={styles.label}>what's your gender?</Text>
       <View style={styles.buttons}>
         <TouchableOpacity
-          style={[styles.button, isSelected("male") && styles.selected]}
+          style={[styles.button, isSelected("male") && styles.selectedButton]}
           onPress={() => handleValueChange("male")}
         >
-          <Text style={styles.buttonText}>male</Text>
+          <Text
+            style={[
+              styles.buttonText,
+              isSelected("male") && styles.buttonTextSelected,
+            ]}
+          >
+            male
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.button, isSelected("female") && styles.selected]}
+          style={[styles.button, isSelected("female") && styles.selectedButton]}
           onPress={() => handleValueChange("female")}
         >
-          <Text style={styles.buttonText}>female</Text>
+          <Text
+            style={[
+              styles.buttonText,
+              isSelected("female") && styles.buttonTextSelected,
+            ]}
+          >
+            female
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.button, isSelected("other") && styles.selected]}
+          style={[styles.button, isSelected("other") && styles.selectedButton]}
           onPress={() => handleValueChange("other")}
         >
-          <Text style={styles.buttonText}>other / prefer not to say</Text>
+          <Text
+            style={[
+              styles.buttonText,
+              isSelected("other") && styles.buttonTextSelected,
+            ]}
+          >
+            other / prefer not to say
+          </Text>
         </TouchableOpacity>
       </View>
     </View>
