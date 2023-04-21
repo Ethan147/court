@@ -6,6 +6,7 @@ import {
   View,
   StyleProp,
   ViewStyle,
+  Text,
 } from "react-native";
 import { TextInput } from "react-native-paper";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -29,6 +30,7 @@ const TextInputComp = ({
   error,
   secureTextEntry,
   passStyles,
+  hintMessage,
 }: {
   label?: string;
   value?: string;
@@ -37,24 +39,29 @@ const TextInputComp = ({
   error?: boolean;
   secureTextEntry?: boolean;
   passStyles?: {
-    textInputCompContainer?: StyleProp<ViewStyle>;
+    textInputCompOuterView?: StyleProp<ViewStyle>;
+    textInputCompTextContainer?: StyleProp<ViewStyle>;
     textInputCompIconContainer?: StyleProp<ViewStyle>;
     textInputCompViewStyle?: StyleProp<ViewStyle>;
     textInputCompText?: StyleProp<ViewStyle>;
+    textInputCompHintMessage?: StyleProp<ViewStyle>;
   };
+  hintMessage?: string;
 }) => {
   const styles = {
-    textInputCompContainer: passStyles?.textInputCompContainer || {},
+    textInputCompOuterView: passStyles?.textInputCompOuterView || {},
+    textInputCompTextContainer: passStyles?.textInputCompTextContainer || {},
     textInputCompIconContainer: passStyles?.textInputCompIconContainer || {},
     textInputCompViewStyle: passStyles?.textInputCompViewStyle || {},
     textInputCompText: passStyles?.textInputCompText || {},
+    textInputCompHintMessage: passStyles?.textInputCompHintMessage || {},
   };
 
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <View style={styles.textInputCompViewStyle}>
-      <View style={styles.textInputCompContainer}>
+    <View style={styles.textInputCompOuterView}>
+      <View style={styles.textInputCompTextContainer}>
         <TextInput
           label={label}
           value={value}
@@ -79,6 +86,9 @@ const TextInputComp = ({
           </TouchableOpacity>
         )}
       </View>
+      {hintMessage && (
+        <Text style={styles.textInputCompHintMessage}>{hintMessage}</Text>
+      )}
     </View>
   );
 };

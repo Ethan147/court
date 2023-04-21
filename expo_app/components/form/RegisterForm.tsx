@@ -106,7 +106,8 @@ const RegisterForm = () => {
       width: "100%",
     },
     // TextInputComp styling
-    textInputCompContainer: {
+    textInputCompOuterView: {},
+    textInputCompTextContainer: {
       ...Platform.select({
         web: {
           width: windowDimensions.width * 0.65,
@@ -231,7 +232,8 @@ const RegisterForm = () => {
   });
 
   const passTextInputCompStyles = {
-    textInputCompContainer: styles.textInputCompContainer,
+    textInputCompContainer: styles.textInputCompOuterView,
+    textInputCompTextContainer: styles.textInputCompTextContainer,
     textInputCompIconContainer: styles.textInputCompIconContainer,
     textInputCompViewStyle: styles.textInputCompViewStyle,
   };
@@ -297,6 +299,7 @@ const RegisterForm = () => {
                 onBlur={formik.handleBlur("lastName")}
                 error={!!formik.touched.lastName && !!formik.errors.lastName}
                 passStyles={passTextInputCompStyles}
+                hintMessage={"think long and hard"}
               />
               {formik.touched.lastName && formik.errors.lastName ? (
                 <Text style={styles.error}>{formik.errors.lastName}</Text>
