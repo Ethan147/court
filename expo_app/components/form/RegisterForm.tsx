@@ -61,6 +61,7 @@ const RegisterForm = () => {
   const windowDimensions = useWindowDimensions();
 
   const styles = StyleSheet.create({
+    // RegisterForm styling
     container: {
       flex: 1,
       justifyContent: "center",
@@ -158,12 +159,93 @@ const RegisterForm = () => {
       selectionColor: colors.primary,
       backgroundColor: colors.setting,
     },
+    // ToggleButtonGroupComp styling
+    toggleButtonGroupCompContainer: {
+      ...Platform.select({
+        web: {
+          paddingVertical: windowDimensions.width * 0.01,
+          paddingHorizontal: windowDimensions.width * 0.01,
+          marginRight: windowDimensions.width * 0.01,
+        },
+        ios: {
+          paddingVertical: wp("1%"),
+          paddingHorizontal: wp("1%"),
+          marginRight: wp("1%"),
+        },
+        android: {
+          // todo
+        },
+      }),
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    toggleButtonGroupCompLabel: {
+      ...Platform.select({
+        web: {
+          marginBottom: windowDimensions.width * 0.02,
+        },
+        ios: {
+          paddingVertical: wp("1%"),
+        },
+        android: {
+          // todo
+        },
+      }),
+      fontSize: theme.font.size.small,
+      color: colors.text,
+    },
+    toggleButtonGroupCompButtons: {
+      flexDirection: "row",
+    },
+    toggleButtonGroupCompButton: {
+      ...Platform.select({
+        web: {
+          paddingVertical: windowDimensions.width * 0.01,
+          paddingHorizontal: windowDimensions.width * 0.01,
+          marginRight: windowDimensions.width * 0.01,
+        },
+        ios: {
+          paddingVertical: wp("1%"),
+          paddingHorizontal: wp("1%"),
+          marginRight: wp("1%"),
+        },
+        android: {
+          // todo
+        },
+      }),
+      borderRadius: 12,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    toggleButtonGroupCompButtonText: {
+      fontSize: theme.font.size.medium,
+      color: colors.text,
+    },
+    toggleButtonGroupCompButtonTextSelected: {
+      fontSize: theme.font.size.medium,
+      color: "white",
+    },
+    toggleButtonGroupCompSelectedButton: {
+      backgroundColor: colors.settingSelect,
+    },
   });
 
   const passTextInputCompStyles = {
     textInputCompContainer: styles.textInputCompContainer,
     textInputCompIconContainer: styles.textInputCompIconContainer,
     textInputCompViewStyle: styles.textInputCompViewStyle,
+  };
+
+  const passToggleButtonGroupCompStyles = {
+    toggleButtonGroupCompContainer: styles.toggleButtonGroupCompContainer,
+    toggleButtonGroupCompLabel: styles.toggleButtonGroupCompLabel,
+    toggleButtonGroupCompButtons: styles.toggleButtonGroupCompButtons,
+    toggleButtonGroupCompButton: styles.toggleButtonGroupCompButton,
+    toggleButtonGroupCompSelectedButton:
+      styles.toggleButtonGroupCompSelectedButton,
+    toggleButtonGroupCompButtonText: styles.toggleButtonGroupCompButtonText,
+    toggleButtonGroupCompButtonTextSelected:
+      styles.toggleButtonGroupCompButtonTextSelected,
   };
 
   const formik = useFormik({
@@ -236,7 +318,13 @@ const RegisterForm = () => {
             </View>
 
             <View style={styles.inputContainer}>
-              <ToggleButtonGroupComp />
+              <ToggleButtonGroupComp
+                label="what is your gender?"
+                buttons={["male", "female", "other / unspecified"]}
+                onValueChange={(value) => console.log("Selected value:", value)}
+                passStyles={passToggleButtonGroupCompStyles}
+              />
+
               {/* {formik.touched.email && formik.errors.email ? (
               <Text style={styles.error}>{formik.errors.email}</Text>
             ) : null} */}

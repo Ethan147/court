@@ -3,151 +3,83 @@ import {
   View,
   Text,
   TouchableOpacity,
-  StyleSheet,
-  useWindowDimensions,
-  Platform,
+  StyleProp,
+  TextStyle,
+  ViewStyle,
 } from "react-native";
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from "react-native-responsive-screen";
-import colors from "../../../utils/colors";
-import theme from "../../../utils/theme";
 
 interface ToggleButtonGroupCompProps {
   onValueChange?: (value: string) => void;
+  buttons: string[];
+  label: string;
+  passStyles?: {
+    toggleButtonGroupCompContainer?: StyleProp<ViewStyle>;
+    toggleButtonGroupCompLabel?: StyleProp<TextStyle>;
+    toggleButtonGroupCompButtons?: StyleProp<ViewStyle>;
+    toggleButtonGroupCompButton?: StyleProp<ViewStyle>;
+    toggleButtonGroupCompSelectedButton?: StyleProp<ViewStyle>;
+    toggleButtonGroupCompButtonText?: StyleProp<TextStyle>;
+    toggleButtonGroupCompButtonTextSelected?: StyleProp<TextStyle>;
+  };
 }
 
 export const ToggleButtonGroupComp: React.FC<ToggleButtonGroupCompProps> = ({
   onValueChange,
+  buttons,
+  label,
+  passStyles,
 }) => {
-  const windowDimensions = useWindowDimensions();
+  const styles = {
+    toggleButtonGroupCompContainer:
+      passStyles?.toggleButtonGroupCompContainer || {},
+    toggleButtonGroupCompLabel: passStyles?.toggleButtonGroupCompLabel || {},
+    toggleButtonGroupCompButtons:
+      passStyles?.toggleButtonGroupCompButtons || {},
+    toggleButtonGroupCompButton: passStyles?.toggleButtonGroupCompButton || {},
+    toggleButtonGroupCompSelectedButton:
+      passStyles?.toggleButtonGroupCompSelectedButton || {},
+    toggleButtonGroupCompButtonText:
+      passStyles?.toggleButtonGroupCompButtonText || {},
+    toggleButtonGroupCompButtonTextSelected:
+      passStyles?.toggleButtonGroupCompButtonTextSelected || {},
+  };
 
-  const styles = StyleSheet.create({
-    container: {
-      ...Platform.select({
-        web: {
-          paddingVertical: windowDimensions.width * 0.01,
-          paddingHorizontal: windowDimensions.width * 0.01,
-          marginRight: windowDimensions.width * 0.01,
-        },
-        ios: {
-          paddingVertical: wp("1%"),
-          paddingHorizontal: wp("1%"),
-          marginRight: wp("1%"),
-        },
-        android: {
-          // todo
-        },
-      }),
-      justifyContent: "center",
-      alignItems: "center",
-    },
-    label: {
-      ...Platform.select({
-        web: {
-          marginBottom: windowDimensions.width * 0.02,
-        },
-        ios: {
-          paddingVertical: wp("1%"),
-        },
-        android: {
-          // todo
-        },
-      }),
-      fontSize: theme.font.size.small,
-      color: colors.text,
-    },
-    buttons: {
-      flexDirection: "row",
-    },
-    button: {
-      ...Platform.select({
-        web: {
-          paddingVertical: windowDimensions.width * 0.01,
-          paddingHorizontal: windowDimensions.width * 0.01,
-          marginRight: windowDimensions.width * 0.01,
-        },
-        ios: {
-          paddingVertical: wp("1%"),
-          paddingHorizontal: wp("1%"),
-          marginRight: wp("1%"),
-        },
-        android: {
-          // todo
-        },
-      }),
-      borderRadius: 12,
-      justifyContent: "center",
-      alignItems: "center",
-    },
-    buttonText: {
-      fontSize: theme.font.size.medium,
-      color: colors.text,
-    },
-    buttonTextSelected: {
-      fontSize: theme.font.size.medium,
-      color: "white",
-    },
-    selectedButton: {
-      backgroundColor: colors.settingSelect,
-    },
-  });
-
-  const [gender, setGender] = useState("male");
+  const [selectedValue, setSelectedValue] = useState(buttons[0]);
 
   const handleValueChange = (value: string) => {
-    setGender(value);
+    setSelectedValue(value);
     if (onValueChange) {
       onValueChange(value);
     }
   };
 
-  const isSelected = (value: string) => gender === value;
+  const isSelected = (value: string) => selectedValue === value;
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.label}>what's your gender?</Text>
-      <View style={styles.buttons}>
-        <TouchableOpacity
-          style={[styles.button, isSelected("male") && styles.selectedButton]}
-          onPress={() => handleValueChange("male")}
-        >
-          <Text
+    <View style={styles.toggleButtonGroupCompContainer}>
+      <Text style={styles.toggleButtonGroupCompLabel}>{label}</Text>
+      <View style={styles.toggleButtonGroupCompButtons}>
+        {buttons.map((buttonName) => (
+          <TouchableOpacity
+            key={buttonName}
             style={[
-              styles.buttonText,
-              isSelected("male") && styles.buttonTextSelected,
+              styles.toggleButtonGroupCompButton,
+              isSelected(buttonName) &&
+                styles.toggleButtonGroupCompSelectedButton,
             ]}
+            onPress={() => handleValueChange(buttonName)}
           >
-            male
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.button, isSelected("female") && styles.selectedButton]}
-          onPress={() => handleValueChange("female")}
-        >
-          <Text
-            style={[
-              styles.buttonText,
-              isSelected("female") && styles.buttonTextSelected,
-            ]}
-          >
-            female
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.button, isSelected("other") && styles.selectedButton]}
-          onPress={() => handleValueChange("other")}
-        >
-          <Text
-            style={[
-              styles.buttonText,
-              isSelected("other") && styles.buttonTextSelected,
-            ]}
-          >
-            other / prefer not to say
-          </Text>
-        </TouchableOpacity>
+            <Text
+              style={[
+                styles.toggleButtonGroupCompButtonText,
+                isSelected(buttonName) &&
+                  styles.toggleButtonGroupCompButtonTextSelected,
+              ]}
+            >
+              {buttonName}
+            </Text>
+          </TouchableOpacity>
+        ))}
       </View>
     </View>
   );
