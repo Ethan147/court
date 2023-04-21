@@ -10,8 +10,8 @@ import {
 } from "react-native";
 import { TextInput } from "react-native-paper";
 import { MaterialIcons } from "@expo/vector-icons";
-import colors from "../../../utils/colors";
-import theme from "../../../utils/theme";
+import colors from "../../utils/colors";
+import theme from "../../utils/theme";
 
 const customTheme = {
   ...theme,
