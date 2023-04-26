@@ -17,6 +17,7 @@ import ToggleButtonGroupComp from "../basic/ToggleButtonGroupComp";
 import theme from "../../utils/theme";
 import validationSchema from "./elements/validationSchema";
 import FormInput from "./elements/FormInput";
+import DatePickerComp from "../basic/DatePickerComp";
 
 const RegisterForm = () => {
   const windowDimensions = useWindowDimensions();
@@ -322,6 +323,8 @@ const RegisterForm = () => {
                 />
               </View>
             ) : null}
+
+            <DatePickerComp />
           </View>
         </LinearGradient>
       </ScrollView>

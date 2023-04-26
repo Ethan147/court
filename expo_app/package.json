@@ -8,21 +8,24 @@
   },
   "dependencies": {
     "@expo/webpack-config": "^18.0.1",
+    "@react-native-community/datetimepicker": "6.7.3",
     "expo": "~48.0.10",
+    "expo-linear-gradient": "~12.1.2",
     "expo-status-bar": "~1.4.4",
     "formik": "^2.2.9",
     "react": "18.2.0",
+    "react-datepicker": "^4.11.0",
     "react-dom": "^18.2.0",
     "react-native": "0.71.6",
     "react-native-paper": "^4.12.5",
     "react-native-responsive-screen": "^1.4.2",
     "react-native-web": "^0.18.12",
-    "yup": "^1.1.1",
-    "expo-linear-gradient": "~12.1.2"
+    "yup": "^1.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
     "@types/react": "~18.0.14",
+    "@types/react-datepicker": "^4.10.0",
     "@typescript-eslint/eslint-plugin": "^5.58.0",
     "@typescript-eslint/parser": "^5.58.0",
     "eslint": "^8.38.0",
