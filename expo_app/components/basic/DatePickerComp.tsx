@@ -15,7 +15,6 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 interface DatePickerCompProps {
-  label?: string;
   value?: Date | null;
   onDateChange?: (date: Date | null) => void;
   passStyles?: {
@@ -30,14 +29,13 @@ const CustomInput = React.forwardRef(({ value, onClick }, ref) => (
     ref={ref}
     style={{ borderWidth: 1, borderColor: "grey", padding: 5 }}
     value={value}
-    placeholder="Date (MM/DD/YYYY)"
+    placeholder="date of birth (mm/dd/yyyy)"
     onClick={onClick}
     readOnly
   />
 ));
 
 const DatePickerComp: React.FC<DatePickerCompProps> = ({
-  label,
   value,
   onDateChange,
   passStyles,
@@ -65,7 +63,6 @@ const DatePickerComp: React.FC<DatePickerCompProps> = ({
   if (Platform.OS === "web") {
     return (
       <View style={styles.dateOfBirthPickerContainer}>
-        <Text>{label}</Text>
         <DatePicker
           selected={value}
           onChange={(date: Date | [Date | null, Date | null] | null) => {
@@ -86,7 +83,6 @@ const DatePickerComp: React.FC<DatePickerCompProps> = ({
 
   return (
     <View style={styles.dateOfBirthPickerContainer}>
-      <Text>{label}</Text>
       <TouchableOpacity
         onPress={handlePress}
         style={styles.dateOfBirthPickerButton}

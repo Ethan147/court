@@ -243,6 +243,7 @@ const RegisterForm = () => {
       confirmPassword: "",
       gender: "",
       age: "",
+      birthdate: null,
     },
     validationSchema,
     onSubmit: (values) => {
@@ -324,7 +325,10 @@ const RegisterForm = () => {
               </View>
             ) : null}
 
-            <DatePickerComp />
+            <DatePickerComp
+              value={formik.values.birthdate}
+              onDateChange={(date) => formik.setFieldValue("birthdate", date)}
+            />
           </View>
         </LinearGradient>
       </ScrollView>

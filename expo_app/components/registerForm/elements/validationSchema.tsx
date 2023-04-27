@@ -35,6 +35,10 @@ const validationSchema = Yup.object().shape({
   age: Yup.number()
     .min(14, "must be at least 14 years old")
     .required("age is required"),
+  birthdate: Yup.date()
+    .nullable()
+    .required("Birthdate is required")
+    .max(new Date(), "Birthdate must be in the past"),
 });
 
 export default validationSchema;
