@@ -17,6 +17,7 @@
     "react-datepicker": "^4.11.0",
     "react-dom": "^18.2.0",
     "react-native": "0.71.6",
+    "react-native-google-places-autocomplete": "^2.5.1",
     "react-native-paper": "^4.12.5",
     "react-native-responsive-screen": "^1.4.2",
     "react-native-web": "^0.18.12",

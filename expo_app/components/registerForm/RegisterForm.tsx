@@ -18,6 +18,7 @@ import theme from "../../utils/theme";
 import validationSchema from "./elements/validationSchema";
 import FormInput from "./elements/FormInput";
 import DatePickerComp from "../basic/DatePickerComp";
+import AddressInputComp from "../basic/AddressInputComp";
 
 const RegisterForm = () => {
   const windowDimensions = useWindowDimensions();
@@ -234,6 +235,8 @@ const RegisterForm = () => {
       styles.toggleButtonGroupCompButtonTextSelected,
   };
 
+  const passAddressInputStyles = {}; // todo
+
   const formik = useFormik({
     initialValues: {
       firstName: "",
@@ -244,6 +247,7 @@ const RegisterForm = () => {
       gender: "",
       age: "",
       birthdate: null,
+      address: {},
     },
     validationSchema,
     onSubmit: (values) => {
@@ -328,6 +332,17 @@ const RegisterForm = () => {
             <DatePickerComp
               value={formik.values.birthdate}
               onDateChange={(date) => formik.setFieldValue("birthdate", date)}
+            />
+
+            <AddressInputComp
+              onPlaceSelected={(data, details) =>
+                formik.setFieldValue("address", {
+                  place_id: data.place_id,
+                  formatted_address: details.formatted_address,
+                })
+              }
+              error={formik.touched.address && formik.errors.address}
+              passStyles={passAddressInputStyles}
             />
           </View>
         </LinearGradient>

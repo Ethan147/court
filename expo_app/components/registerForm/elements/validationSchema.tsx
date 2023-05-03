@@ -39,6 +39,20 @@ const validationSchema = Yup.object().shape({
     .nullable()
     .required("Birthdate is required")
     .max(new Date(), "Birthdate must be in the past"),
+  address: Yup.object()
+    .shape({
+      place_id: Yup.string().required(),
+      formatted_address: Yup.string().required(),
+    })
+    .required("address is required")
+    .test("is-address-object", "address must be a valid object", (value) => {
+      return (
+        !!value &&
+        typeof value === "object" &&
+        !!value.place_id &&
+        !!value.formatted_address
+      );
+    }),
 });
 
 export default validationSchema;
