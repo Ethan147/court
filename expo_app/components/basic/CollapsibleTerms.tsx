@@ -1,24 +1,29 @@
 import React, { Component } from "react";
 import Accordion from "react-native-collapsible/Accordion";
-import { View, Text, ViewStyle, StyleProp } from "react-native";
+import { View, Text, ViewStyle, StyleProp, TextStyle } from "react-native";
+import { CheckBox } from "react-native-elements";
 
 interface SectionData {
   title: string;
   content: string;
 }
 
+// todo get version information etc from API (to keep this up to date)
 const SECTIONS: SectionData[] = [
   {
-    title: "First",
-    content: "Lorem ipsum...",
-  },
-  {
-    title: "Second",
+    title: "Agree to Terms and Conditions",
     content: "Lorem ipsum...",
   },
 ];
 
-interface CollapsibleTermsProps {}
+interface CollapsibleTermsProps {
+  passStyles: {
+    collapsibleTermsViewHeader: StyleProp<ViewStyle>;
+    collapsibleTermsHeaderText: StyleProp<ViewStyle>;
+    collapsibleTermsContent: StyleProp<TextStyle>;
+    collapsibleTermsContentText: StyleProp<TextStyle>;
+  };
+}
 
 interface CollapsibleTermsState {
   activeSections: number[];
@@ -34,16 +39,20 @@ class AccordionComp extends Component<
 
   _renderHeader = (section: SectionData) => {
     return (
-      <View style={styles.header}>
-        <Text style={styles.headerText}>{section.title}</Text>
+      <View style={this.props.passStyles.collapsibleTermsViewHeader}>
+        <Text style={this.props.passStyles.collapsibleTermsHeaderText}>
+          {section.title}
+        </Text>
       </View>
     );
   };
 
   _renderContent = (section: SectionData) => {
     return (
-      <View style={styles.content}>
-        <Text>{section.content}</Text>
+      <View style={this.props.passStyles.collapsibleTermsContent}>
+        <Text style={this.props.passStyles.collapsibleTermsContentText} t>
+          {section.content}
+        </Text>
       </View>
     );
   };
@@ -65,12 +74,6 @@ class AccordionComp extends Component<
   }
 }
 
-const styles = {
-  content: {},
-  header: {},
-  headerText: {},
-};
-
 const CollapsibleTerms = ({
   acceptTerms,
   passStyles,
@@ -78,19 +81,38 @@ const CollapsibleTerms = ({
   acceptTerms?: boolean;
   passStyles?: {
     collapsibleTermsViewContainer?: StyleProp<ViewStyle>;
+    collapsibleTermsViewHeader: StyleProp<ViewStyle>;
+    collapsibleTermsHeaderText: StyleProp<ViewStyle>;
+    collapsibleTermsContent: StyleProp<TextStyle>;
+    collapsibleTermsContentText: StyleProp<TextStyle>;
   };
 }) => {
   const styles = {
     collapsibleTermsViewContainer:
-      passStyles?.collapsibleTermsViewContainer || {},
-    content: {},
-    header: {},
-    headerText: {},
+      passStyles?.collapsibleTermsViewContainer || {
+        flexDirection: "row",
+        alignItems: "center",
+      },
+    collapsibleTermsViewHeader: passStyles?.collapsibleTermsViewHeader || {},
+    collapsibleTermsHeaderText: passStyles?.collapsibleTermsHeaderText || {},
+    collapsibleTermsContent: passStyles?.collapsibleTermsContent || {},
+    collapsibleTermsContentText: passStyles?.collapsibleTermsContentText || {},
   };
+
+  const [checked, setChecked] = React.useState(false);
 
   return (
     <View style={styles.collapsibleTermsViewContainer}>
-      <AccordionComp />
+      <CheckBox
+        checked={checked}
+        onPress={() => setChecked(!checked)}
+        containerStyle={{
+          borderWidth: 0,
+          paddingHorizontal: 0,
+          backgroundColor: "transparent",
+        }}
+      />
+      <AccordionComp passStyles={styles} />
     </View>
   );
 };
