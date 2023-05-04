@@ -237,6 +237,7 @@ const RegisterForm = () => {
   };
 
   const passAddressInputStyles = {}; // todo
+  const passCollapsibleTermsStyles = {}; // todo
 
   const formik = useFormik({
     initialValues: {
@@ -249,6 +250,7 @@ const RegisterForm = () => {
       age: "",
       birthdate: null,
       address: {},
+      termsAccepted: false,
     },
     validationSchema,
     onSubmit: (values) => {
@@ -275,6 +277,7 @@ const RegisterForm = () => {
               error={formik.touched.firstName && formik.errors.firstName}
               passStyles={passFormInputStyles}
             />
+
             <FormInput
               label="last name"
               value={formik.values.lastName}
@@ -283,6 +286,7 @@ const RegisterForm = () => {
               error={formik.touched.lastName && formik.errors.lastName}
               passStyles={passFormInputStyles}
             />
+
             <FormInput
               label="email"
               value={formik.values.email}
@@ -346,7 +350,16 @@ const RegisterForm = () => {
               passStyles={passAddressInputStyles}
             />
 
-            <CollapsibleTerms />
+            <CollapsibleTerms
+              acceptTerms={formik.values.termsAccepted}
+              onPress={() =>
+                formik.setFieldValue(
+                  "termsAccepted",
+                  !formik.values.termsAccepted
+                )
+              }
+              passStyles={passCollapsibleTermsStyles}
+            />
           </View>
         </LinearGradient>
       </ScrollView>

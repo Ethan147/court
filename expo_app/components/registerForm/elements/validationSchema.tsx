@@ -53,6 +53,10 @@ const validationSchema = Yup.object().shape({
         !!value.formatted_address
       );
     }),
+  termsAccepted: Yup.bool().oneOf(
+    [true],
+    "You must accept the terms and conditions"
+  ),
 });
 
 export default validationSchema;
