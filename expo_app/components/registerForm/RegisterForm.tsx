@@ -19,6 +19,7 @@ import validationSchema from "./elements/validationSchema";
 import FormInput from "./elements/FormInput";
 import DatePickerComp from "../basic/DatePickerComp";
 import AddressInputComp from "../basic/AddressInputComp";
+import CollapsibleTerms from "../basic/CollapsibleTerms";
 
 const RegisterForm = () => {
   const windowDimensions = useWindowDimensions();
@@ -334,16 +335,18 @@ const RegisterForm = () => {
               onDateChange={(date) => formik.setFieldValue("birthdate", date)}
             />
 
-            <AddressInputComp
+            <AddressInputComp // TODO - get API set up & continue from there
               onPlaceSelected={(data, details) =>
                 formik.setFieldValue("address", {
                   place_id: data.place_id,
                   formatted_address: details.formatted_address,
                 })
               }
-              error={formik.touched.address && formik.errors.address}
+              error={!!formik.touched.address && !!formik.errors.address}
               passStyles={passAddressInputStyles}
             />
+
+            <CollapsibleTerms />
           </View>
         </LinearGradient>
       </ScrollView>

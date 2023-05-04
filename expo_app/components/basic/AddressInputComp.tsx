@@ -4,7 +4,7 @@ import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplet
 
 interface AddressInputCompProps {
   onPlaceSelected: (data: any, details: any) => void;
-  error?: string | false | undefined;
+  error?: boolean;
   passStyles?: {
     addressInputCompViewContainer?: StyleProp<ViewStyle>;
     addressInputCompViewGooglePlacesAutoComplete?: StyleProp<ViewStyle>;
