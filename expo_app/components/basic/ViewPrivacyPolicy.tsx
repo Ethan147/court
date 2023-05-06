@@ -13,8 +13,8 @@ interface ViewPrivacyPolicyProps {
   acceptTerms?: boolean;
   onPress?: () => void;
   passStyles?: {
-    viewPrivacyPolicyView?: StyleProp<TextStyle>;
-    viewPrivacyPolicyText?: StyleProp<ViewStyle>;
+    viewPrivacyPolicyView?: StyleProp<ViewStyle>;
+    viewPrivacyPolicyText?: StyleProp<TextStyle>;
   };
 }
 

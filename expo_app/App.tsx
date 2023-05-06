@@ -5,7 +5,7 @@ import { Provider } from "react-native-paper";
 import theme from "./utils/theme";
 import RegisterForm from "./components/registerForm/RegisterForm";
 import TermsAndConditions from "./components/conditions/TermsAndConditions";
-import PrivacyPolicy from "./components/conditions/PrivatePolicy";
+import PrivacyPolicy from "./components/conditions/PrivacyPolicy";
 
 const Stack = createNativeStackNavigator();
 

@@ -213,6 +213,21 @@ const RegisterForm = () => {
       flexDirection: "row",
       alignItems: "center",
     },
+    // accept terms
+    collapsibleTermsCheckboxView: {
+      flexDirection: "row",
+      alignItems: "center",
+    },
+    collapsibleTermsAgreeText: {
+      color: colors.link,
+      textDecorationLine: "underline",
+    },
+    // privacy policy
+    viewPrivacyPolicyView: {},
+    viewPrivacyPolicyText: {
+      color: colors.link,
+      textDecorationLine: "underline",
+    },
   });
 
   const passTextInputCompStyles = {
@@ -242,9 +257,15 @@ const RegisterForm = () => {
     toggleButtonGroupCompButtonTextSelected:
       styles.toggleButtonGroupCompButtonTextSelected,
   };
-
-  const passAddressInputStyles = {}; // todo
-  const passAcceptTermsStyles = {}; // todo
+  const passAddressInputStyles = {};
+  const passAcceptTermsStyles = {
+    collapsibleTermsCheckboxView: styles.collapsibleTermsCheckboxView,
+    collapsibleTermsAgreeText: styles.collapsibleTermsAgreeText,
+  };
+  const passViewPrivacyPolicyStyles = {
+    viewPrivacyPolicyView: styles.viewPrivacyPolicyView,
+    viewPrivacyPolicyText: styles.viewPrivacyPolicyText,
+  };
   const passSubmitStyles = {
     buttonCompTouchableOpacity: {
       backgroundColor: colors.primary,
@@ -285,8 +306,10 @@ const RegisterForm = () => {
         keyboardShouldPersistTaps="never"
       >
         <LinearGradient
-          colors={[colors.primary, colors.background]}
+          colors={[colors.primary, colors.accent]}
           style={styles.backgroundGradient}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
         >
           <View style={styles.container}>
             <FormInput
@@ -382,7 +405,7 @@ const RegisterForm = () => {
               }
               passStyles={passAcceptTermsStyles}
             />
-            <ViewPrivacyPolicy />
+            <ViewPrivacyPolicy passStyles={passViewPrivacyPolicyStyles} />
             <ButtonComp
               text="Submit"
               onPress={formik.handleSubmit}
