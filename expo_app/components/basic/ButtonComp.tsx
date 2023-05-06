@@ -2,7 +2,6 @@ import React from "react";
 import {
   TouchableOpacity,
   Text,
-  useWindowDimensions,
   StyleProp,
   TextStyle,
   ViewStyle,
@@ -22,8 +21,6 @@ const ButtonComp: React.FC<ButtonCompProps> = ({
   onPress,
   passStyles,
 }) => {
-  const windowDimensions = useWindowDimensions();
-
   const styles = {
     buttonCompTouchableOpacity: passStyles?.buttonCompTouchableOpacity || {},
     buttonCompText: passStyles?.buttonCompText || {},

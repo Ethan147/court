@@ -245,7 +245,19 @@ const RegisterForm = () => {
 
   const passAddressInputStyles = {}; // todo
   const passAcceptTermsStyles = {}; // todo
-  const passSubmitStyles = {}; // todo
+  const passSubmitStyles = {
+    buttonCompTouchableOpacity: {
+      backgroundColor: colors.primary,
+      borderRadius: wp("4%"),
+      paddingHorizontal: wp("5%"),
+      paddingVertical: wp("2%"),
+      marginTop: wp("4%"),
+    },
+    buttonCompText: {
+      color: "white",
+      fontSize: theme.font.size.medium,
+    },
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -324,6 +336,7 @@ const RegisterForm = () => {
               onBlur={formik.handleBlur("password")}
               error={formik.touched.password && formik.errors.password}
               passStyles={passFormInputStyles}
+              secureTextEntry={true}
             />
 
             {formik.values.password.length > 0 ? (
@@ -338,6 +351,7 @@ const RegisterForm = () => {
                     formik.errors.confirmPassword
                   }
                   passStyles={passFormInputStyles}
+                  secureTextEntry={true}
                 />
               </View>
             ) : null}

@@ -22,7 +22,7 @@ const validationSchema = Yup.object().shape({
   password: Yup.string()
     .min(8, badPassText)
     .matches(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.])[A-Za-z\d@$!%*?&.]{8,}$/,
       badPassText
     )
     .required("password is required"),
