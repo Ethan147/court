@@ -1,5 +1,11 @@
 import React from "react";
-import { ScrollView, Text } from "react-native";
+import {
+  ScrollView,
+  StyleProp,
+  Text,
+  TextStyle,
+  ViewStyle,
+} from "react-native";
 
 const terms = `1. Introduction
 Welcome to [app-name]! This app is designed to help you schedule games across singles and doubles, organize tournaments and challenge-ladders, find courts to play at, and maintain an internal ELO ranking system for players. The app also includes basic social media capabilities and geolocation features. By using our app, you agree to comply with these Terms of Service and our Privacy Policy.
@@ -28,12 +34,26 @@ We make no warranties, express or implied, regarding the availability, accuracy,
 We may update these Terms of Service from time to time. We will notify you of any significant changes and, where required by applicable law, obtain your consent to any such changes. Your continued use of our app following the posting of revised Terms of Service constitutes your acceptance of the updated terms.
 
 8. Contact Us
-If you have any questions or concerns regarding these Terms of Service or our app, please contact us at [your email address].`;
+If you have any questions or concerns regarding these Terms of Service or our app, please contact us at [company email address].`;
 
-const TermsAndConditions: React.FC = () => {
+interface termsAndConditionsProps {
+  passStyles?: {
+    privacyPolicyScrollView?: StyleProp<ViewStyle>;
+    privacyPolicyText?: StyleProp<TextStyle>;
+  };
+}
+
+const TermsAndConditions: React.FC<termsAndConditionsProps> = ({
+  passStyles,
+}) => {
+  const styles = {
+    privacyPolicyScrollView: passStyles?.privacyPolicyScrollView || {},
+    privacyPolicyText: passStyles?.privacyPolicyText || {},
+  };
+
   return (
-    <ScrollView>
-      <Text>{terms}</Text>
+    <ScrollView style={styles.privacyPolicyScrollView}>
+      <Text style={styles.privacyPolicyText}>{terms}</Text>
     </ScrollView>
   );
 };

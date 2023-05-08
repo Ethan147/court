@@ -1,5 +1,13 @@
+import { NavigationProp } from "@react-navigation/native";
 import React from "react";
-import { ScrollView, Text } from "react-native";
+import {
+  ScrollView,
+  Text,
+  StyleSheet,
+  StyleProp,
+  ViewStyle,
+  TextStyle,
+} from "react-native";
 
 const policy = `1. Introduction
 We value your privacy and are committed to protecting your personal information. This Privacy Policy explains how we collect, use, store, and share your personal data when using our app. By using our app, you agree to the terms of this Privacy Policy.
@@ -31,20 +39,32 @@ We take the security of your personal data seriously and implement appropriate t
 6. Data Retention
 We will retain your personal data for as long as necessary to fulfill the purposes for which it was collected, including for the purposes of satisfying any legal, accounting, or reporting requirements. While we aim to maintain the best of intentions when handling your data, please be aware that there might not be a specific need for our app to delete or anonymize your data, unless the data load becomes exceptionally large. In such cases, we will assess the situation and take appropriate measures as needed.
 
-7. Your Righst and Choices
+7. Your Rights and Choices
 Depending on your jurisdiction, you may have certain rights related to your personal data, such as the right to access, correct, delete, or restrict the processing of your data. If you would like to exercise any of these rights, please contact us at [your email address]. We will respond to your request in accordance with applicable data protection laws.
 
 8. Changes to This Privacy Policy
 We may update this Privacy Policy from time to time. We will notify you of any significant changes and, where required by applicable law, obtain your consent to any such changes. Your continued use of our app following the posting of a revised Privacy Policy constitutes your acceptance of the updated policy.
 
 9. Contact Us
-If you have any questions or concerns regarding this Privacy Policy or our data practices, please contact us at [your email address].
+If you have any questions or concerns regarding this Privacy Policy or our data practices, please contact us at [company email address].
 `;
 
-const PrivacyPolicy: React.FC = () => {
+interface privacyPolicyProps {
+  passStyles?: {
+    privacyPolicyScrollView?: StyleProp<ViewStyle>;
+    privacyPolicyText?: StyleProp<TextStyle>;
+  };
+}
+
+const PrivacyPolicy: React.FC<privacyPolicyProps> = ({ passStyles }) => {
+  const styles = {
+    privacyPolicyScrollView: passStyles?.privacyPolicyScrollView || {},
+    privacyPolicyText: passStyles?.privacyPolicyText || {},
+  };
+
   return (
-    <ScrollView>
-      <Text>{policy}</Text>
+    <ScrollView style={styles?.privacyPolicyScrollView}>
+      <Text style={styles?.privacyPolicyText}>{policy}</Text>
     </ScrollView>
   );
 };
