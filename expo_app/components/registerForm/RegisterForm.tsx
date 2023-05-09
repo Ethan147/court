@@ -26,6 +26,13 @@ import ButtonComp from "../basic/ButtonComp";
 const RegisterForm = () => {
   const windowDimensions = useWindowDimensions();
 
+  // generalized styling
+  const formInputWidthWeb = 0.45;
+  const formInputWidthApp = `${formInputWidthWeb * 100}%`;
+
+  const formInputMarginBottomWeb = 0.02;
+  const formInputMarginBottomApp = `${formInputMarginBottomWeb * 100}%`;
+
   const styles = StyleSheet.create({
     // RegisterForm styling
     container: {
@@ -36,10 +43,10 @@ const RegisterForm = () => {
     formInputViewContainer: {
       ...Platform.select({
         web: {
-          marginBottom: windowDimensions.width * 0.02,
+          marginBottom: windowDimensions.width * formInputMarginBottomWeb,
         },
         ios: {
-          marginBottom: wp("2%"),
+          marginBottom: wp(formInputMarginBottomApp),
           width: wp("80%"),
         },
         android: {
@@ -79,20 +86,31 @@ const RegisterForm = () => {
       }),
     },
     backgroundGradient: {
-      flex: 1,
+      ...Platform.select({
+        web: {
+          width: windowDimensions.width * 1,
+          height: windowDimensions.width * 1,
+        },
+        ios: {
+          width: wp("100%"),
+          height: wp("100%"),
+        },
+        android: {
+          // todo
+        },
+      }),
       justifyContent: "center",
       alignItems: "center",
-      width: "100%",
     },
     // TextInputComp styling
     textInputCompOuterView: {},
     textInputCompTextContainer: {
       ...Platform.select({
         web: {
-          width: windowDimensions.width * 0.65,
+          width: windowDimensions.width * formInputWidthWeb,
         },
         ios: {
-          width: wp("65%"),
+          width: wp(formInputWidthApp),
         },
         android: {
           // todo
@@ -126,10 +144,10 @@ const RegisterForm = () => {
     textInputCompText: {
       ...Platform.select({
         web: {
-          width: windowDimensions.width * 0.65,
+          width: windowDimensions.width * formInputWidthWeb,
         },
         ios: {
-          width: wp("65%"),
+          width: wp(formInputWidthApp),
         },
         android: {
           // todo
@@ -162,10 +180,10 @@ const RegisterForm = () => {
     toggleButtonGroupCompLabel: {
       ...Platform.select({
         web: {
-          marginBottom: windowDimensions.width * 0.02,
+          marginBottom: windowDimensions.width * formInputMarginBottomWeb,
         },
         ios: {
-          paddingVertical: wp("1%"),
+          marginBottom: wp(formInputMarginBottomApp),
         },
         android: {
           // todo
@@ -228,6 +246,36 @@ const RegisterForm = () => {
       color: colors.link,
       textDecorationLine: "underline",
     },
+    // date
+    datePickerCompWebView: {
+      marginBottom: windowDimensions.width * formInputMarginBottomWeb,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    datePickerCompWebInput: {
+      width: windowDimensions.width * formInputWidthWeb,
+      fontSize: theme.font.size.small,
+      backgroundColor: colors.setting,
+      paddingLeft: windowDimensions.width * 0.01,
+    },
+    datePickerCompAppView: {},
+    datePickerCompAppModal: {},
+    // address
+    addressInputCompViewContainer: {
+      ...Platform.select({
+        web: {
+          width: windowDimensions.width * formInputWidthWeb,
+          marginBottom: windowDimensions.width * formInputMarginBottomWeb,
+        },
+        ios: {
+          // todo
+        },
+        android: {
+          // todo
+        },
+      }),
+    },
+    addressInputCompGooglePlacesAutoCompete: {},
   });
 
   const passTextInputCompStyles = {
@@ -257,7 +305,11 @@ const RegisterForm = () => {
     toggleButtonGroupCompButtonTextSelected:
       styles.toggleButtonGroupCompButtonTextSelected,
   };
-  const passAddressInputStyles = {};
+  const passAddressInputStyles = {
+    addressInputCompViewContainer: styles.addressInputCompViewContainer,
+    addressInputCompGooglePlacesAutoCompete:
+      styles.addressInputCompGooglePlacesAutoCompete,
+  };
   const passAcceptTermsStyles = {
     collapsibleTermsCheckboxView: styles.collapsibleTermsCheckboxView,
     collapsibleTermsAgreeText: styles.collapsibleTermsAgreeText,
@@ -279,6 +331,12 @@ const RegisterForm = () => {
       fontSize: theme.font.size.medium,
     },
   };
+  const passDateStyles = {
+    datePickerCompWebView: styles.datePickerCompWebView,
+    datePickerCompWebInput: styles.datePickerCompWebInput,
+    datePickerCompAppView: styles.datePickerCompAppView,
+    datePickerCompAppModal: styles.datePickerCompAppModal,
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -289,7 +347,7 @@ const RegisterForm = () => {
       confirmPassword: "",
       gender: "",
       age: "",
-      birthdate: null,
+      birthdate: "",
       address: {},
       termsAccepted: false,
     },
@@ -306,7 +364,7 @@ const RegisterForm = () => {
         keyboardShouldPersistTaps="never"
       >
         <LinearGradient
-          colors={[colors.primary, colors.accent]}
+          colors={[colors.accent, colors.primary]}
           style={styles.backgroundGradient}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
@@ -380,8 +438,10 @@ const RegisterForm = () => {
             ) : null}
 
             <DatePickerComp
+              label="date of birth (mm/dd/yyyy)"
               value={formik.values.birthdate}
               onDateChange={(date) => formik.setFieldValue("birthdate", date)}
+              passStyles={passDateStyles}
             />
 
             <AddressInputComp // TODO - get API set up & continue from there

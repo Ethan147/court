@@ -7,7 +7,6 @@ interface AddressInputCompProps {
   error?: boolean;
   passStyles?: {
     addressInputCompViewContainer?: StyleProp<ViewStyle>;
-    addressInputCompViewGooglePlacesAutoComplete?: StyleProp<ViewStyle>;
     addressInputCompGooglePlacesAutoCompete?: StyleProp<ViewStyle>;
   };
 }
@@ -20,26 +19,22 @@ const AddressInputComp: React.FC<AddressInputCompProps> = ({
   const styles = {
     addressInputCompViewContainer:
       passStyles?.addressInputCompViewContainer || {},
-    addressInputCompViewGooglePlacesAutoComplete:
-      passStyles?.addressInputCompViewGooglePlacesAutoComplete || {},
     addressInputCompGooglePlacesAutoCompete:
       passStyles?.addressInputCompGooglePlacesAutoCompete || {},
   };
 
   return (
     <View style={styles.addressInputCompViewContainer}>
-      <View style={styles.addressInputCompViewGooglePlacesAutoComplete}>
-        <GooglePlacesAutocomplete
-          placeholder="Search"
-          onPress={(data, details = null) => {
-            onPlaceSelected(data, details);
-          }}
-          query={{
-            key: "YOUR API KEY", // todo figure out API integration etc
-            language: "en",
-          }}
-        />
-      </View>
+      <GooglePlacesAutocomplete
+        placeholder="Search"
+        onPress={(data, details = null) => {
+          onPlaceSelected(data, details);
+        }}
+        query={{
+          key: "YOUR API KEY", // todo figure out API integration etc
+          language: "en",
+        }}
+      />
     </View>
   );
 };

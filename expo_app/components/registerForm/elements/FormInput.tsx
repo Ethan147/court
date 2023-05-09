@@ -9,16 +9,7 @@ import {
 } from "react-native";
 import TextInputComp from "../../basic/TextInputComp";
 
-const FormInput = ({
-  label,
-  value,
-  onChangeText,
-  onBlur,
-  error,
-  secureTextEntry,
-  passStyles,
-  hintMessage,
-}: {
+interface FormInputProps {
   label?: string;
   value?: string;
   onChangeText?: (text: string) => void;
@@ -36,6 +27,17 @@ const FormInput = ({
     textInputCompHintMessage?: StyleProp<ViewStyle>;
   };
   hintMessage?: string;
+}
+
+const FormInput: React.FC<FormInputProps> = ({
+  label,
+  value,
+  onChangeText,
+  onBlur,
+  error,
+  secureTextEntry,
+  passStyles,
+  hintMessage,
 }) => {
   const styles = {
     // formInput styling
