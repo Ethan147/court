@@ -1,107 +1,51 @@
 import React, { useState } from "react";
-import {
-  Platform,
-  View,
-  TouchableOpacity,
-  Text,
-  StyleProp,
-  ViewStyle,
-  TextInput,
-} from "react-native";
-import DateTimePicker, {
-  Event as DateTimePickerEvent,
-} from "@react-native-community/datetimepicker";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+import { Button, Platform, View } from "react-native";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { Input } from "react-native-elements";
 
-interface DatePickerCompProps {
-  value?: Date | null;
-  onDateChange?: (date: Date | null) => void;
-  passStyles?: {
-    dateOfBirthPickerContainer?: StyleProp<ViewStyle>;
-    dateOfBirthPickerButton?: StyleProp<ViewStyle>;
-    datePickerWeb?: StyleProp<ViewStyle>;
-  };
-}
+const DatePickerComp = () => {
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(null);
 
-const CustomInput = React.forwardRef(({ value, onClick }, ref) => (
-  <TextInput
-    ref={ref}
-    style={{ borderWidth: 1, borderColor: "grey", padding: 5 }}
-    value={value}
-    placeholder="date of birth (mm/dd/yyyy)"
-    onClick={onClick}
-    readOnly
-  />
-));
-
-const DatePickerComp: React.FC<DatePickerCompProps> = ({
-  value,
-  onDateChange,
-  passStyles,
-}) => {
-  const styles = {
-    dateOfBirthPickerContainer: passStyles?.dateOfBirthPickerContainer || {},
-    dateOfBirthPickerButton: passStyles?.dateOfBirthPickerButton || {},
-    datePickerWeb: passStyles?.datePickerWeb || {},
+  const showDatePicker = () => {
+    setDatePickerVisibility(true);
   };
 
-  const [showPicker, setShowPicker] = useState(false);
-
-  const handleChange = (event: any, selectedDate?: Date) => {
-    const currentDate = selectedDate || value;
-    setShowPicker(false);
-    if (onDateChange && currentDate) {
-      onDateChange(currentDate);
-    }
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
   };
 
-  const handlePress = () => {
-    setShowPicker(true);
+  const handleConfirm = (date) => {
+    console.warn("A date has been picked: ", date);
+    hideDatePicker();
+  };
+
+  const handleWebDateChange = (event) => {
+    setSelectedDate(event.target.value);
+    console.warn("A date has been picked: ", event.target.value);
   };
 
   if (Platform.OS === "web") {
     return (
-      <View style={styles.dateOfBirthPickerContainer}>
-        <DatePicker
-          selected={value}
-          onChange={(date: Date | [Date | null, Date | null] | null) => {
-            if (onDateChange && date instanceof Date) {
-              onDateChange(date);
-            }
-          }}
-          dateFormat="MM/dd/yyyy"
-          maxDate={new Date()}
-          showYearDropdown
-          showMonthDropdown
-          dropdownMode="select"
-          customInput={<CustomInput />}
+      <View>
+        <Input
+          type="date"
+          value={selectedDate}
+          onChange={handleWebDateChange}
         />
       </View>
     );
   }
 
   return (
-    <View style={styles.dateOfBirthPickerContainer}>
-      <TouchableOpacity
-        onPress={handlePress}
-        style={styles.dateOfBirthPickerButton}
-      >
-        <Text>
-          {value
-            ? `Date: ${value.toLocaleDateString()}`
-            : "Select Date (MM/DD/YYYY)"}
-        </Text>
-      </TouchableOpacity>
-      {showPicker && (
-        <DateTimePicker
-          value={value || new Date()}
-          mode="date"
-          display="default"
-          onChange={handleChange}
-          maximumDate={new Date()}
-        />
-      )}
+    <View>
+      <Button title="Show Date Picker" onPress={showDatePicker} />
+      <DateTimePickerModal
+        isVisible={isDatePickerVisible}
+        mode="date"
+        onConfirm={handleConfirm}
+        onCancel={hideDatePicker}
+      />
     </View>
   );
 };
