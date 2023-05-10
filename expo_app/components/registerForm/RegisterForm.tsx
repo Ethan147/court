@@ -33,10 +33,22 @@ const RegisterForm = () => {
   const formInputMarginBottomWeb = 0.02;
   const formInputMarginBottomApp = `${formInputMarginBottomWeb * 100}%`;
 
+  const borderRad = 12;
+  const textInputHeight = theme.font.size.large * 2.5;
+
   const styles = StyleSheet.create({
     // RegisterForm styling
     container: {
       flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    backgroundGradient: {
+      position: "absolute",
+      top: 0,
+      bottom: 0,
+      left: 0,
+      right: 0,
       justifyContent: "center",
       alignItems: "center",
     },
@@ -59,7 +71,7 @@ const RegisterForm = () => {
     error: {
       ...Platform.select({
         web: {
-          width: windowDimensions.width * 0.6,
+          width: windowDimensions.width * formInputWidthWeb,
         },
         ios: {
           width: wp("60%"),
@@ -69,38 +81,7 @@ const RegisterForm = () => {
         },
       }),
       color: colors.error,
-      // alignSelf: 'flex-start', -- TODO: must left-orient w/ space matching
       fontSize: theme.font.size.small,
-    },
-    error2: {
-      ...Platform.select({
-        web: {
-          width: windowDimensions.width * 0.6,
-        },
-        ios: {
-          width: wp("60%"),
-        },
-        android: {
-          // todo
-        },
-      }),
-    },
-    backgroundGradient: {
-      ...Platform.select({
-        web: {
-          width: windowDimensions.width * 1,
-          height: windowDimensions.width * 1,
-        },
-        ios: {
-          width: wp("100%"),
-          height: wp("100%"),
-        },
-        android: {
-          // todo
-        },
-      }),
-      justifyContent: "center",
-      alignItems: "center",
     },
     // TextInputComp styling
     textInputCompOuterView: {},
@@ -153,6 +134,7 @@ const RegisterForm = () => {
           // todo
         },
       }),
+      height: textInputHeight,
       borderColor: colors.text,
       selectionColor: colors.primary,
       backgroundColor: colors.setting,
@@ -175,12 +157,14 @@ const RegisterForm = () => {
         },
       }),
       justifyContent: "center",
-      alignItems: "center",
+      backgroundColor: colors.setting,
+      borderRadius: borderRad,
     },
     toggleButtonGroupCompLabel: {
       ...Platform.select({
         web: {
-          marginBottom: windowDimensions.width * formInputMarginBottomWeb,
+          marginBottom: windowDimensions.width * 0.01,
+          marginLeft: windowDimensions.width * 0.005,
         },
         ios: {
           marginBottom: wp(formInputMarginBottomApp),
@@ -191,6 +175,7 @@ const RegisterForm = () => {
       }),
       fontSize: theme.font.size.small,
       color: colors.text,
+      alignItems: "flex-start",
     },
     toggleButtonGroupCompButtons: {
       flexDirection: "row",
@@ -211,7 +196,7 @@ const RegisterForm = () => {
           // todo
         },
       }),
-      borderRadius: 12,
+      borderRadius: borderRad,
       justifyContent: "center",
       alignItems: "center",
     },
@@ -254,9 +239,10 @@ const RegisterForm = () => {
     },
     datePickerCompWebInput: {
       width: windowDimensions.width * formInputWidthWeb,
-      fontSize: theme.font.size.small,
+      fontSize: theme.font.size.medium,
       backgroundColor: colors.setting,
       paddingLeft: windowDimensions.width * 0.01,
+      height: textInputHeight,
     },
     datePickerCompAppView: {},
     datePickerCompAppModal: {},
@@ -275,20 +261,19 @@ const RegisterForm = () => {
         },
       }),
     },
-    addressInputCompGooglePlacesAutoCompete: {},
+    addressInputCompGooglePlacesAutoCompete: {
+      height: textInputHeight,
+      fontSize: theme.font.size.medium,
+      color: colors.text,
+      backgroundColor: colors.setting,
+    },
   });
-
-  const passTextInputCompStyles = {
-    textInputCompContainer: styles.textInputCompOuterView,
-    textInputCompTextContainer: styles.textInputCompTextContainer,
-    textInputCompIconContainer: styles.textInputCompIconContainer,
-    textInputCompViewStyle: styles.textInputCompViewStyle,
-  };
 
   const passFormInputStyles = {
     formInputViewContainer: styles.formInputViewContainer,
-    formInputViewErrorText: styles.error2,
+    formInputViewErrorText: styles.error,
     textInputCompContainer: styles.textInputCompOuterView,
+    textInputCompText: styles.textInputCompText,
     textInputCompTextContainer: styles.textInputCompTextContainer,
     textInputCompIconContainer: styles.textInputCompIconContainer,
     textInputCompViewStyle: styles.textInputCompViewStyle,
@@ -336,6 +321,11 @@ const RegisterForm = () => {
     datePickerCompWebInput: styles.datePickerCompWebInput,
     datePickerCompAppView: styles.datePickerCompAppView,
     datePickerCompAppModal: styles.datePickerCompAppModal,
+    textInputCompText: styles.textInputCompText,
+    textInputCompContainer: styles.textInputCompOuterView,
+    textInputCompTextContainer: styles.textInputCompTextContainer,
+    textInputCompIconContainer: styles.textInputCompIconContainer,
+    textInputCompViewStyle: styles.textInputCompViewStyle,
   };
 
   const formik = useFormik({
@@ -358,16 +348,16 @@ const RegisterForm = () => {
   });
 
   return (
-    <FormikProvider value={formik}>
-      <ScrollView
-        contentContainerStyle={styles.container}
-        keyboardShouldPersistTaps="never"
-      >
-        <LinearGradient
-          colors={[colors.accent, colors.primary]}
-          style={styles.backgroundGradient}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
+    <LinearGradient
+      colors={[colors.accent, colors.primary]}
+      style={styles.backgroundGradient}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+    >
+      <FormikProvider value={formik}>
+        <ScrollView
+          contentContainerStyle={styles.container}
+          keyboardShouldPersistTaps="never"
         >
           <View style={styles.container}>
             <FormInput
@@ -404,10 +394,6 @@ const RegisterForm = () => {
                 onValueChange={(value) => console.log("Selected value:", value)}
                 passStyles={passToggleButtonGroupCompStyles}
               />
-
-              {/* {formik.touched.email && formik.errors.email ? (
-              <Text style={styles.error}>{formik.errors.email}</Text>
-            ) : null} */}
             </View>
 
             <FormInput
@@ -421,26 +407,25 @@ const RegisterForm = () => {
             />
 
             {formik.values.password.length > 0 ? (
-              <View style={styles.formInputViewContainer}>
-                <FormInput
-                  label="confirm password"
-                  value={formik.values.confirmPassword}
-                  onChangeText={formik.handleChange("confirmPassword")}
-                  onBlur={formik.handleBlur("confirmPassword")}
-                  error={
-                    formik.touched.confirmPassword &&
-                    formik.errors.confirmPassword
-                  }
-                  passStyles={passFormInputStyles}
-                  secureTextEntry={true}
-                />
-              </View>
+              <FormInput
+                label="confirm password"
+                value={formik.values.confirmPassword}
+                onChangeText={formik.handleChange("confirmPassword")}
+                onBlur={formik.handleBlur("confirmPassword")}
+                error={
+                  formik.touched.confirmPassword &&
+                  formik.errors.confirmPassword
+                }
+                passStyles={passFormInputStyles}
+                secureTextEntry={true}
+              />
             ) : null}
 
             <DatePickerComp
               label="date of birth (mm/dd/yyyy)"
               value={formik.values.birthdate}
               onDateChange={(date) => formik.setFieldValue("birthdate", date)}
+              error={formik.touched.birthdate && formik.errors.birthdate}
               passStyles={passDateStyles}
             />
 
@@ -472,9 +457,9 @@ const RegisterForm = () => {
               passStyles={passSubmitStyles}
             />
           </View>
-        </LinearGradient>
-      </ScrollView>
-    </FormikProvider>
+        </ScrollView>
+      </FormikProvider>
+    </LinearGradient>
   );
 };
 

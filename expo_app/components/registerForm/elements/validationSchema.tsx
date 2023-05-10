@@ -35,10 +35,12 @@ const validationSchema = Yup.object().shape({
   age: Yup.number()
     .min(14, "must be at least 14 years old")
     .required("age is required"),
-  birthdate: Yup.date()
-    .nullable()
-    .required("Birthdate is required")
-    .max(new Date(), "Birthdate must be in the past"),
+  birthdate: Yup.string()
+    .matches(
+      /^(0[1-9]|1[0-2])\/(0[1-9]|1[0-9]|2[0-9]|3[01])\/(19|20)\d\d$/,
+      "birthdate must be in the format mm/dd/yyyy"
+    )
+    .required("Birthdate is required"),
   address: Yup.object()
     .shape({
       place_id: Yup.string().required(),
