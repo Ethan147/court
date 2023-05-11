@@ -59,7 +59,6 @@ const RegisterForm = () => {
         },
         ios: {
           marginBottom: wp(formInputMarginBottomApp),
-          width: wp("80%"),
         },
         android: {
           // todo
@@ -74,7 +73,7 @@ const RegisterForm = () => {
           width: windowDimensions.width * formInputWidthWeb,
         },
         ios: {
-          width: wp("60%"),
+          width: wp(formInputWidthApp),
         },
         android: {
           // todo
@@ -163,11 +162,12 @@ const RegisterForm = () => {
     toggleButtonGroupCompLabel: {
       ...Platform.select({
         web: {
-          marginBottom: windowDimensions.width * 0.01,
+          marginBottom: windowDimensions.width * formInputMarginBottomWeb,
           marginLeft: windowDimensions.width * 0.005,
         },
         ios: {
           marginBottom: wp(formInputMarginBottomApp),
+          marginLeft: wp("0.5%"),
         },
         android: {
           // todo
@@ -254,7 +254,8 @@ const RegisterForm = () => {
           marginBottom: windowDimensions.width * formInputMarginBottomWeb,
         },
         ios: {
-          // todo
+          width: wp(formInputWidthApp),
+          marginBottom: wp(formInputMarginBottomApp),
         },
         android: {
           // todo
