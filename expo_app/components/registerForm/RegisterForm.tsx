@@ -28,27 +28,60 @@ const RegisterForm = () => {
 
   // generalized styling
   const formInputWidthWeb = 0.45;
-  const formInputWidthApp = `${formInputWidthWeb * 100}%`;
+  const formInputWidthApp = `${0.8 * 100}%`;
 
   const formInputMarginBottomWeb = 0.02;
-  const formInputMarginBottomApp = `${formInputMarginBottomWeb * 100}%`;
+  const formInputMarginBottomApp = `${0.04 * 100}%`;
+
+  const formInputMarginEdgesWeb = 0.1;
+  const formInputMarginEdgesApp = `${formInputMarginEdgesWeb * 100}%`;
 
   const borderRad = 12;
   const textInputHeight = theme.font.size.large * 2.5;
 
+  // TODO password requirements show up before you begin typing
+  // TODO slightly rounded corners to the text input boxes
+  // TODO universal wrapper component for error text, tooltips, etc (pass in component to wrap)
   const styles = StyleSheet.create({
     // RegisterForm styling
     container: {
-      flex: 1,
+      ...Platform.select({
+        web: {
+          marginTop: windowDimensions.width * formInputMarginBottomWeb,
+        },
+        ios: {
+          marginTop: wp(formInputMarginBottomApp),
+        },
+        android: {
+          // todo
+        },
+      }),
       justifyContent: "center",
       alignItems: "center",
     },
+
     backgroundGradient: {
       position: "absolute",
       top: 0,
       bottom: 0,
       left: 0,
       right: 0,
+      justifyContent: "center",
+    },
+    formInputViewContainerTop: {
+      ...Platform.select({
+        web: {
+          marginTop: windowDimensions.width * formInputMarginEdgesWeb,
+          marginBottom: windowDimensions.width * formInputMarginBottomWeb,
+        },
+        ios: {
+          marginTop: wp(formInputMarginEdgesApp),
+          marginBottom: wp(formInputMarginBottomApp),
+        },
+        android: {
+          // todo
+        },
+      }),
       justifyContent: "center",
       alignItems: "center",
     },
@@ -70,16 +103,19 @@ const RegisterForm = () => {
     error: {
       ...Platform.select({
         web: {
+          marginTop: windowDimensions.width * 0.005,
           width: windowDimensions.width * formInputWidthWeb,
         },
         ios: {
+          marginTop: wp("0.5%"),
           width: wp(formInputWidthApp),
         },
         android: {
           // todo
         },
       }),
-      color: colors.error,
+      color: colors.setting,
+      fontWeight: "bold",
       fontSize: theme.font.size.small,
     },
     // TextInputComp styling
@@ -99,6 +135,7 @@ const RegisterForm = () => {
       borderColor: colors.text,
       selectionColor: colors.primary,
       backgroundColor: colors.setting,
+      borderRadius: 10,
     },
     textInputCompIconContainer: {
       ...Platform.select({
@@ -206,30 +243,10 @@ const RegisterForm = () => {
     },
     toggleButtonGroupCompButtonTextSelected: {
       fontSize: theme.font.size.medium,
-      color: "white",
+      color: colors.setting,
     },
     toggleButtonGroupCompSelectedButton: {
-      backgroundColor: colors.settingSelect,
-    },
-    // in progress
-    collapsibleTermsViewContainer: {
-      flexDirection: "row",
-      alignItems: "center",
-    },
-    // accept terms
-    collapsibleTermsCheckboxView: {
-      flexDirection: "row",
-      alignItems: "center",
-    },
-    collapsibleTermsAgreeText: {
-      color: colors.link,
-      textDecorationLine: "underline",
-    },
-    // privacy policy
-    viewPrivacyPolicyView: {},
-    viewPrivacyPolicyText: {
-      color: colors.link,
-      textDecorationLine: "underline",
+      backgroundColor: colors.primary,
     },
     // date
     datePickerCompWebView: {
@@ -244,7 +261,15 @@ const RegisterForm = () => {
       paddingLeft: windowDimensions.width * 0.01,
       height: textInputHeight,
     },
-    datePickerCompAppView: {},
+    datePickerCompAppView: {
+      borderRadius: wp("4%"),
+      marginBottom: wp(formInputMarginBottomApp),
+      paddingLeft: wp("1%"),
+      paddingRight: wp("1%"),
+      height: textInputHeight,
+      backgroundColor: colors.setting,
+      justifyContent: "center",
+    },
     datePickerCompAppModal: {},
     // address
     addressInputCompViewContainer: {
@@ -268,7 +293,71 @@ const RegisterForm = () => {
       color: colors.text,
       backgroundColor: colors.setting,
     },
+    // accept terms
+    collapsibleTermsCheckboxView: {
+      flexDirection: "row",
+      alignItems: "center",
+    },
+    collapsibleTermsAgreeText: {
+      color: colors.accent,
+      textDecorationLine: "underline",
+    },
+    // privacy policy
+    viewPrivacyPolicyView: {
+      ...Platform.select({
+        web: {
+          marginBottom: windowDimensions.width * formInputMarginBottomWeb,
+        },
+        ios: {
+          marginBottom: wp(formInputMarginBottomApp),
+        },
+        android: {
+          // todo
+        },
+      }),
+    },
+    viewPrivacyPolicyText: {
+      color: colors.accent,
+      textDecorationLine: "underline",
+    },
+    // submit button
+    buttonCompTouchableOpacity: {
+      ...Platform.select({
+        web: {
+          borderRadius: windowDimensions.width * 0.04,
+          paddingHorizontal: windowDimensions.width * 0.05,
+          paddingVertical: windowDimensions.width * 0.02,
+          padding: windowDimensions.width * 0.01,
+          marginBottom: windowDimensions.width * formInputMarginEdgesWeb,
+        },
+        ios: {
+          borderRadius: wp("4%"),
+          paddingHorizontal: wp("10%"),
+          paddingVertical: wp("4%"),
+          marginBottom: wp(formInputMarginEdgesApp),
+        },
+        android: {
+          // todo
+        },
+      }),
+      backgroundColor: colors.accent,
+    },
+    buttonCompText: {
+      color: colors.text,
+      fontSize: theme.font.size.medium,
+    },
   });
+
+  // for top scroll element to establish some visual margin
+  const passFormInputStylesTop = {
+    formInputViewContainer: styles.formInputViewContainerTop,
+    formInputViewErrorText: styles.error,
+    textInputCompContainer: styles.textInputCompOuterView,
+    textInputCompText: styles.textInputCompText,
+    textInputCompTextContainer: styles.textInputCompTextContainer,
+    textInputCompIconContainer: styles.textInputCompIconContainer,
+    textInputCompViewStyle: styles.textInputCompViewStyle,
+  };
 
   const passFormInputStyles = {
     formInputViewContainer: styles.formInputViewContainer,
@@ -305,17 +394,8 @@ const RegisterForm = () => {
     viewPrivacyPolicyText: styles.viewPrivacyPolicyText,
   };
   const passSubmitStyles = {
-    buttonCompTouchableOpacity: {
-      backgroundColor: colors.primary,
-      borderRadius: wp("4%"),
-      paddingHorizontal: wp("5%"),
-      paddingVertical: wp("2%"),
-      marginTop: wp("4%"),
-    },
-    buttonCompText: {
-      color: "white",
-      fontSize: theme.font.size.medium,
-    },
+    buttonCompTouchableOpacity: styles.buttonCompTouchableOpacity,
+    buttonCompText: styles.buttonCompText,
   };
   const passDateStyles = {
     datePickerCompWebView: styles.datePickerCompWebView,
@@ -350,7 +430,7 @@ const RegisterForm = () => {
 
   return (
     <LinearGradient
-      colors={[colors.accent, colors.primary]}
+      colors={[colors.primary, colors.primary]}
       style={styles.backgroundGradient}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
@@ -360,104 +440,102 @@ const RegisterForm = () => {
           contentContainerStyle={styles.container}
           keyboardShouldPersistTaps="never"
         >
-          <View style={styles.container}>
-            <FormInput
-              label="first name"
-              value={formik.values.firstName}
-              onChangeText={formik.handleChange("firstName")}
-              onBlur={formik.handleBlur("firstName")}
-              error={formik.touched.firstName && formik.errors.firstName}
-              passStyles={passFormInputStyles}
+          <FormInput
+            label="first name"
+            value={formik.values.firstName}
+            onChangeText={formik.handleChange("firstName")}
+            onBlur={formik.handleBlur("firstName")}
+            error={formik.touched.firstName && formik.errors.firstName}
+            passStyles={passFormInputStylesTop}
+          />
+
+          <FormInput
+            label="last name"
+            value={formik.values.lastName}
+            onChangeText={formik.handleChange("lastName")}
+            onBlur={formik.handleBlur("lastName")}
+            error={formik.touched.lastName && formik.errors.lastName}
+            passStyles={passFormInputStyles}
+          />
+
+          <FormInput
+            label="email"
+            value={formik.values.email}
+            onChangeText={formik.handleChange("email")}
+            onBlur={formik.handleBlur("email")}
+            error={formik.touched.email && formik.errors.email}
+            passStyles={passFormInputStyles}
+          />
+
+          <View style={styles.formInputViewContainer}>
+            <ToggleButtonGroupComp
+              label="what is your gender?"
+              buttons={["male", "female", "other / unspecified"]}
+              onValueChange={(value) => console.log("Selected value:", value)}
+              passStyles={passToggleButtonGroupCompStyles}
             />
+          </View>
 
+          <FormInput
+            label="password"
+            value={formik.values.password}
+            onChangeText={formik.handleChange("password")}
+            onBlur={formik.handleBlur("password")}
+            error={formik.touched.password && formik.errors.password}
+            passStyles={passFormInputStyles}
+            secureTextEntry={true}
+          />
+
+          {formik.values.password.length > 0 ? (
             <FormInput
-              label="last name"
-              value={formik.values.lastName}
-              onChangeText={formik.handleChange("lastName")}
-              onBlur={formik.handleBlur("lastName")}
-              error={formik.touched.lastName && formik.errors.lastName}
-              passStyles={passFormInputStyles}
-            />
-
-            <FormInput
-              label="email"
-              value={formik.values.email}
-              onChangeText={formik.handleChange("email")}
-              onBlur={formik.handleBlur("email")}
-              error={formik.touched.email && formik.errors.email}
-              passStyles={passFormInputStyles}
-            />
-
-            <View style={styles.formInputViewContainer}>
-              <ToggleButtonGroupComp
-                label="what is your gender?"
-                buttons={["male", "female", "other / unspecified"]}
-                onValueChange={(value) => console.log("Selected value:", value)}
-                passStyles={passToggleButtonGroupCompStyles}
-              />
-            </View>
-
-            <FormInput
-              label="password"
-              value={formik.values.password}
-              onChangeText={formik.handleChange("password")}
-              onBlur={formik.handleBlur("password")}
-              error={formik.touched.password && formik.errors.password}
+              label="confirm password"
+              value={formik.values.confirmPassword}
+              onChangeText={formik.handleChange("confirmPassword")}
+              onBlur={formik.handleBlur("confirmPassword")}
+              error={
+                formik.touched.confirmPassword && formik.errors.confirmPassword
+              }
               passStyles={passFormInputStyles}
               secureTextEntry={true}
             />
+          ) : null}
 
-            {formik.values.password.length > 0 ? (
-              <FormInput
-                label="confirm password"
-                value={formik.values.confirmPassword}
-                onChangeText={formik.handleChange("confirmPassword")}
-                onBlur={formik.handleBlur("confirmPassword")}
-                error={
-                  formik.touched.confirmPassword &&
-                  formik.errors.confirmPassword
-                }
-                passStyles={passFormInputStyles}
-                secureTextEntry={true}
-              />
-            ) : null}
+          <DatePickerComp
+            label="date of birth"
+            webFormatHint="(mm/dd/yyyy)"
+            value={formik.values.birthdate}
+            onDateChange={(date) => formik.setFieldValue("birthdate", date)}
+            error={formik.touched.birthdate && formik.errors.birthdate}
+            passStyles={passDateStyles}
+          />
 
-            <DatePickerComp
-              label="date of birth (mm/dd/yyyy)"
-              value={formik.values.birthdate}
-              onDateChange={(date) => formik.setFieldValue("birthdate", date)}
-              error={formik.touched.birthdate && formik.errors.birthdate}
-              passStyles={passDateStyles}
-            />
+          <AddressInputComp // TODO - get API set up & continue from there
+            onPlaceSelected={(data, details) =>
+              formik.setFieldValue("address", {
+                place_id: data.place_id,
+                formatted_address: details.formatted_address,
+              })
+            }
+            error={!!formik.touched.address && !!formik.errors.address}
+            passStyles={passAddressInputStyles}
+          />
 
-            <AddressInputComp // TODO - get API set up & continue from there
-              onPlaceSelected={(data, details) =>
-                formik.setFieldValue("address", {
-                  place_id: data.place_id,
-                  formatted_address: details.formatted_address,
-                })
-              }
-              error={!!formik.touched.address && !!formik.errors.address}
-              passStyles={passAddressInputStyles}
-            />
-
-            <AcceptTerms
-              acceptTerms={formik.values.termsAccepted}
-              onPress={() =>
-                formik.setFieldValue(
-                  "termsAccepted",
-                  !formik.values.termsAccepted
-                )
-              }
-              passStyles={passAcceptTermsStyles}
-            />
-            <ViewPrivacyPolicy passStyles={passViewPrivacyPolicyStyles} />
-            <ButtonComp
-              text="Submit"
-              onPress={formik.handleSubmit}
-              passStyles={passSubmitStyles}
-            />
-          </View>
+          <AcceptTerms
+            acceptTerms={formik.values.termsAccepted}
+            onPress={() =>
+              formik.setFieldValue(
+                "termsAccepted",
+                !formik.values.termsAccepted
+              )
+            }
+            passStyles={passAcceptTermsStyles}
+          />
+          <ViewPrivacyPolicy passStyles={passViewPrivacyPolicyStyles} />
+          <ButtonComp
+            text="Submit"
+            onPress={formik.handleSubmit}
+            passStyles={passSubmitStyles}
+          />
         </ScrollView>
       </FormikProvider>
     </LinearGradient>
