@@ -44,7 +44,7 @@ export const ToggleButtonGroupComp: React.FC<ToggleButtonGroupCompProps> = ({
       passStyles?.toggleButtonGroupCompButtonTextSelected || {},
   };
 
-  const [selectedValue, setSelectedValue] = useState(buttons[0]);
+  const [selectedValue, setSelectedValue] = useState("");
 
   const handleValueChange = (value: string) => {
     setSelectedValue(value);

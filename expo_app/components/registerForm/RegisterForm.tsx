@@ -16,12 +16,13 @@ import colors from "../../utils/colors";
 import ToggleButtonGroupComp from "../basic/ToggleButtonGroupComp";
 import theme from "../../utils/theme";
 import validationSchema from "./elements/validationSchema";
-import FormInput from "./elements/FormInput";
 import DatePickerComp from "../basic/DatePickerComp";
 import AddressInputComp from "../basic/AddressInputComp";
 import AcceptTerms from "./elements/AcceptTerms";
 import ViewPrivacyPolicy from "../basic/ViewPrivacyPolicy";
 import ButtonComp from "../basic/ButtonComp";
+import TextAddOn from "../wrapper/TextAddOn";
+import TextInputComp from "../basic/TextInputComp";
 
 const RegisterForm = () => {
   const windowDimensions = useWindowDimensions();
@@ -349,14 +350,22 @@ const RegisterForm = () => {
   });
 
   // for top scroll element to establish some visual margin
+  const passFormInputTextAddOnTop = {
+    textAddOnView: styles.formInputViewContainerTop,
+    textAddOnText: styles.error,
+  };
+
   const passFormInputStylesTop = {
-    formInputViewContainer: styles.formInputViewContainerTop,
-    formInputViewErrorText: styles.error,
     textInputCompContainer: styles.textInputCompOuterView,
     textInputCompText: styles.textInputCompText,
     textInputCompTextContainer: styles.textInputCompTextContainer,
     textInputCompIconContainer: styles.textInputCompIconContainer,
     textInputCompViewStyle: styles.textInputCompViewStyle,
+  };
+
+  const passFormInputTextAddOn = {
+    textAddOnView: styles.formInputViewContainer,
+    textAddOnText: styles.error,
   };
 
   const passFormInputStyles = {
@@ -440,75 +449,130 @@ const RegisterForm = () => {
           contentContainerStyle={styles.container}
           keyboardShouldPersistTaps="never"
         >
-          <FormInput
-            label="first name"
-            value={formik.values.firstName}
-            onChangeText={formik.handleChange("firstName")}
-            onBlur={formik.handleBlur("firstName")}
-            error={formik.touched.firstName && formik.errors.firstName}
-            passStyles={passFormInputStylesTop}
+          {/*First name entry*/}
+          <TextAddOn
+            component={
+              <TextInputComp
+                label="first name"
+                value={formik.values.firstName}
+                onChangeText={formik.handleChange("firstName")}
+                onBlur={formik.handleBlur("firstName")}
+                error={!!formik.touched.firstName && !!formik.errors.firstName}
+                passStyles={passFormInputStylesTop}
+              />
+            }
+            value={formik.errors.firstName}
+            display={!!formik.touched.firstName && !!formik.errors.firstName}
+            passStyles={passFormInputTextAddOnTop}
           />
 
-          <FormInput
-            label="last name"
-            value={formik.values.lastName}
-            onChangeText={formik.handleChange("lastName")}
-            onBlur={formik.handleBlur("lastName")}
-            error={formik.touched.lastName && formik.errors.lastName}
-            passStyles={passFormInputStyles}
+          {/*Last name entry*/}
+          <TextAddOn
+            component={
+              <TextInputComp
+                label="last name"
+                value={formik.values.lastName}
+                onChangeText={formik.handleChange("lastName")}
+                onBlur={formik.handleBlur("lastName")}
+                error={!!formik.touched.lastName && !!formik.errors.lastName}
+                passStyles={passFormInputStyles}
+              />
+            }
+            value={formik.errors.lastName}
+            display={!!formik.touched.lastName && !!formik.errors.lastName}
+            passStyles={passFormInputTextAddOn}
           />
 
-          <FormInput
-            label="email"
-            value={formik.values.email}
-            onChangeText={formik.handleChange("email")}
-            onBlur={formik.handleBlur("email")}
-            error={formik.touched.email && formik.errors.email}
-            passStyles={passFormInputStyles}
+          {/*Email entry*/}
+          <TextAddOn
+            component={
+              <TextInputComp
+                label="email"
+                value={formik.values.email}
+                onChangeText={formik.handleChange("email")}
+                onBlur={formik.handleBlur("email")}
+                error={!!formik.touched.email && !!formik.errors.email}
+                passStyles={passFormInputStyles}
+              />
+            }
+            value={formik.errors.email}
+            display={!!formik.touched.email && !!formik.errors.email}
+            passStyles={passFormInputTextAddOn}
           />
 
+          {/*Gender entry*/}
           <View style={styles.formInputViewContainer}>
             <ToggleButtonGroupComp
-              label="what is your gender?"
+              label="please select your gender"
               buttons={["male", "female", "other / unspecified"]}
               onValueChange={(value) => console.log("Selected value:", value)}
               passStyles={passToggleButtonGroupCompStyles}
             />
           </View>
 
-          <FormInput
-            label="password"
-            value={formik.values.password}
-            onChangeText={formik.handleChange("password")}
-            onBlur={formik.handleBlur("password")}
-            error={formik.touched.password && formik.errors.password}
-            passStyles={passFormInputStyles}
-            secureTextEntry={true}
+          {/*Password entry*/}
+          <TextAddOn
+            component={
+              <TextInputComp
+                label="password"
+                value={formik.values.password}
+                onChangeText={formik.handleChange("password")}
+                onBlur={formik.handleBlur("password")}
+                error={!!formik.touched.password && !!formik.errors.password}
+                passStyles={passFormInputStyles}
+                secureTextEntry={true}
+              />
+            }
+            value={formik.errors.password}
+            display={!!formik.touched.password && !!formik.errors.password}
+            passStyles={passFormInputTextAddOn}
           />
 
+          {/*Password confirmation entry*/}
           {formik.values.password.length > 0 ? (
-            <FormInput
-              label="confirm password"
-              value={formik.values.confirmPassword}
-              onChangeText={formik.handleChange("confirmPassword")}
-              onBlur={formik.handleBlur("confirmPassword")}
-              error={
-                formik.touched.confirmPassword && formik.errors.confirmPassword
+            <TextAddOn
+              component={
+                <TextInputComp
+                  label="confirm password"
+                  value={formik.values.confirmPassword}
+                  onChangeText={formik.handleChange("confirmPassword")}
+                  onBlur={formik.handleBlur("confirmPassword")}
+                  error={
+                    !!formik.touched.confirmPassword &&
+                    !!formik.errors.confirmPassword
+                  }
+                  passStyles={passFormInputStyles}
+                  secureTextEntry={true}
+                />
               }
-              passStyles={passFormInputStyles}
-              secureTextEntry={true}
+              value={formik.errors.confirmPassword}
+              display={
+                !!formik.touched.confirmPassword &&
+                !!formik.errors.confirmPassword
+              }
+              passStyles={passFormInputTextAddOn}
             />
           ) : null}
 
-          <DatePickerComp
-            label="date of birth"
-            webFormatHint="(mm/dd/yyyy)"
-            value={formik.values.birthdate}
-            onDateChange={(date) => formik.setFieldValue("birthdate", date)}
-            error={formik.touched.birthdate && formik.errors.birthdate}
-            passStyles={passDateStyles}
+          {/*dob entry*/}
+          <TextAddOn
+            component={
+              <DatePickerComp
+                label="date of birth"
+                webFormatHint="(mm/dd/yyyy)"
+                value={formik.values.birthdate}
+                onDateChange={(date) => formik.setFieldValue("birthdate", date)}
+                onBlur={() => formik.setFieldTouched("birthdate")}
+                error={!!formik.touched.birthdate && !!formik.errors.birthdate}
+                passStyles={passDateStyles}
+              />
+            }
+            value={formik.errors.birthdate}
+            display={!!formik.touched.birthdate && !!formik.errors.birthdate}
+            passStyles={passFormInputTextAddOn}
           />
 
+          {/*Address entry*/}
           <AddressInputComp // TODO - get API set up & continue from there
             onPlaceSelected={(data, details) =>
               formik.setFieldValue("address", {
@@ -520,6 +584,7 @@ const RegisterForm = () => {
             passStyles={passAddressInputStyles}
           />
 
+          {/*Terms, Private Policy, Submit*/}
           <AcceptTerms
             acceptTerms={formik.values.termsAccepted}
             onPress={() =>

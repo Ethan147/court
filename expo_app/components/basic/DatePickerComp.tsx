@@ -1,12 +1,5 @@
 import React, { useState } from "react";
-import {
-  Button,
-  Platform,
-  Text,
-  View,
-  StyleProp,
-  ViewStyle,
-} from "react-native";
+import { Button, Platform, View, StyleProp, ViewStyle } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 import TextInputComp from "./TextInputComp";
@@ -16,7 +9,8 @@ interface DatePickerCompProps {
   webFormatHint: string;
   value: string;
   onDateChange: (text: string) => void;
-  error?: string | false | undefined;
+  onBlur?: () => void;
+  error?: boolean;
   passStyles?: {
     datePickerCompWebView?: StyleProp<ViewStyle>;
     datePickerCompWebInput?: StyleProp<ViewStyle>;
@@ -30,8 +24,6 @@ interface DatePickerCompProps {
     textInputCompViewStyle?: StyleProp<ViewStyle>;
     textInputCompText?: StyleProp<ViewStyle>;
     textInputCompHintMessage?: StyleProp<ViewStyle>;
-    // error
-    datePickerCompErrorText?: StyleProp<ViewStyle>;
   };
 }
 
@@ -40,6 +32,7 @@ const DatePickerComp: React.FC<DatePickerCompProps> = ({
   webFormatHint,
   value,
   onDateChange,
+  onBlur,
   error,
   passStyles,
 }) => {
@@ -56,8 +49,6 @@ const DatePickerComp: React.FC<DatePickerCompProps> = ({
     textInputCompViewStyle: passStyles?.textInputCompViewStyle || {},
     textInputCompText: passStyles?.textInputCompText || {},
     textInputCompHintMessage: passStyles?.textInputCompHintMessage || {},
-    // error text
-    datePickerCompErrorText: passStyles?.datePickerCompErrorText || {},
   };
 
   const [dateValue, setDateValue] = useState<string>("");
@@ -72,13 +63,21 @@ const DatePickerComp: React.FC<DatePickerCompProps> = ({
     setDatePickerVisibility(false);
   };
 
+  const handleBlur = () => {
+    if (onBlur) {
+      onBlur();
+    }
+  };
+
   const handleConfirm = (date: Date) => {
     console.warn("A date has been picked: ", date);
     const formattedDate = date.toLocaleDateString();
     setDateValue(formattedDate);
     onDateChange(formattedDate);
     hideDatePicker();
+    handleBlur();
   };
+
   const handleWebDateChange = (text: string) => {
     let newText = "";
     let len = text.length;
@@ -90,6 +89,7 @@ const DatePickerComp: React.FC<DatePickerCompProps> = ({
     }
     onDateChange(newText);
     console.warn("A date has been picked: ", newText);
+    handleBlur();
   };
 
   if (Platform.OS === "web") {
@@ -98,10 +98,10 @@ const DatePickerComp: React.FC<DatePickerCompProps> = ({
         <TextInputComp
           label={label + " " + webFormatHint}
           value={value}
+          error={error}
           onChangeText={handleWebDateChange}
           passStyles={styles}
         />
-        {error && <Text style={styles.datePickerCompErrorText}>{error}</Text>}
       </View>
     );
   }
@@ -118,7 +118,6 @@ const DatePickerComp: React.FC<DatePickerCompProps> = ({
         onCancel={hideDatePicker}
         style={styles.datePickerCompAppModal}
       />
-      {error && <Text style={styles.datePickerCompErrorText}>{error}</Text>}
     </View>
   );
 };
