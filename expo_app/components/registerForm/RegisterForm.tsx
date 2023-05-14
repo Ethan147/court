@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   StyleSheet,
   useWindowDimensions,
@@ -42,6 +42,12 @@ const RegisterForm = () => {
   const borderRad = 12;
   const textInputHeight = theme.font.size.large * 2.5;
 
+  // todo need to fix up mobile styling (gender selection appropriate size, etc)
+  // todo accept terms is not registering as selected, even when it is
+  // todo date selection stuff is a little weird, standardize
+  // todo should "please select your gender" be larger?
+  // todo password confirmation is not verifying against the first
+  // todo clean up style names, remove irrelevant styling
   const styles = StyleSheet.create({
     // RegisterForm styling
     container: {
@@ -464,6 +470,8 @@ const RegisterForm = () => {
     textInputCompViewStyle: styles.textInputCompViewStyle,
   };
 
+  const scrollViewRef = useRef<ScrollView>(null);
+
   const formik = useFormik({
     initialValues: {
       firstName: "",
@@ -489,6 +497,17 @@ const RegisterForm = () => {
     }
   };
 
+  const handleSubmit = () => {
+    formik.handleSubmit();
+    if (
+      formik.errors &&
+      Object.keys(formik.errors).length > 0 &&
+      scrollViewRef.current
+    ) {
+      scrollViewRef.current.scrollTo({ x: 0, y: 0, animated: true });
+    }
+  };
+
   return (
     <LinearGradient
       colors={[colors.primary, colors.primary]}
@@ -500,6 +519,7 @@ const RegisterForm = () => {
         <ScrollView
           contentContainerStyle={styles.container}
           keyboardShouldPersistTaps="never"
+          ref={scrollViewRef}
         >
           {/*First name entry*/}
           <TextAddOn
@@ -626,7 +646,7 @@ const RegisterForm = () => {
                     onDateChange={(date) =>
                       formik.setFieldValue("birthdate", date)
                     }
-                    onBlur={handleBlurOnlyIfNotEmpty("birthdate")}
+                    // onBlur={handleBlurOnlyIfNotEmpty("birthdate")}
                     error={
                       !!formik.touched.birthdate && !!formik.errors.birthdate
                     }
@@ -705,7 +725,7 @@ const RegisterForm = () => {
           <ViewPrivacyPolicy passStyles={passViewPrivacyPolicyStyles} />
           <ButtonComp
             text="Submit"
-            onPress={formik.handleSubmit}
+            onPress={handleSubmit}
             passStyles={passSubmitStyles}
           />
         </ScrollView>
