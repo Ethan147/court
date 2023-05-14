@@ -6,7 +6,8 @@ interface TextAddOnProps {
   value?: string;
   display?: boolean;
   passStyles?: {
-    textAddOnView?: StyleProp<ViewStyle>;
+    textAddOnContainerView?: StyleProp<ViewStyle>;
+    textAddOnTextView?: StyleProp<ViewStyle>;
     textAddOnText?: StyleProp<TextStyle>;
   };
 }
@@ -18,14 +19,19 @@ const TextAddOn: React.FC<TextAddOnProps> = ({
   passStyles,
 }) => {
   const styles = {
-    textAddOnView: passStyles?.textAddOnView || {},
+    textAddOnContainerView: passStyles?.textAddOnContainerView || {},
+    textAddOnTextView: passStyles?.textAddOnTextView || {},
     textAddOnText: passStyles?.textAddOnText || {},
   };
 
   return (
-    <View style={styles.textAddOnView}>
+    <View style={styles.textAddOnContainerView}>
       {component}
-      {display && <Text style={styles.textAddOnText}>{value}</Text>}
+      {display && (
+        <View style={styles.textAddOnTextView}>
+          <Text style={styles.textAddOnText}>{value}</Text>
+        </View>
+      )}
     </View>
   );
 };

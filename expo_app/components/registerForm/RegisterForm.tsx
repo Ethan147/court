@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-  View,
   StyleSheet,
   useWindowDimensions,
   Platform,
@@ -15,7 +14,10 @@ import { LinearGradient } from "expo-linear-gradient";
 import colors from "../../utils/colors";
 import ToggleButtonGroupComp from "../basic/ToggleButtonGroupComp";
 import theme from "../../utils/theme";
-import validationSchema from "./elements/validationSchema";
+import validationSchema, {
+  minAge,
+  passReqText,
+} from "./elements/validationSchema";
 import DatePickerComp from "../basic/DatePickerComp";
 import AddressInputComp from "../basic/AddressInputComp";
 import AcceptTerms from "./elements/AcceptTerms";
@@ -34,15 +36,12 @@ const RegisterForm = () => {
   const formInputMarginBottomWeb = 0.02;
   const formInputMarginBottomApp = `${0.04 * 100}%`;
 
-  const formInputMarginEdgesWeb = 0.1;
+  const formInputMarginEdgesWeb = 0.05;
   const formInputMarginEdgesApp = `${formInputMarginEdgesWeb * 100}%`;
 
   const borderRad = 12;
   const textInputHeight = theme.font.size.large * 2.5;
 
-  // TODO password requirements show up before you begin typing
-  // TODO slightly rounded corners to the text input boxes
-  // TODO universal wrapper component for error text, tooltips, etc (pass in component to wrap)
   const styles = StyleSheet.create({
     // RegisterForm styling
     container: {
@@ -60,7 +59,6 @@ const RegisterForm = () => {
       justifyContent: "center",
       alignItems: "center",
     },
-
     backgroundGradient: {
       position: "absolute",
       top: 0,
@@ -83,8 +81,6 @@ const RegisterForm = () => {
           // todo
         },
       }),
-      justifyContent: "center",
-      alignItems: "center",
     },
     formInputViewContainer: {
       ...Platform.select({
@@ -98,25 +94,64 @@ const RegisterForm = () => {
           // todo
         },
       }),
-      justifyContent: "center",
-      alignItems: "center",
     },
-    error: {
+    errorView: {
       ...Platform.select({
         web: {
           marginTop: windowDimensions.width * 0.005,
-          width: windowDimensions.width * formInputWidthWeb,
         },
         ios: {
           marginTop: wp("0.5%"),
-          width: wp(formInputWidthApp),
         },
         android: {
           // todo
         },
       }),
+      backgroundColor: colors.setting,
+      padding: 8,
+      borderRadius: 10,
+      alignSelf: "flex-start",
+    },
+    errorViewTerms: {
+      ...Platform.select({
+        web: {
+          marginTop: windowDimensions.width * 0.005,
+          marginBottom: windowDimensions.width * 0.005,
+        },
+        ios: {
+          marginTop: wp("0.5%"),
+          marginBottom: wp("0.5%"),
+        },
+        android: {
+          // todo
+        },
+      }),
+      backgroundColor: colors.setting,
+      padding: 8,
+      borderRadius: 10,
+      alignSelf: "flex-start",
+    },
+    error: {
+      color: colors.error,
+      fontSize: theme.font.size.small,
+    },
+    hintView: {
+      ...Platform.select({
+        web: {
+          marginTop: windowDimensions.width * 0.002,
+        },
+        ios: {
+          marginTop: wp("0.2%"),
+        },
+        android: {
+          // todo
+        },
+      }),
+      color: colors.error,
+      alignSelf: "flex-start",
+    },
+    hint: {
       color: colors.setting,
-      fontWeight: "bold",
       fontSize: theme.font.size.small,
     },
     // TextInputComp styling
@@ -251,7 +286,7 @@ const RegisterForm = () => {
     },
     // date
     datePickerCompWebView: {
-      marginBottom: windowDimensions.width * formInputMarginBottomWeb,
+      // marginBottom: windowDimensions.width * formInputMarginBottomWeb,
       justifyContent: "center",
       alignItems: "center",
     },
@@ -277,11 +312,9 @@ const RegisterForm = () => {
       ...Platform.select({
         web: {
           width: windowDimensions.width * formInputWidthWeb,
-          marginBottom: windowDimensions.width * formInputMarginBottomWeb,
         },
         ios: {
           width: wp(formInputWidthApp),
-          marginBottom: wp(formInputMarginBottomApp),
         },
         android: {
           // todo
@@ -350,8 +383,9 @@ const RegisterForm = () => {
   });
 
   // for top scroll element to establish some visual margin
-  const passFormInputTextAddOnTop = {
-    textAddOnView: styles.formInputViewContainerTop,
+  const passFormInputTextAddOnErrorTop = {
+    textAddOnContainerView: styles.formInputViewContainerTop,
+    textAddOnTextView: styles.errorView,
     textAddOnText: styles.error,
   };
 
@@ -363,9 +397,21 @@ const RegisterForm = () => {
     textInputCompViewStyle: styles.textInputCompViewStyle,
   };
 
-  const passFormInputTextAddOn = {
-    textAddOnView: styles.formInputViewContainer,
+  const passFormInputTextAddOnError = {
+    textAddOnContainerView: styles.formInputViewContainer,
+    textAddOnTextView: styles.errorView,
     textAddOnText: styles.error,
+  };
+
+  const passFormInputTextAddOnErrorTerms = {
+    // textAddOnContainerView: styles.formInputViewContainer,
+    textAddOnTextView: styles.errorViewTerms,
+    textAddOnText: styles.error,
+  };
+
+  const passFormInputTextAddOnHint = {
+    textAddOnTextView: styles.hintView,
+    textAddOnText: styles.hint,
   };
 
   const passFormInputStyles = {
@@ -428,7 +474,7 @@ const RegisterForm = () => {
       gender: "",
       age: "",
       birthdate: "",
-      address: {},
+      address: "",
       termsAccepted: false,
     },
     validationSchema,
@@ -436,6 +482,12 @@ const RegisterForm = () => {
       console.log("Submitted values:", values);
     },
   });
+
+  const handleBlurOnlyIfNotEmpty = (name: string) => (e: any) => {
+    if (e.target.value !== "") {
+      formik.handleBlur(name)(e);
+    }
+  };
 
   return (
     <LinearGradient
@@ -456,16 +508,15 @@ const RegisterForm = () => {
                 label="first name"
                 value={formik.values.firstName}
                 onChangeText={formik.handleChange("firstName")}
-                onBlur={formik.handleBlur("firstName")}
+                onBlur={handleBlurOnlyIfNotEmpty("firstName")}
                 error={!!formik.touched.firstName && !!formik.errors.firstName}
                 passStyles={passFormInputStylesTop}
               />
             }
             value={formik.errors.firstName}
             display={!!formik.touched.firstName && !!formik.errors.firstName}
-            passStyles={passFormInputTextAddOnTop}
+            passStyles={passFormInputTextAddOnErrorTop}
           />
-
           {/*Last name entry*/}
           <TextAddOn
             component={
@@ -473,16 +524,15 @@ const RegisterForm = () => {
                 label="last name"
                 value={formik.values.lastName}
                 onChangeText={formik.handleChange("lastName")}
-                onBlur={formik.handleBlur("lastName")}
+                onBlur={handleBlurOnlyIfNotEmpty("lastName")}
                 error={!!formik.touched.lastName && !!formik.errors.lastName}
                 passStyles={passFormInputStyles}
               />
             }
             value={formik.errors.lastName}
             display={!!formik.touched.lastName && !!formik.errors.lastName}
-            passStyles={passFormInputTextAddOn}
+            passStyles={passFormInputTextAddOnError}
           />
-
           {/*Email entry*/}
           <TextAddOn
             component={
@@ -490,44 +540,55 @@ const RegisterForm = () => {
                 label="email"
                 value={formik.values.email}
                 onChangeText={formik.handleChange("email")}
-                onBlur={formik.handleBlur("email")}
+                onBlur={handleBlurOnlyIfNotEmpty("email")}
                 error={!!formik.touched.email && !!formik.errors.email}
                 passStyles={passFormInputStyles}
               />
             }
             value={formik.errors.email}
             display={!!formik.touched.email && !!formik.errors.email}
-            passStyles={passFormInputTextAddOn}
+            passStyles={passFormInputTextAddOnError}
           />
-
           {/*Gender entry*/}
-          <View style={styles.formInputViewContainer}>
-            <ToggleButtonGroupComp
-              label="please select your gender"
-              buttons={["male", "female", "other / unspecified"]}
-              onValueChange={(value) => console.log("Selected value:", value)}
-              passStyles={passToggleButtonGroupCompStyles}
-            />
-          </View>
-
+          <TextAddOn
+            component={
+              <ToggleButtonGroupComp
+                label="please select your gender"
+                buttons={["male", "female", "other / unspecified"]}
+                onValueChange={(value) => console.log("Selected value:", value)}
+                passStyles={passToggleButtonGroupCompStyles}
+              />
+            }
+            value={formik.errors.gender}
+            display={!!formik.touched.gender && !!formik.errors.gender}
+            passStyles={passFormInputTextAddOnError}
+          />
           {/*Password entry*/}
           <TextAddOn
             component={
-              <TextInputComp
-                label="password"
-                value={formik.values.password}
-                onChangeText={formik.handleChange("password")}
-                onBlur={formik.handleBlur("password")}
-                error={!!formik.touched.password && !!formik.errors.password}
-                passStyles={passFormInputStyles}
-                secureTextEntry={true}
+              <TextAddOn
+                component={
+                  <TextInputComp
+                    label="password"
+                    value={formik.values.password}
+                    onChangeText={formik.handleChange("password")}
+                    onBlur={handleBlurOnlyIfNotEmpty("password")}
+                    error={
+                      !!formik.touched.password && !!formik.errors.password
+                    }
+                    passStyles={passFormInputStyles}
+                    secureTextEntry={true}
+                  />
+                }
+                value={passReqText}
+                display={true}
+                passStyles={passFormInputTextAddOnHint}
               />
             }
-            value={formik.errors.password}
+            value={"password is invalid"}
             display={!!formik.touched.password && !!formik.errors.password}
-            passStyles={passFormInputTextAddOn}
+            passStyles={passFormInputTextAddOnError}
           />
-
           {/*Password confirmation entry*/}
           {formik.values.password.length > 0 ? (
             <TextAddOn
@@ -536,7 +597,7 @@ const RegisterForm = () => {
                   label="confirm password"
                   value={formik.values.confirmPassword}
                   onChangeText={formik.handleChange("confirmPassword")}
-                  onBlur={formik.handleBlur("confirmPassword")}
+                  onBlur={handleBlurOnlyIfNotEmpty("confirmPassword")}
                   error={
                     !!formik.touched.confirmPassword &&
                     !!formik.errors.confirmPassword
@@ -550,50 +611,96 @@ const RegisterForm = () => {
                 !!formik.touched.confirmPassword &&
                 !!formik.errors.confirmPassword
               }
-              passStyles={passFormInputTextAddOn}
+              passStyles={passFormInputTextAddOnError}
             />
           ) : null}
-
           {/*dob entry*/}
           <TextAddOn
             component={
-              <DatePickerComp
-                label="date of birth"
-                webFormatHint="(mm/dd/yyyy)"
-                value={formik.values.birthdate}
-                onDateChange={(date) => formik.setFieldValue("birthdate", date)}
-                onBlur={() => formik.setFieldTouched("birthdate")}
-                error={!!formik.touched.birthdate && !!formik.errors.birthdate}
-                passStyles={passDateStyles}
+              <TextAddOn
+                component={
+                  <DatePickerComp
+                    label="date of birth"
+                    webFormatHint="(mm/dd/yyyy)"
+                    value={formik.values.birthdate}
+                    onDateChange={(date) =>
+                      formik.setFieldValue("birthdate", date)
+                    }
+                    onBlur={handleBlurOnlyIfNotEmpty("birthdate")}
+                    error={
+                      !!formik.touched.birthdate && !!formik.errors.birthdate
+                    }
+                    passStyles={passDateStyles}
+                  />
+                }
+                value={
+                  "participants must be at least " + minAge + " years of age"
+                }
+                display={true}
+                passStyles={passFormInputTextAddOnHint}
               />
             }
             value={formik.errors.birthdate}
             display={!!formik.touched.birthdate && !!formik.errors.birthdate}
-            passStyles={passFormInputTextAddOn}
+            passStyles={passFormInputTextAddOnError}
           />
-
           {/*Address entry*/}
-          <AddressInputComp // TODO - get API set up & continue from there
-            onPlaceSelected={(data, details) =>
-              formik.setFieldValue("address", {
-                place_id: data.place_id,
-                formatted_address: details.formatted_address,
-              })
+          <TextAddOn
+            component={
+              <TextAddOn
+                component={
+                  <TextAddOn
+                    component={
+                      <AddressInputComp // TODO - get API set up & continue from there
+                        onPlaceSelected={(data, details) =>
+                          formik.setFieldValue("address", {
+                            place_id: data.place_id,
+                            formatted_address: details.formatted_address,
+                          })
+                        }
+                        error={
+                          !!formik.touched.address && !!formik.errors.address
+                        }
+                        passStyles={passAddressInputStyles}
+                      />
+                    }
+                    value={
+                      "Your address will be used solely to match you with nearby tennis, racquetball, and/or pickleball partners."
+                    }
+                    display={true}
+                    passStyles={passFormInputTextAddOnHint}
+                  />
+                }
+                value={
+                  "We're committed to helping you find the perfect match within your community!"
+                }
+                display={true}
+                passStyles={passFormInputTextAddOnHint}
+              />
             }
-            error={!!formik.touched.address && !!formik.errors.address}
-            passStyles={passAddressInputStyles}
+            value={formik.errors.address}
+            display={!!formik.touched.address && !!formik.errors.address}
+            passStyles={passFormInputTextAddOnError}
           />
-
           {/*Terms, Private Policy, Submit*/}
-          <AcceptTerms
-            acceptTerms={formik.values.termsAccepted}
-            onPress={() =>
-              formik.setFieldValue(
-                "termsAccepted",
-                !formik.values.termsAccepted
-              )
+          <TextAddOn
+            component={
+              <AcceptTerms
+                acceptTerms={formik.values.termsAccepted}
+                onPress={() =>
+                  formik.setFieldValue(
+                    "termsAccepted",
+                    !formik.values.termsAccepted
+                  )
+                }
+                passStyles={passAcceptTermsStyles}
+              />
             }
-            passStyles={passAcceptTermsStyles}
+            value={formik.errors.termsAccepted}
+            display={
+              !!formik.touched.termsAccepted && !!formik.errors.termsAccepted
+            }
+            passStyles={passFormInputTextAddOnErrorTerms}
           />
           <ViewPrivacyPolicy passStyles={passViewPrivacyPolicyStyles} />
           <ButtonComp

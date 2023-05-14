@@ -1,7 +1,15 @@
 import * as Yup from "yup";
 
-const badPassText =
+export const passReqText =
   "password must be 8+ characters with at least 1 uppercase, 1 lowercase, 1 number, and 1 special character";
+
+export const minAge = 16;
+const today = new Date();
+const minimumAgeDate = new Date(
+  today.getFullYear() - 16,
+  today.getMonth(),
+  today.getDate()
+);
 
 const validationSchema = Yup.object().shape({
   firstName: Yup.string()
@@ -20,17 +28,14 @@ const validationSchema = Yup.object().shape({
     .email("email must be a valid email address")
     .required("email is required"),
   password: Yup.string()
-    .min(8, badPassText)
+    .min(8, passReqText)
     .matches(
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.])[A-Za-z\d@$!%*?&.]{8,}$/,
-      badPassText
+      passReqText
     )
     .required("password is required"),
   gender: Yup.string()
-    .oneOf(
-      ["male", "female", "other", "prefer_not_to_say"],
-      "please select a gender"
-    )
+    .oneOf(["male", "female", "other"], "please select a gender")
     .required("gender is required"),
   age: Yup.number()
     .min(14, "must be at least 14 years old")
@@ -38,23 +43,14 @@ const validationSchema = Yup.object().shape({
   birthdate: Yup.string()
     .matches(
       /^(0[1-9]|1[0-2])\/(0[1-9]|1[0-9]|2[0-9]|3[01])\/(19|20)\d\d$/,
-      "birthdate must be in the format mm/dd/yyyy"
+      "Date of birth must be in the format mm/dd/yyyy"
     )
-    .required("Birthdate is required"),
-  address: Yup.object()
-    .shape({
-      place_id: Yup.string().required(),
-      formatted_address: Yup.string().required(),
-    })
-    .required("address is required")
-    .test("is-address-object", "address must be a valid object", (value) => {
-      return (
-        !!value &&
-        typeof value === "object" &&
-        !!value.place_id &&
-        !!value.formatted_address
-      );
+    .required("Date of birth is required")
+    .test("minimum-age", "You must be at least 16 years old", function (value) {
+      const birthdate = new Date(value);
+      return birthdate <= minimumAgeDate;
     }),
+  address: Yup.string().required("address is required"),
   termsAccepted: Yup.bool().oneOf(
     [true],
     "You must accept the terms and conditions"
