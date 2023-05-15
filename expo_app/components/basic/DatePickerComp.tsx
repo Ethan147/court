@@ -79,14 +79,17 @@ const DatePickerComp: React.FC<DatePickerCompProps> = ({
   };
 
   const handleWebDateChange = (text: string) => {
-    let newText = "";
-    let len = text.length;
-    for (let i = 0; i < len; i++) {
-      if (i == 2 || i == 5) {
-        if (/[0-9]/.test(text[i])) newText = newText + "/";
-      }
-      newText = newText + text[i];
+    // remove all non-numeric characters
+    let newText = text.replace(/[^0-9]/g, "");
+
+    // add slashes at the correct positions
+    if (newText.length >= 2) {
+      newText = newText.slice(0, 2) + "/" + newText.slice(2);
     }
+    if (newText.length >= 5) {
+      newText = newText.slice(0, 5) + "/" + newText.slice(5);
+    }
+
     onDateChange(newText);
     console.warn("A date has been picked: ", newText);
     handleBlur();
