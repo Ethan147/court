@@ -6,9 +6,10 @@ import {
   ViewStyle,
   StyleProp,
   TouchableOpacity,
+  Switch,
 } from "react-native";
-import { Checkbox } from "react-native-paper";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
+import colors from "../../../utils/colors";
 
 interface AcceptTermsProps {
   acceptTerms?: boolean;
@@ -33,7 +34,7 @@ const AcceptTerms: React.FC<AcceptTermsProps> = ({
   };
 
   const navigation = useNavigation<CollapsibleTermsNavigationProp>();
-  const [checked, setChecked] = useState(acceptTerms);
+  const [isChecked, setIsChecked] = useState(acceptTerms);
 
   const handlePress = () => {
     navigation.navigate("TermsAndConditions");
@@ -43,15 +44,17 @@ const AcceptTerms: React.FC<AcceptTermsProps> = ({
   };
 
   const handleCheckbox = () => {
-    setChecked(!checked);
+    setIsChecked(!isChecked);
   };
 
   return (
     <View>
       <View style={styles?.collapsibleTermsCheckboxView}>
-        <Checkbox
-          status={checked ? "checked" : "unchecked"}
-          onPress={handleCheckbox}
+        <Switch
+          value={isChecked}
+          onValueChange={handleCheckbox}
+          // thumbColor={isChecked ? "red" : "blue"}
+          trackColor={{ true: colors.accent, false: colors.setting }}
         />
         <TouchableOpacity onPress={handlePress}>
           <Text style={styles?.collapsibleTermsAgreeText}>

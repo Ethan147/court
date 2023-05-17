@@ -23,7 +23,6 @@ interface DatePickerCompProps {
     textInputCompIconContainer?: StyleProp<ViewStyle>;
     textInputCompViewStyle?: StyleProp<ViewStyle>;
     textInputCompText?: StyleProp<ViewStyle>;
-    textInputCompHintMessage?: StyleProp<ViewStyle>;
   };
 }
 
@@ -48,7 +47,6 @@ const DatePickerComp: React.FC<DatePickerCompProps> = ({
     textInputCompIconContainer: passStyles?.textInputCompIconContainer || {},
     textInputCompViewStyle: passStyles?.textInputCompViewStyle || {},
     textInputCompText: passStyles?.textInputCompText || {},
-    textInputCompHintMessage: passStyles?.textInputCompHintMessage || {},
   };
 
   const [dateValue, setDateValue] = useState<string>("");

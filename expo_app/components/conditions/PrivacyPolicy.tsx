@@ -1,9 +1,7 @@
-import { NavigationProp } from "@react-navigation/native";
 import React from "react";
 import {
   ScrollView,
   Text,
-  StyleSheet,
   StyleProp,
   ViewStyle,
   TextStyle,

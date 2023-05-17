@@ -13,7 +13,6 @@ interface AddressInputCompProps {
 
 const AddressInputComp: React.FC<AddressInputCompProps> = ({
   onPlaceSelected,
-  error,
   passStyles,
 }) => {
   const styles = {

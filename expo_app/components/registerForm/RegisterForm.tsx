@@ -145,9 +145,11 @@ const RegisterForm = () => {
       ...Platform.select({
         web: {
           marginTop: windowDimensions.width * 0.002,
+          width: windowDimensions.width * formInputWidthWeb,
         },
         ios: {
           marginTop: wp("0.2%"),
+          width: wp(formInputWidthApp),
         },
         android: {
           // todo
@@ -292,7 +294,6 @@ const RegisterForm = () => {
     },
     // date
     datePickerCompWebView: {
-      // marginBottom: windowDimensions.width * formInputMarginBottomWeb,
       justifyContent: "center",
       alignItems: "center",
     },
@@ -388,39 +389,37 @@ const RegisterForm = () => {
     },
   });
 
-  // for top scroll element to establish some visual margin
-  const passFormInputTextAddOnErrorTop = {
+  // error styling
+  const passTextAddOnErrorTop = {
     textAddOnContainerView: styles.formInputViewContainerTop,
     textAddOnTextView: styles.errorView,
     textAddOnText: styles.error,
   };
+  const passTextAddOnError = {
+    textAddOnContainerView: styles.formInputViewContainer,
+    textAddOnTextView: styles.errorView,
+    textAddOnText: styles.error,
+  };
+  const passTextAddOnErrorTerms = {
+    textAddOnTextView: styles.errorViewTerms,
+    textAddOnText: styles.error,
+  };
 
-  const passFormInputStylesTop = {
+  // text hint styling
+  const passFormInputTextAddOnHint = {
+    textAddOnTextView: styles.hintView,
+    textAddOnText: styles.hint,
+  };
+
+  // component styling
+  const passTextInputStylesTop = {
     textInputCompContainer: styles.textInputCompOuterView,
     textInputCompText: styles.textInputCompText,
     textInputCompTextContainer: styles.textInputCompTextContainer,
     textInputCompIconContainer: styles.textInputCompIconContainer,
     textInputCompViewStyle: styles.textInputCompViewStyle,
   };
-
-  const passFormInputTextAddOnError = {
-    textAddOnContainerView: styles.formInputViewContainer,
-    textAddOnTextView: styles.errorView,
-    textAddOnText: styles.error,
-  };
-
-  const passFormInputTextAddOnErrorTerms = {
-    // textAddOnContainerView: styles.formInputViewContainer,
-    textAddOnTextView: styles.errorViewTerms,
-    textAddOnText: styles.error,
-  };
-
-  const passFormInputTextAddOnHint = {
-    textAddOnTextView: styles.hintView,
-    textAddOnText: styles.hint,
-  };
-
-  const passFormInputStyles = {
+  const passTextInputStyles = {
     formInputViewContainer: styles.formInputViewContainer,
     formInputViewErrorText: styles.error,
     textInputCompContainer: styles.textInputCompOuterView,
@@ -429,7 +428,6 @@ const RegisterForm = () => {
     textInputCompIconContainer: styles.textInputCompIconContainer,
     textInputCompViewStyle: styles.textInputCompViewStyle,
   };
-
   const passToggleButtonGroupCompStyles = {
     toggleButtonGroupCompContainer: styles.toggleButtonGroupCompContainer,
     toggleButtonGroupCompLabel: styles.toggleButtonGroupCompLabel,
@@ -441,14 +439,24 @@ const RegisterForm = () => {
     toggleButtonGroupCompButtonTextSelected:
       styles.toggleButtonGroupCompButtonTextSelected,
   };
+  const passDateStyles = {
+    datePickerCompWebView: styles.datePickerCompWebView,
+    datePickerCompWebInput: styles.datePickerCompWebInput,
+    datePickerCompAppView: styles.datePickerCompAppView,
+    datePickerCompAppModal: styles.datePickerCompAppModal,
+    textInputCompTextContainer: styles.textInputCompTextContainer,
+    textInputCompIconContainer: styles.textInputCompIconContainer,
+    textInputCompViewStyle: styles.textInputCompViewStyle,
+    textInputCompText: styles.textInputCompText,
+  };
   const passAddressInputStyles = {
     addressInputCompViewContainer: styles.addressInputCompViewContainer,
     addressInputCompGooglePlacesAutoCompete:
       styles.addressInputCompGooglePlacesAutoCompete,
   };
   const passAcceptTermsStyles = {
-    collapsibleTermsCheckboxView: styles.collapsibleTermsCheckboxView,
     collapsibleTermsAgreeText: styles.collapsibleTermsAgreeText,
+    collapsibleTermsCheckboxView: styles.collapsibleTermsCheckboxView,
   };
   const passViewPrivacyPolicyStyles = {
     viewPrivacyPolicyView: styles.viewPrivacyPolicyView,
@@ -457,17 +465,6 @@ const RegisterForm = () => {
   const passSubmitStyles = {
     buttonCompTouchableOpacity: styles.buttonCompTouchableOpacity,
     buttonCompText: styles.buttonCompText,
-  };
-  const passDateStyles = {
-    datePickerCompWebView: styles.datePickerCompWebView,
-    datePickerCompWebInput: styles.datePickerCompWebInput,
-    datePickerCompAppView: styles.datePickerCompAppView,
-    datePickerCompAppModal: styles.datePickerCompAppModal,
-    textInputCompText: styles.textInputCompText,
-    textInputCompContainer: styles.textInputCompOuterView,
-    textInputCompTextContainer: styles.textInputCompTextContainer,
-    textInputCompIconContainer: styles.textInputCompIconContainer,
-    textInputCompViewStyle: styles.textInputCompViewStyle,
   };
 
   const scrollViewRef = useRef<ScrollView>(null);
@@ -530,12 +527,12 @@ const RegisterForm = () => {
                 onChangeText={formik.handleChange("firstName")}
                 onBlur={handleBlurOnlyIfNotEmpty("firstName")}
                 error={!!formik.touched.firstName && !!formik.errors.firstName}
-                passStyles={passFormInputStylesTop}
+                passStyles={passTextInputStylesTop}
               />
             }
             value={formik.errors.firstName}
             display={!!formik.touched.firstName && !!formik.errors.firstName}
-            passStyles={passFormInputTextAddOnErrorTop}
+            passStyles={passTextAddOnErrorTop}
           />
           {/*Last name entry*/}
           <TextAddOn
@@ -546,12 +543,12 @@ const RegisterForm = () => {
                 onChangeText={formik.handleChange("lastName")}
                 onBlur={handleBlurOnlyIfNotEmpty("lastName")}
                 error={!!formik.touched.lastName && !!formik.errors.lastName}
-                passStyles={passFormInputStyles}
+                passStyles={passTextInputStyles}
               />
             }
             value={formik.errors.lastName}
             display={!!formik.touched.lastName && !!formik.errors.lastName}
-            passStyles={passFormInputTextAddOnError}
+            passStyles={passTextAddOnError}
           />
           {/*Email entry*/}
           <TextAddOn
@@ -562,12 +559,12 @@ const RegisterForm = () => {
                 onChangeText={formik.handleChange("email")}
                 onBlur={handleBlurOnlyIfNotEmpty("email")}
                 error={!!formik.touched.email && !!formik.errors.email}
-                passStyles={passFormInputStyles}
+                passStyles={passTextInputStyles}
               />
             }
             value={formik.errors.email}
             display={!!formik.touched.email && !!formik.errors.email}
-            passStyles={passFormInputTextAddOnError}
+            passStyles={passTextAddOnError}
           />
           {/*Gender entry*/}
           <TextAddOn
@@ -581,7 +578,7 @@ const RegisterForm = () => {
             }
             value={formik.errors.gender}
             display={!!formik.touched.gender && !!formik.errors.gender}
-            passStyles={passFormInputTextAddOnError}
+            passStyles={passTextAddOnError}
           />
           {/*Password entry*/}
           <TextAddOn
@@ -596,7 +593,7 @@ const RegisterForm = () => {
                     error={
                       !!formik.touched.password && !!formik.errors.password
                     }
-                    passStyles={passFormInputStyles}
+                    passStyles={passTextInputStyles}
                     secureTextEntry={true}
                   />
                 }
@@ -607,7 +604,7 @@ const RegisterForm = () => {
             }
             value={"password is invalid"}
             display={!!formik.touched.password && !!formik.errors.password}
-            passStyles={passFormInputTextAddOnError}
+            passStyles={passTextAddOnError}
           />
           {/*Password confirmation entry*/}
           {formik.values.password.length > 0 ? (
@@ -622,7 +619,7 @@ const RegisterForm = () => {
                     !!formik.touched.confirmPassword &&
                     !!formik.errors.confirmPassword
                   }
-                  passStyles={passFormInputStyles}
+                  passStyles={passTextInputStyles}
                   secureTextEntry={true}
                 />
               }
@@ -631,7 +628,7 @@ const RegisterForm = () => {
                 !!formik.touched.confirmPassword &&
                 !!formik.errors.confirmPassword
               }
-              passStyles={passFormInputTextAddOnError}
+              passStyles={passTextAddOnError}
             />
           ) : null}
           {/*dob entry*/}
@@ -662,7 +659,7 @@ const RegisterForm = () => {
             }
             value={formik.errors.birthdate}
             display={!!formik.touched.birthdate && !!formik.errors.birthdate}
-            passStyles={passFormInputTextAddOnError}
+            passStyles={passTextAddOnError}
           />
           {/*Address entry*/}
           <TextAddOn
@@ -677,9 +674,6 @@ const RegisterForm = () => {
                             place_id: data.place_id,
                             formatted_address: details.formatted_address,
                           })
-                        }
-                        error={
-                          !!formik.touched.address && !!formik.errors.address
                         }
                         passStyles={passAddressInputStyles}
                       />
@@ -700,7 +694,7 @@ const RegisterForm = () => {
             }
             value={formik.errors.address}
             display={!!formik.touched.address && !!formik.errors.address}
-            passStyles={passFormInputTextAddOnError}
+            passStyles={passTextAddOnError}
           />
           {/*Terms, Private Policy, Submit*/}
           <TextAddOn
@@ -720,7 +714,7 @@ const RegisterForm = () => {
             display={
               !!formik.touched.termsAccepted && !!formik.errors.termsAccepted
             }
-            passStyles={passFormInputTextAddOnErrorTerms}
+            passStyles={passTextAddOnErrorTerms}
           />
           <ViewPrivacyPolicy passStyles={passViewPrivacyPolicyStyles} />
           <ButtonComp
