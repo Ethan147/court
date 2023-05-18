@@ -335,11 +335,11 @@ const RegisterForm = () => {
       backgroundColor: colors.setting,
     },
     // accept terms
-    collapsibleTermsCheckboxView: {
+    termsSwitchView: {
       flexDirection: "row",
       alignItems: "center",
     },
-    collapsibleTermsAgreeText: {
+    termsAgreeText: {
       color: colors.accent,
       textDecorationLine: "underline",
     },
@@ -356,6 +356,7 @@ const RegisterForm = () => {
           // todo
         },
       }),
+      flexDirection: 'row'
     },
     viewPrivacyPolicyText: {
       color: colors.accent,
@@ -455,8 +456,8 @@ const RegisterForm = () => {
       styles.addressInputCompGooglePlacesAutoCompete,
   };
   const passAcceptTermsStyles = {
-    collapsibleTermsAgreeText: styles.collapsibleTermsAgreeText,
-    collapsibleTermsCheckboxView: styles.collapsibleTermsCheckboxView,
+    termsAgreeText: styles.termsAgreeText,
+    termsSwitchView: styles.termsSwitchView,
   };
   const passViewPrivacyPolicyStyles = {
     viewPrivacyPolicyView: styles.viewPrivacyPolicyView,

@@ -15,12 +15,12 @@ interface AcceptTermsProps {
   acceptTerms?: boolean;
   onPress?: () => void;
   passStyles?: {
-    collapsibleTermsAgreeText?: StyleProp<TextStyle>;
-    collapsibleTermsCheckboxView?: StyleProp<ViewStyle>;
+    termsAgreeText?: StyleProp<TextStyle>;
+    termsSwitchOuterView?: StyleProp<ViewStyle>;
   };
 }
 
-type CollapsibleTermsNavigationProp = NavigationProp<any, "TermsAndConditions">;
+type TermsNavigationProp = NavigationProp<any, "TermsAndConditions">;
 
 const AcceptTerms: React.FC<AcceptTermsProps> = ({
   acceptTerms = false,
@@ -28,13 +28,12 @@ const AcceptTerms: React.FC<AcceptTermsProps> = ({
   passStyles,
 }) => {
   const styles = {
-    collapsibleTermsAgreeText: passStyles?.collapsibleTermsAgreeText || {},
-    collapsibleTermsCheckboxView:
-      passStyles?.collapsibleTermsCheckboxView || {},
+    termsAgreeText: passStyles?.termsAgreeText || {},
+    termsSwitchOuterView: passStyles?.termsSwitchOuterView || {},
   };
 
-  const navigation = useNavigation<CollapsibleTermsNavigationProp>();
-  const [isChecked, setIsChecked] = useState(acceptTerms);
+  const navigation = useNavigation<TermsNavigationProp>();
+  const [isAccepted, setIsAccepted] = useState(acceptTerms);
 
   const handlePress = () => {
     navigation.navigate("TermsAndConditions");
@@ -43,25 +42,26 @@ const AcceptTerms: React.FC<AcceptTermsProps> = ({
     }
   };
 
-  const handleCheckbox = () => {
-    setIsChecked(!isChecked);
+  const handleSwitch = () => {
+    setIsAccepted(!isAccepted);
   };
 
+  // TODO continue this individual view thought 
   return (
-    <View>
-      <View style={styles?.collapsibleTermsCheckboxView}>
-        <Switch
-          value={isChecked}
-          onValueChange={handleCheckbox}
-          // thumbColor={isChecked ? "red" : "blue"}
-          trackColor={{ true: colors.accent, false: colors.setting }}
-        />
-        <TouchableOpacity onPress={handlePress}>
-          <Text style={styles?.collapsibleTermsAgreeText}>
-            Agree to Terms and Conditions
-          </Text>
-        </TouchableOpacity>
+    <View style={styles?.termsSwitchOuterView}>
+    <View style={styles?.termsSwitchView}>  
+      <Switch
+        value={isAccepted}
+        onValueChange={handleSwitch}
+        ios_backgroundColor={colors.setting}
+        trackColor={{ false: colors.settingSelect, true: colors.accent }}
+      />
       </View>
+      <TouchableOpacity onPress={handlePress}>
+        <Text style={styles?.termsAgreeText}>
+          Agree to Terms and Conditions
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 };
