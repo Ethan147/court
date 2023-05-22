@@ -310,7 +310,6 @@ const RegisterForm = () => {
     },
     datePickerCompAppView: {
       borderRadius: wp("4%"),
-      marginBottom: wp(formInputMarginBottomApp),
       paddingLeft: wp("1%"),
       paddingRight: wp("1%"),
       height: textInputHeight,
@@ -341,6 +340,7 @@ const RegisterForm = () => {
     // accept terms
     termsSwitchOuterView: {
       flexDirection: "row",
+      justifyContent: "center",
     },
     termsSwitchView: {
       ...Platform.select({
@@ -348,12 +348,13 @@ const RegisterForm = () => {
           paddingRight: windowDimensions.width * 0.005,
         },
         ios: {
-          paddingRight: wp("0.5%"),
+          paddingRight: wp("2%"),
         },
         android: {
           // todo
         },
       }),
+      justifyContent: "center",
     },
     termsAgreeText: {
       color: colors.accent,
