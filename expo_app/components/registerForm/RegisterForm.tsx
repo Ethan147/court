@@ -231,6 +231,7 @@ const RegisterForm = () => {
           paddingVertical: wp("1%"),
           paddingHorizontal: wp("1%"),
           marginRight: wp("1%"),
+          width: wp(formInputWidthApp),
         },
         android: {
           // todo
@@ -243,23 +244,26 @@ const RegisterForm = () => {
     toggleButtonGroupCompLabel: {
       ...Platform.select({
         web: {
-          marginBottom: windowDimensions.width * formInputMarginBottomWeb,
-          marginLeft: windowDimensions.width * 0.005,
+          marginLeft: windowDimensions.width * 0.001,
+          marginTop: windowDimensions.width * 0.005,
+          marginBottom: windowDimensions.width * 0.005,
+          fontSize: theme.font.size.small,
         },
         ios: {
+          marginTop: wp("1%"),
+          marginLeft: wp("1%"),
           marginBottom: wp(formInputMarginBottomApp),
-          marginLeft: wp("0.5%"),
+          fontSize: theme.font.size.medium,
         },
         android: {
           // todo
         },
       }),
-      fontSize: theme.font.size.small,
       color: colors.text,
-      alignItems: "flex-start",
     },
     toggleButtonGroupCompButtons: {
       flexDirection: "row",
+      justifyContent: "center",
     },
     toggleButtonGroupCompButton: {
       ...Platform.select({
@@ -335,9 +339,21 @@ const RegisterForm = () => {
       backgroundColor: colors.setting,
     },
     // accept terms
-    termsSwitchView: {
+    termsSwitchOuterView: {
       flexDirection: "row",
-      alignItems: "center",
+    },
+    termsSwitchView: {
+      ...Platform.select({
+        web: {
+          paddingRight: windowDimensions.width * 0.005,
+        },
+        ios: {
+          paddingRight: wp("0.5%"),
+        },
+        android: {
+          // todo
+        },
+      }),
     },
     termsAgreeText: {
       color: colors.accent,
@@ -356,7 +372,7 @@ const RegisterForm = () => {
           // todo
         },
       }),
-      flexDirection: 'row'
+      flexDirection: "row",
     },
     viewPrivacyPolicyText: {
       color: colors.accent,
@@ -456,8 +472,9 @@ const RegisterForm = () => {
       styles.addressInputCompGooglePlacesAutoCompete,
   };
   const passAcceptTermsStyles = {
-    termsAgreeText: styles.termsAgreeText,
+    termsSwitchOuterView: styles.termsSwitchOuterView,
     termsSwitchView: styles.termsSwitchView,
+    termsAgreeText: styles.termsAgreeText,
   };
   const passViewPrivacyPolicyStyles = {
     viewPrivacyPolicyView: styles.viewPrivacyPolicyView,

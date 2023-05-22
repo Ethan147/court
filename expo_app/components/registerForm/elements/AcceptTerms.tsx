@@ -15,8 +15,10 @@ interface AcceptTermsProps {
   acceptTerms?: boolean;
   onPress?: () => void;
   passStyles?: {
-    termsAgreeText?: StyleProp<TextStyle>;
     termsSwitchOuterView?: StyleProp<ViewStyle>;
+    termsSwitchView?: StyleProp<ViewStyle>;
+    termsTextView?: StyleProp<ViewStyle>;
+    termsAgreeText?: StyleProp<TextStyle>;
   };
 }
 
@@ -28,8 +30,10 @@ const AcceptTerms: React.FC<AcceptTermsProps> = ({
   passStyles,
 }) => {
   const styles = {
-    termsAgreeText: passStyles?.termsAgreeText || {},
     termsSwitchOuterView: passStyles?.termsSwitchOuterView || {},
+    termsSwitchView: passStyles?.termsSwitchView || {},
+    termsTextView: passStyles?.termsTextView || {},
+    termsAgreeText: passStyles?.termsAgreeText || {},
   };
 
   const navigation = useNavigation<TermsNavigationProp>();
@@ -46,22 +50,23 @@ const AcceptTerms: React.FC<AcceptTermsProps> = ({
     setIsAccepted(!isAccepted);
   };
 
-  // TODO continue this individual view thought 
   return (
     <View style={styles?.termsSwitchOuterView}>
-    <View style={styles?.termsSwitchView}>  
-      <Switch
-        value={isAccepted}
-        onValueChange={handleSwitch}
-        ios_backgroundColor={colors.setting}
-        trackColor={{ false: colors.settingSelect, true: colors.accent }}
-      />
+      <View style={styles?.termsSwitchView}>
+        <Switch
+          value={isAccepted}
+          onValueChange={handleSwitch}
+          ios_backgroundColor={colors.setting}
+          trackColor={{ false: colors.settingSelect, true: colors.accent }}
+        />
       </View>
-      <TouchableOpacity onPress={handlePress}>
-        <Text style={styles?.termsAgreeText}>
-          Agree to Terms and Conditions
-        </Text>
-      </TouchableOpacity>
+      <View style={styles?.termsTextView}>
+        <TouchableOpacity onPress={handlePress}>
+          <Text style={styles?.termsAgreeText}>
+            Agree to Terms and Conditions
+          </Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
