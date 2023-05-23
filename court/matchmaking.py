@@ -1,5 +1,4 @@
 import math
-from user import User
 import glicko2
 from geopy.distance import great_circle
 

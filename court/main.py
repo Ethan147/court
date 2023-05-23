@@ -2,7 +2,7 @@ from matchmaking import matchmake
 from testdata import generate_test_users
 
 def main():
-    num_test_users = 100
+    num_test_users = 20
     test_users = generate_test_users(num_test_users)
     matches = matchmake(test_users)
 
