@@ -1,43 +1,78 @@
-import math
+from typing import Optional, List, Tuple
+import datetime
 
-class User:
-    questions = [
-        "How many years have you been playing tennis?",
-        "How often do you play tennis in a month?",
-        "On a scale of 1 to 10, how would you rate your serve?",
-        "On a scale of 1 to 10, how would you rate your groundstrokes?",
-        "On a scale of 1 to 10, how would you rate your net game?",
-    ]
+class UserAuth:
+    def __init__(self, user_id: str, email: str, password: str) -> None:
+        self._user_id = user_id
+        self.email = email
+        self.password = password
 
-    def __init__(self, user_id, name, availability, location, ntrp=None, responses=None):
-        self.user_id = user_id
+    @property
+    def user_id(self) -> str:
+        return self._user_id
+
+class UserProfile:
+    def __init__(self, user_auth: UserAuth, name: str, availability: List[int], location: Tuple[float, float], 
+                 bio: str, match_history: List[int] = [], ntrp: Optional[float] = None, 
+                 responses: Optional[List[int]] = None, completed: bool = False, 
+                 created_at: Optional[datetime.datetime] = None, gender: Optional[str] = None, 
+                 DOB: Optional[datetime.date] = None, walkthrough: bool = False) -> None:
+        self.user_auth = user_auth
         self.name = name
-        self.ntrp = ntrp
-        self.mmr = self.ntrp_to_mmr(ntrp) if ntrp is not None else self.determine_mmr(responses)
         self.availability = availability
         self.location = location
+        self.bio = bio
+        self.match_history = match_history
+        self.ntrp = ntrp
+        self.mmr = self.ntrp_to_mmr(ntrp) if ntrp is not None else self.determine_mmr(responses)
+        self.completed = completed
+        self.created_at = created_at if created_at else datetime.datetime.now()
+        self.gender = gender
+        self.DOB = DOB
+        self.walkthrough = walkthrough
 
-    # Convert NTRP rating to MMR (matchmaking rating)
+    questions = [
+    "How many years have you been playing tennis?",
+    "How often do you play tennis in a month?",
+    "On a scale of 1 to 10, how would you rate your serve?",
+    "On a scale of 1 to 10, how would you rate your groundstrokes?",
+    "On a scale of 1 to 10, how would you rate your net game?",
+    ]
+
+    @property
+    def user_id(self):
+        return self.user_auth.user_id
+
+    @property
+    def email(self):
+        return self.user_auth.email
+
+    @property
+    def password(self):
+        return self.user_auth.password
+
+    @property
+    def age(self) -> Optional[int]:
+        return self.determine_age()
+    
+    def determine_age(self) -> Optional[int]:
+        if self.DOB is None:
+            return None
+        today = datetime.date.today()
+        return today.year - self.DOB.year - ((today.month, today.day) < (self.DOB.month, self.DOB.day))
+
     def ntrp_to_mmr(self, ntrp):
-        # Feel free to adjust this formula, this is just a placeholder
         return (ntrp - 1) * 500
 
-    # Determine MMR based on user responses to questions
     def determine_mmr(self, responses):
         if responses is None:
             return None
-
         total_score = sum(responses)
-
-        # Normalize the total score to a value between 1 and 7 to mimic the NTRP range
         normalized_score = 1 + (total_score / (len(responses) * 10)) * 6
-
-        # Convert the normalized score to MMR
         return self.ntrp_to_mmr(normalized_score)
 
-    # String representation of a User object
-    def __str__(self):
-        return f"{self.name} (NTRP: {self.ntrp}, MMR: {self.mmr}, Location: {self.location}, Availability: {self.availability})"
+    def __repr__(self):
+        return f"UserProfile(user_id={self.user_id}, name={self.name}, email={self.email}, password={self.password}, ntrp={self.ntrp}, mmr={self.mmr}, location={self.location}, availability={self.availability})"
 
 '''
 1.0 Player is just starting to play tennis.
