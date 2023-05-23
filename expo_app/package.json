@@ -32,6 +32,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
+    "@types/jest": "^29.5.1",
     "@types/react": "~18.0.14",
     "@types/react-datepicker": "^4.10.0",
     "@typescript-eslint/eslint-plugin": "^5.58.0",
