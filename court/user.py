@@ -74,7 +74,6 @@ class UserProfile:
     def __repr__(self):
         return f"UserProfile(user_id={self.user_id}, name={self.name}, email={self.email}, password={self.password}, ntrp={self.ntrp}, mmr={self.mmr}, location={self.location}, availability={self.availability})"
 
-
 '''
 1.0 Player is just starting to play tennis.
 1.5 Player has limited experience and is working primarily on getting the ball in play. Player needs to coordinate moving when hitting the ball and is still concentrating on getting the ball over the net from a stationary position. Player is learning to serve and keep score.

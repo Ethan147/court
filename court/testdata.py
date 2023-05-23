@@ -72,24 +72,3 @@ def generate_test_users(num_users):
         print(f"Generated {i + 1}/{num_users} users", flush=True)
 
     return test_users
-
-# def generate_test_users(num_users):
-#     test_users = []
-#     unique_addresses = set()
-
-#     while len(unique_addresses) < num_users:
-#         address = generate_address()
-#         if address:
-#             unique_addresses.add(address)
-#         print(f"Generated {len(unique_addresses)}/{num_users} unique addresses", flush=True)
-
-#     for i, location in enumerate(unique_addresses):
-#         user_id = i + 1
-#         name = fake.name()
-#         ntrp = round(random.uniform(1.0, 7.0) * 2) / 2
-#         availability = random.sample(range(1, 8), random.randint(1, 7))
-#         test_users.append(User(user_id, name, availability, location, ntrp))
-#         print(f"Generated {i + 1}/{num_users} users", flush=True)
-# return test_users
-
-
