@@ -4,8 +4,7 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web",
-    "test": "jest"
+    "web": "expo start --web"
   },
   "dependencies": {
     "@expo/webpack-config": "^18.0.1",
@@ -32,15 +31,11 @@
     "yup": "^1.1.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.21.8",
-    "@babel/preset-env": "^7.21.5",
-    "@babel/preset-typescript": "^7.21.5",
-    "@types/jest": "^29.5.1",
+    "@babel/core": "^7.20.0",
     "@types/react": "~18.0.14",
     "@types/react-datepicker": "^4.10.0",
     "@typescript-eslint/eslint-plugin": "^5.58.0",
     "@typescript-eslint/parser": "^5.58.0",
-    "babel-jest": "^29.5.0",
     "eslint": "^8.38.0",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-react": "^7.32.2",
