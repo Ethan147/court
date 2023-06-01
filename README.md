@@ -79,7 +79,8 @@ sudo chmod +x /usr/local/bin/dbmate
 
 ## Unit testing
 
-- all done via python unittest `python -m unittest`
+- backend: python unittest `python -m unittest`
+- frontend: jest test `npm test` from expo_app\.
 
 
 ## test coverage reports
