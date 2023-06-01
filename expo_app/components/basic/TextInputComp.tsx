@@ -6,7 +6,6 @@ import {
   View,
   StyleProp,
   ViewStyle,
-  Text,
 } from "react-native";
 import { TextInput } from "react-native-paper";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -30,7 +29,6 @@ const TextInputComp = ({
   error,
   secureTextEntry,
   passStyles,
-  hintMessage,
 }: {
   label?: string;
   value?: string;
@@ -44,9 +42,7 @@ const TextInputComp = ({
     textInputCompIconContainer?: StyleProp<ViewStyle>;
     textInputCompViewStyle?: StyleProp<ViewStyle>;
     textInputCompText?: StyleProp<ViewStyle>;
-    textInputCompHintMessage?: StyleProp<ViewStyle>;
   };
-  hintMessage?: string;
 }) => {
   const styles = {
     textInputCompOuterView: passStyles?.textInputCompOuterView || {},
@@ -54,7 +50,6 @@ const TextInputComp = ({
     textInputCompIconContainer: passStyles?.textInputCompIconContainer || {},
     textInputCompViewStyle: passStyles?.textInputCompViewStyle || {},
     textInputCompText: passStyles?.textInputCompText || {},
-    textInputCompHintMessage: passStyles?.textInputCompHintMessage || {},
   };
 
   const [showPassword, setShowPassword] = useState(false);
@@ -72,11 +67,13 @@ const TextInputComp = ({
           style={styles.textInputCompText}
           theme={customTheme}
           secureTextEntry={secureTextEntry && !showPassword}
+          testID="textInputComp"
         />
         {secureTextEntry && (
           <TouchableOpacity
             onPress={() => setShowPassword(!showPassword)}
             style={styles.textInputCompIconContainer}
+            testID="togglePasswordVisibility"
           >
             <MaterialIcons
               name={showPassword ? "visibility" : "visibility-off"}
@@ -86,9 +83,6 @@ const TextInputComp = ({
           </TouchableOpacity>
         )}
       </View>
-      {hintMessage && (
-        <Text style={styles.textInputCompHintMessage}>{hintMessage}</Text>
-      )}
     </View>
   );
 };
