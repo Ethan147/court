@@ -30,6 +30,7 @@ const ButtonComp: React.FC<ButtonCompProps> = ({
     <TouchableOpacity
       onPress={onPress}
       style={styles.buttonCompTouchableOpacity}
+      testID="buttonComp"
     >
       <Text style={styles.buttonCompText}>{text}</Text>
     </TouchableOpacity>
