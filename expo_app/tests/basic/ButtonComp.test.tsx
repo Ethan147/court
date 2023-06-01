@@ -22,4 +22,9 @@ describe("<ButtonComp />", () => {
     fireEvent.press(button);
     expect(onPressMock).toHaveBeenCalled();
   });
+
+  it("snapshot", () => {
+    const tree = render(<ButtonComp text="Test button" />).toJSON();
+    expect(tree).toMatchSnapshot();
+  });
 });
