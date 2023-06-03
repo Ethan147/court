@@ -67,6 +67,8 @@ describe("<TextInputComp />", () => {
     expect(onChange).toHaveBeenCalledWith("test value");
   });
 
+  // jest does not render and so cannot tell whether in the front end the text is displayed or hidden,
+  // it queries the inputs to the component and so will always be able to "see" the text
   it("secureTextEntry prop hides the text until 'show password' button is clicked", () => {
     const { getByTestId } = render(<TextInputComp secureTextEntry />);
     const input = getByTestId("textInputComp");
@@ -78,6 +80,7 @@ describe("<TextInputComp />", () => {
     fireEvent.press(showPasswordButton);
   });
 
+  // the same jest limitations keep this test from being complete, but some interaction is at least proven out
   it("secureTextEntry prop hides the text again when 'show password' button is clicked twice", () => {
     let secureTextEntry = true;
     const { getByTestId, rerender } = render(
@@ -86,10 +89,8 @@ describe("<TextInputComp />", () => {
     const input = getByTestId("textInputComp");
     const showPasswordButton = getByTestId("togglePasswordVisibility");
 
-    // Initially, the text should be hidden
     expect(input.props.secureTextEntry).toBe(true);
 
-    // After clicking the 'show password' button once, the text should be visible
     secureTextEntry = false;
     rerender(<TextInputComp secureTextEntry={secureTextEntry} />);
     expect(input.props.secureTextEntry).toBe(false);
