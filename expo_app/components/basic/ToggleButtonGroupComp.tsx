@@ -62,6 +62,7 @@ export const ToggleButtonGroupComp: React.FC<ToggleButtonGroupCompProps> = ({
         {buttons.map((buttonName) => (
           <TouchableOpacity
             key={buttonName}
+            testID="button"
             style={[
               styles.toggleButtonGroupCompButton,
               isSelected(buttonName) &&
