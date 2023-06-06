@@ -32,27 +32,95 @@ describe("<DatePickerComp />", () => {
     console.error = originalError; // restore console.error
   });
 
-  /*
-  describe('Web Platform', () => {
+  // TODO: seems like I can't backspace through the first entered character, need to revisit
+  // TODO: add text (and update code) so you can't enter things like 12/12/12120000 (currently allowed)
+  describe("Web Platform", () => {
+    const originalWarning = console.warn;
+    const originalError = console.error;
+
     beforeAll(() => {
-      Platform.OS = 'web';
+      Platform.OS = "web";
+
+      // mock console warn & error
+      console.warn = jest.fn();
+      console.error = jest.fn();
     });
 
-    it('displays the passed value', () => {
+    afterAll(() => {
+      // restore console
+      console.warn = originalWarning;
+      console.error = originalError;
+    });
+
+    it("displays the passed value", () => {
       const { getByDisplayValue } = render(<DatePickerComp {...props} />);
-      expect(getByDisplayValue('01/01/2022')).toBeDefined();
+      expect(getByDisplayValue("01/01/2022")).toBeDefined();
     });
 
-    it('calls onDateChange with the correct formatted date', () => {
+    it("calls onDateChange with the correct formatted date", () => {
       const { getByDisplayValue } = render(<DatePickerComp {...props} />);
-      const input = getByDisplayValue('01/01/2022');
-      fireEvent.changeText(input, '20012003');
-      expect(onDateChangeMock).toHaveBeenCalledWith('20/01/2003');
+      const input = getByDisplayValue("01/01/2022");
+      fireEvent.changeText(input, "20012003");
+      expect(onDateChangeMock).toHaveBeenCalledWith("20/01/2003");
     });
 
-    // More web tests go here...
+    test("handleWebDateChange should only allow numeric characters", () => {
+      const { getByTestId, queryByDisplayValue } = render(
+        <DatePickerComp
+          label="Test"
+          webFormatHint="mm/dd/yyyy"
+          value=""
+          onDateChange={onDateChangeMock}
+        />
+      );
+
+      const input = getByTestId("textInputComp");
+
+      // non-numeric values will not be displayed on the input
+      // non-valid entries will not call onDateChangeMock
+      fireEvent.changeText(input, "march");
+      expect(queryByDisplayValue("march")).toBeNull();
+      expect(onDateChangeMock).not.toHaveBeenCalled();
+
+      // special-characters will not be displayed on the input
+      // non-valid entries will not call onDateChangeMock
+      fireEvent.changeText(input, "!");
+      expect(queryByDisplayValue("!")).toBeNull();
+      expect(onDateChangeMock).not.toHaveBeenCalled();
+
+      // numeric values will be displayed on the input
+      // each valid adition will call
+      fireEvent.changeText(input, "1");
+      expect(onDateChangeMock).toHaveBeenCalledWith("1");
+      fireEvent.changeText(input, "2");
+      expect(onDateChangeMock).toHaveBeenCalledWith("2");
+    });
+
+    test("handleWebDateChange should add slashes at the correct positions", () => {
+      const { getByTestId } = render(
+        <DatePickerComp
+          label="Test"
+          webFormatHint="mm/dd/yyyy"
+          value=""
+          onDateChange={onDateChangeMock}
+        />
+      );
+
+      const input = getByTestId("textInputComp");
+
+      fireEvent.changeText(input, "0");
+      expect(onDateChangeMock).toHaveBeenCalledWith("0");
+
+      fireEvent.changeText(input, "01");
+      expect(onDateChangeMock).toHaveBeenCalledWith("01/");
+
+      fireEvent.changeText(input, "0101");
+      expect(onDateChangeMock).toHaveBeenCalledWith("01/01/");
+
+      fireEvent.changeText(input, "01012023");
+      expect(onDateChangeMock).toHaveBeenCalledWith("01/01/2023");
+    });
   });
-  */
 
   /*
   describe('Non-web Platforms', () => {

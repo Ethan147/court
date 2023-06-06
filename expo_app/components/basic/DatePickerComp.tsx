@@ -88,9 +88,12 @@ const DatePickerComp: React.FC<DatePickerCompProps> = ({
       newText = newText.slice(0, 5) + "/" + newText.slice(5);
     }
 
-    onDateChange(newText);
-    console.warn("A date has been picked: ", newText);
-    handleBlur();
+    // only call onDateChange and handleBlur if new unique numeric entry has been provided
+    if (newText !== value && /^[\d/]+$/.test(newText)) {
+      onDateChange(newText);
+      console.warn("A date has been picked: ", newText);
+      handleBlur();
+    }
   };
 
   if (Platform.OS === "web") {
