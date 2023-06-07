@@ -88,8 +88,18 @@ const DatePickerComp: React.FC<DatePickerCompProps> = ({
       newText = newText.slice(0, 5) + "/" + newText.slice(5);
     }
 
+    // disregard extra characters if length is more than 10 (mm/dd/yyyy format)
+    if (newText.length > 10) {
+      newText = newText.slice(0, 10);
+    }
+
+    // Handle empty text case to allow backspacing through the first element
+    if (text === "") {
+      onDateChange("");
+      handleBlur();
+    }
     // only call onDateChange and handleBlur if new unique numeric entry has been provided
-    if (newText !== value && /^[\d/]+$/.test(newText)) {
+    else if (newText !== value && /^[\d/]+$/.test(newText)) {
       onDateChange(newText);
       console.warn("A date has been picked: ", newText);
       handleBlur();
@@ -114,13 +124,18 @@ const DatePickerComp: React.FC<DatePickerCompProps> = ({
 
   return (
     <View style={styles.datePickerCompAppView}>
-      <Button title={buttonText} onPress={showDatePicker} />
+      <Button
+        title={buttonText}
+        onPress={showDatePicker}
+        testID="datePickerButton"
+      />
       <DateTimePickerModal
         isVisible={isDatePickerVisible}
         mode="date"
         onConfirm={handleConfirm}
         onCancel={hideDatePicker}
         style={styles.datePickerCompAppModal}
+        testID="dateTimePickerModal"
       />
     </View>
   );

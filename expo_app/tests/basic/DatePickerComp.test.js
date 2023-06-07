@@ -1,12 +1,10 @@
 import { render, fireEvent } from "@testing-library/react-native";
 import React from "react";
 import { Platform } from "react-native";
-import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 import DatePickerComp from "../../components/basic/DatePickerComp";
 
-jest.mock("react-native-modal-datetime-picker");
-
+// TODO: unsure if it's possible to test the date-modal aspect of this component
 describe("<DatePickerComp />", () => {
   const onDateChangeMock = jest.fn();
   const onBlurMock = jest.fn();
@@ -32,8 +30,11 @@ describe("<DatePickerComp />", () => {
     console.error = originalError; // restore console.error
   });
 
-  // TODO: seems like I can't backspace through the first entered character, need to revisit
-  // TODO: add text (and update code) so you can't enter things like 12/12/12120000 (currently allowed)
+  it("snapshot", () => {
+    const tree = render(<DatePickerComp {...props} />).toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+
   describe("Web Platform", () => {
     const originalWarning = console.warn;
     const originalError = console.error;
@@ -97,7 +98,7 @@ describe("<DatePickerComp />", () => {
     });
 
     test("handleWebDateChange should add slashes at the correct positions", () => {
-      const { getByTestId } = render(
+      const component = render(
         <DatePickerComp
           label="Test"
           webFormatHint="mm/dd/yyyy"
@@ -106,7 +107,7 @@ describe("<DatePickerComp />", () => {
         />
       );
 
-      const input = getByTestId("textInputComp");
+      let input = component.getByTestId("textInputComp");
 
       fireEvent.changeText(input, "0");
       expect(onDateChangeMock).toHaveBeenCalledWith("0");
@@ -119,31 +120,42 @@ describe("<DatePickerComp />", () => {
 
       fireEvent.changeText(input, "01012023");
       expect(onDateChangeMock).toHaveBeenCalledWith("01/01/2023");
+
+      fireEvent.changeText(input, "0101202311");
+      expect(onDateChangeMock).toHaveBeenCalledWith("01/01/2023");
+    });
+
+    test("handleWebDateChange should allow backspacing through the first digit", () => {
+      const onDateChange = jest.fn();
+
+      const { getByTestId } = render(
+        <DatePickerComp
+          label="Test"
+          webFormatHint="mm/dd/yyyy"
+          value=""
+          onDateChange={onDateChange}
+        />
+      );
+
+      const input = getByTestId("textInputComp");
+
+      fireEvent.changeText(input, "01012023");
+      expect(onDateChange).toHaveBeenCalledWith("01/01/2023");
+
+      // Start backspacing
+      fireEvent.changeText(input, "0101202");
+      expect(onDateChange).toHaveBeenCalledWith("01/01/202");
+
+      fireEvent.changeText(input, "010120");
+      expect(onDateChange).toHaveBeenCalledWith("01/01/20");
+
+      // ... continue backspacing ...
+
+      fireEvent.changeText(input, "0");
+      expect(onDateChange).toHaveBeenCalledWith("0");
+
+      fireEvent.changeText(input, ""); // Backspace through the first digit
+      expect(onDateChange).toHaveBeenCalledWith("");
     });
   });
-
-  /*
-  describe('Non-web Platforms', () => {
-    beforeAll(() => {
-      Platform.OS = 'ios'; // or 'android'
-    });
-
-    it('opens DateTimePickerModal on button press', () => {
-      const { getByText } = render(<DatePickerComp {...props} />);
-      const button = getByText('select Test Date');
-      fireEvent.press(button);
-      expect(DateTimePickerModal).toBeVisible();
-    });
-
-    it('calls handleConfirm when date is selected', () => {
-      const { getByText } = render(<DatePickerComp {...props} />);
-      const button = getByText('select Test Date');
-      fireEvent.press(button);
-      // you can mock the confirm action of the DateTimePickerModal here
-      // but as of the last update, there's no official way to do it using '@testing-library/react-native'
-    });
-
-    // More non-web tests go here...
-  });
-  */
 });
