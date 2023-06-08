@@ -10,4 +10,11 @@ module.exports = {
       "<rootDir>/__mocks__/fileMock.js",
     "\\.(css|less)$": "<rootDir>/__mocks__/styleMock.js",
   },
+  collectCoverageFrom: [
+    "**/*.{js,jsx,ts,tsx}",
+    "!**/node_modules/**",
+    "!**/coverage/**",
+    "!**/jest-setup.js", // Exclude jest setup file
+    "!**/__mocks__/**", // Exclude files in __mocks__ directory
+  ],
 };
