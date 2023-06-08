@@ -10,7 +10,6 @@ import {
 import { useNavigation, NavigationProp } from "@react-navigation/native";
 
 interface ViewPrivacyPolicyProps {
-  acceptTerms?: boolean;
   onPress?: () => void;
   passStyles?: {
     viewPrivacyPolicyView?: StyleProp<ViewStyle>;
