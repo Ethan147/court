@@ -16,5 +16,7 @@ module.exports = {
     "!**/coverage/**",
     "!**/jest-setup.js", // Exclude jest setup file
     "!**/__mocks__/**", // Exclude files in __mocks__ directory
+    "!babel.config.js", // Exclude babel config file
+    "!jest.config.js", // Exclude jest config file
   ],
 };
