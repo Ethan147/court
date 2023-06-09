@@ -1,13 +1,15 @@
-import React from "react";
-import {
-  ScrollView,
-  Text,
-  StyleProp,
-  ViewStyle,
-  TextStyle,
-} from "react-native";
+// Jest Snapshot v1, https://goo.gl/fbAQLP
 
-const policy = `1. Introduction
+exports[`PrivacyPolicy snapshot 1`] = `
+<RCTScrollView
+  style={{}}
+  testID="privacy-policy-scroll-view"
+>
+  <View>
+    <Text
+      style={{}}
+    >
+      1. Introduction
 We value your privacy and are committed to protecting your personal information. This Privacy Policy explains how we collect, use, store, and share your personal data when using our app. By using our app, you agree to the terms of this Privacy Policy.
 
 2. Collection of Personal Data
@@ -45,29 +47,8 @@ We may update this Privacy Policy from time to time. We will notify you of any s
 
 9. Contact Us
 If you have any questions or concerns regarding this Privacy Policy or our data practices, please contact us at [company email address].
+
+    </Text>
+  </View>
+</RCTScrollView>
 `;
-
-interface privacyPolicyProps {
-  passStyles?: {
-    privacyPolicyScrollView?: StyleProp<ViewStyle>;
-    privacyPolicyText?: StyleProp<TextStyle>;
-  };
-}
-
-const PrivacyPolicy: React.FC<privacyPolicyProps> = ({ passStyles }) => {
-  const styles = {
-    privacyPolicyScrollView: passStyles?.privacyPolicyScrollView || {},
-    privacyPolicyText: passStyles?.privacyPolicyText || {},
-  };
-
-  return (
-    <ScrollView
-      style={styles?.privacyPolicyScrollView}
-      testID="privacy-policy-scroll-view"
-    >
-      <Text style={styles?.privacyPolicyText}>{policy}</Text>
-    </ScrollView>
-  );
-};
-
-export default PrivacyPolicy;
