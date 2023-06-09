@@ -58,6 +58,7 @@ const AcceptTerms: React.FC<AcceptTermsProps> = ({
           onValueChange={handleSwitch}
           ios_backgroundColor={colors.setting}
           trackColor={{ false: colors.settingSelect, true: colors.accent }}
+          testID="switch"
         />
       </View>
       <View style={styles?.termsTextView}>
