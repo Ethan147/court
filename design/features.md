@@ -22,6 +22,7 @@
     - Browse list of player profiles in the user's area.
     - View detailed profile information, including sports interests, activity level, game stats, etc.
     - Player suggestions prioritized by skill level (relative to the user's) and activity on the app.
+    - Only players in your skill-region will be displayed, in limited quantity
 
 2. Schedule a Hit:
     - Invite other players to hit and schedule time for it.
@@ -73,6 +74,16 @@
 
 5. Tournaments:
     - Join local tournaments with matches scheduled on a week-to-week basis.
+
+6. Player search:
+    - Can search for any player & filter for player types
+
+7. Game Feedback:
+    - After game rate your opponent (in terms of how nice they were to play with etc)
+    - Comment box for strong aspects of opponents game
+
+8. Rating tracking
+    - Auto rating updates according to match / ladders / tournament results
 
 ## Post-MVP Features:
 
