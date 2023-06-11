@@ -3,7 +3,6 @@
 ## Basics:
 
 1. User Registration and Login:
-
     - Register with email and password.
     - Login with email and password.
     - Option to reset forgotten password.
@@ -55,6 +54,9 @@
 11. Settings:
     - Manage account settings, including profile visibility, notification preferences, etc.
 
+12. Friend Referral Program:
+    - To increase user base, a friend referral program could be implemented, where users get extra points or rewards for each friend who joins using their referral code.
+
 ## Premium Features:
 
 1. Subscription:
@@ -89,8 +91,17 @@
 5. Estimated Calorie Burn:
     - Enter height, weight, and gender to get an estimate of calories burned during solo practice or matches.
 
+6. Skill Improvement Tracker:
+    - Generated reports for each user of how their gameplay has changed and improved, according to their match history, playtime, and feedback from other players
+
 ## Post-Traction Features:
 
 1. Coaching and Lessons:
     - Provide a platform for certified trainers to offer lessons.
     - Users can express interest in group lessons, which can help coaches in organizing sessions with group scheduling and payment
+
+2. Booking System for Courts:
+    - If permissible, a feature that allows users to book courts in their local area directly from the app could provide added convenience
+
+3. Integration with Fitness apps:
+    - Integration with other fitness apps (Garmin, myfitnesspal, etc) for user convenience
