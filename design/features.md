@@ -98,6 +98,9 @@
     - NTPR, USTA, quizzes etc to be publicly accessible (with ads for the app thrown in)
     - Blog posts for SEO
 
+8. Winner-swag
+    - T-Shirts awarded to tournament winners, leaderboard winners, etc
+
 ## Post-Traction Features:
 
 1. Coaching and Lessons:
