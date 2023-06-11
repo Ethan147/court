@@ -94,6 +94,10 @@
 6. Skill Improvement Tracker:
     - Generated reports for each user of how their gameplay has changed and improved, according to their match history, playtime, and feedback from other players
 
+7. Web discoverability:
+    - NTPR, USTA, quizzes etc to be publicly accessible (with ads for the app thrown in)
+    - Blog posts for SEO
+
 ## Post-Traction Features:
 
 1. Coaching and Lessons:
