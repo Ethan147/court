@@ -123,3 +123,29 @@
 
 3. Integration with Fitness apps:
     - Integration with other fitness apps (Garmin, myfitnesspal, etc) for user convenience
+
+---
+
+# Page flow
+
+## Navigation
+
+All navigation will be done on the bottom-pane of the app. The following are organized from 1 (leftmost) to 6 (rightmost).
+
+1. Home Icon:
+    Takes users to their personalized dashboard where they can see upcoming hits, recent activity, new player suggestions, and more.
+
+2. Record Icon:
+    Leads users to the activity recording page where they can log different activities like a match or solo practice.
+
+3. Search Icon:
+    Leads to a screen with options to toggle between "People Search" and "Court Search".
+
+4. Events/Community Icon:
+    This icon takes users to a page where they can view and participate in tournaments, challenge ladders, view leaderboards, and other community events.
+
+5. Chat Icon:
+    Takes users to the in-app messaging platform where they can communicate with other players and discuss game details.
+
+6. Hamburger Menu Icon:
+    Positioned on the bottom-right corner. When tapped, a side drawer slides out with additional options like User Profile, User Settings, Skill Assessment, Notifications, Friend Referral Program, and Subscription options.
