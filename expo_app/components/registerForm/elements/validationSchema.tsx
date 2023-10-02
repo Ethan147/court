@@ -34,6 +34,9 @@ const validationSchema = Yup.object().shape({
       passReqText
     )
     .required("password is required"),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref("password")], "Passwords must match")
+    .required("Confirm password is required"),
   gender: Yup.string()
     .oneOf(["male", "female", "other"], "please select a gender")
     .required("gender is required"),

@@ -42,12 +42,18 @@ const RegisterForm = () => {
   const borderRad = 12;
   const textInputHeight = theme.font.size.large * 2.5;
 
-  // todo need to fix up mobile styling (gender selection appropriate size, etc)
-  // todo accept terms is not registering as selected, even when it is
+  // todo, pre-final pass
+  // todo, accept toggle is showing up as green-tinted instead of white-tinted
   // todo date selection stuff is a little weird, standardize
+
+  // todo, final pass
+  ///////////////////
+  // todo need to fix up mobile styling (gender selection appropriate size, etc)
   // todo should "please select your gender" be larger?
-  // todo password confirmation is not verifying against the first
   // todo clean up style names, remove irrelevant styling
+  // get to high 90% unit test coverage
+  // update all packages before moving onto the next thing
+
   const styles = StyleSheet.create({
     // RegisterForm styling
     container: {
