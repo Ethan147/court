@@ -40,7 +40,6 @@ const TextInputComp = ({
     textInputCompOuterView?: StyleProp<ViewStyle>;
     textInputCompTextContainer?: StyleProp<ViewStyle>;
     textInputCompIconContainer?: StyleProp<ViewStyle>;
-    textInputCompViewStyle?: StyleProp<ViewStyle>;
     textInputCompText?: StyleProp<ViewStyle>;
   };
 }) => {
@@ -48,7 +47,6 @@ const TextInputComp = ({
     textInputCompOuterView: passStyles?.textInputCompOuterView || {},
     textInputCompTextContainer: passStyles?.textInputCompTextContainer || {},
     textInputCompIconContainer: passStyles?.textInputCompIconContainer || {},
-    textInputCompViewStyle: passStyles?.textInputCompViewStyle || {},
     textInputCompText: passStyles?.textInputCompText || {},
   };
 

@@ -15,10 +15,10 @@ interface AcceptTermsProps {
   acceptTerms?: boolean;
   onPress?: () => void;
   passStyles?: {
-    termsSwitchOuterView?: StyleProp<ViewStyle>;
-    termsSwitchView?: StyleProp<ViewStyle>;
-    termsTextView?: StyleProp<ViewStyle>;
-    termsAgreeText?: StyleProp<TextStyle>;
+    acceptTermsSwitchOuterView?: StyleProp<ViewStyle>;
+    acceptTermsSwitchView?: StyleProp<ViewStyle>;
+    acceptTermsTextView?: StyleProp<ViewStyle>;
+    acceptTermsAgreeText?: StyleProp<TextStyle>;
   };
 }
 
@@ -30,10 +30,10 @@ const AcceptTerms: React.FC<AcceptTermsProps> = ({
   passStyles,
 }) => {
   const styles = {
-    termsSwitchOuterView: passStyles?.termsSwitchOuterView || {},
-    termsSwitchView: passStyles?.termsSwitchView || {},
-    termsTextView: passStyles?.termsTextView || {},
-    termsAgreeText: passStyles?.termsAgreeText || {},
+    acceptTermsSwitchOuterView: passStyles?.acceptTermsSwitchOuterView || {},
+    acceptTermsSwitchView: passStyles?.acceptTermsSwitchView || {},
+    acceptTermsTextView: passStyles?.acceptTermsTextView || {},
+    acceptTermsAgreeText: passStyles?.acceptTermsAgreeText || {},
   };
 
   const navigation = useNavigation<TermsNavigationProp>();
@@ -51,8 +51,8 @@ const AcceptTerms: React.FC<AcceptTermsProps> = ({
   };
 
   return (
-    <View style={styles?.termsSwitchOuterView}>
-      <View style={styles?.termsSwitchView}>
+    <View style={styles?.acceptTermsSwitchOuterView}>
+      <View style={styles?.acceptTermsSwitchView}>
         <Switch
           value={isAccepted}
           onValueChange={handleSwitch}
@@ -61,9 +61,9 @@ const AcceptTerms: React.FC<AcceptTermsProps> = ({
           testID="switch"
         />
       </View>
-      <View style={styles?.termsTextView}>
+      <View style={styles?.acceptTermsTextView}>
         <TouchableOpacity onPress={handlePress}>
-          <Text style={styles?.termsAgreeText}>
+          <Text style={styles?.acceptTermsAgreeText}>
             Agree to Terms and Conditions
           </Text>
         </TouchableOpacity>

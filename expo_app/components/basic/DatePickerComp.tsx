@@ -21,7 +21,6 @@ interface DatePickerCompProps {
     textInputCompOuterView?: StyleProp<ViewStyle>;
     textInputCompTextContainer?: StyleProp<ViewStyle>;
     textInputCompIconContainer?: StyleProp<ViewStyle>;
-    textInputCompViewStyle?: StyleProp<ViewStyle>;
     textInputCompText?: StyleProp<ViewStyle>;
   };
 }
@@ -45,7 +44,6 @@ const DatePickerComp: React.FC<DatePickerCompProps> = ({
     textInputCompOuterView: passStyles?.textInputCompOuterView || {},
     textInputCompTextContainer: passStyles?.textInputCompTextContainer || {},
     textInputCompIconContainer: passStyles?.textInputCompIconContainer || {},
-    textInputCompViewStyle: passStyles?.textInputCompViewStyle || {},
     textInputCompText: passStyles?.textInputCompText || {},
   };
 
@@ -68,7 +66,6 @@ const DatePickerComp: React.FC<DatePickerCompProps> = ({
   };
 
   const handleConfirm = (date: Date) => {
-    console.warn("A date has been picked: ", date);
     const formattedDate = date.toLocaleDateString();
     setDateValue(formattedDate);
     onDateChange(formattedDate);

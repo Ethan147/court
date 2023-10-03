@@ -10,7 +10,7 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { Formik, useFormik, FormikProvider } from "formik";
-import { LinearGradient } from "expo-linear-gradient";
+import { View } from "react-native";
 import colors from "../../utils/colors";
 import ToggleButtonGroupComp from "../basic/ToggleButtonGroupComp";
 import theme from "../../utils/theme";
@@ -42,15 +42,10 @@ const RegisterForm = () => {
   const borderRad = 12;
   const textInputHeight = theme.font.size.large * 2.5;
 
-  // todo, pre-final pass
-  // todo date selection stuff is a little weird, standardize
-  //  -- not sure if this one still applies, but look into it
-
   // todo, final pass
   ///////////////////
-  // todo need to fix up mobile styling (gender selection appropriate size, etc)
-  // todo should "please select your gender" be larger?
   // todo clean up style names, remove irrelevant styling
+  // -- in progress: this has almost been completed, just need some to confirm that final todo below
   // get to high 90% unit test coverage
   // update all packages before moving onto the next thing
 
@@ -70,14 +65,6 @@ const RegisterForm = () => {
       }),
       justifyContent: "center",
       alignItems: "center",
-    },
-    backgroundGradient: {
-      position: "absolute",
-      top: 0,
-      bottom: 0,
-      left: 0,
-      right: 0,
-      justifyContent: "center",
     },
     formInputViewContainerTop: {
       ...Platform.select({
@@ -413,30 +400,33 @@ const RegisterForm = () => {
     },
   });
 
+  // todo need to do a final pass here confirming that all the inner-group styles here are used
+  //  - check of "base" style area has already been completed
+
   // error styling
-  const passTextAddOnErrorTop = {
+  const passTextAddOnErrorTopStyles = {
     textAddOnContainerView: styles.formInputViewContainerTop,
     textAddOnTextView: styles.errorView,
     textAddOnText: styles.error,
   };
-  const passTextAddOnError = {
+  const passTextAddOnErrorStyles = {
     textAddOnContainerView: styles.formInputViewContainer,
     textAddOnTextView: styles.errorView,
     textAddOnText: styles.error,
   };
-  const passTextAddOnErrorTerms = {
+  const passTextAddOnErrorTermsStyles = {
     textAddOnTextView: styles.errorViewTerms,
     textAddOnText: styles.error,
   };
 
   // text hint styling
-  const passFormInputTextAddOnHint = {
+  const passFormInputTextAddOnHintStyles = {
     textAddOnTextView: styles.hintView,
     textAddOnText: styles.hint,
   };
 
   // component styling
-  const passTextInputStylesTop = {
+  const passTextInputTopStyles = {
     textInputCompContainer: styles.textInputCompOuterView,
     textInputCompText: styles.textInputCompText,
     textInputCompTextContainer: styles.textInputCompTextContainer,
@@ -470,7 +460,6 @@ const RegisterForm = () => {
     datePickerCompAppModal: styles.datePickerCompAppModal,
     textInputCompTextContainer: styles.textInputCompTextContainer,
     textInputCompIconContainer: styles.textInputCompIconContainer,
-    textInputCompViewStyle: styles.textInputCompViewStyle,
     textInputCompText: styles.textInputCompText,
   };
   const passAddressInputStyles = {
@@ -479,9 +468,9 @@ const RegisterForm = () => {
       styles.addressInputCompGooglePlacesAutoCompete,
   };
   const passAcceptTermsStyles = {
-    termsSwitchOuterView: styles.termsSwitchOuterView,
-    termsSwitchView: styles.termsSwitchView,
-    termsAgreeText: styles.termsAgreeText,
+    acceptTermsSwitchOuterView: styles.termsSwitchOuterView,
+    acceptTermsSwitchView: styles.termsSwitchView,
+    acceptTermsAgreeText: styles.termsAgreeText,
   };
   const passViewPrivacyPolicyStyles = {
     viewPrivacyPolicyView: styles.viewPrivacyPolicyView,
@@ -531,12 +520,7 @@ const RegisterForm = () => {
   };
 
   return (
-    <LinearGradient
-      colors={[colors.primary, colors.primary]}
-      style={styles.backgroundGradient}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}
-    >
+    <View style={{ backgroundColor: colors.primary }}>
       <FormikProvider value={formik}>
         <ScrollView
           contentContainerStyle={styles.container}
@@ -552,12 +536,12 @@ const RegisterForm = () => {
                 onChangeText={formik.handleChange("firstName")}
                 onBlur={handleBlurOnlyIfNotEmpty("firstName")}
                 error={!!formik.touched.firstName && !!formik.errors.firstName}
-                passStyles={passTextInputStylesTop}
+                passStyles={passTextInputTopStyles}
               />
             }
             value={formik.errors.firstName}
             display={!!formik.touched.firstName && !!formik.errors.firstName}
-            passStyles={passTextAddOnErrorTop}
+            passStyles={passTextAddOnErrorTopStyles}
           />
           {/*Last name entry*/}
           <TextAddOn
@@ -573,7 +557,7 @@ const RegisterForm = () => {
             }
             value={formik.errors.lastName}
             display={!!formik.touched.lastName && !!formik.errors.lastName}
-            passStyles={passTextAddOnError}
+            passStyles={passTextAddOnErrorStyles}
           />
           {/*Email entry*/}
           <TextAddOn
@@ -589,7 +573,7 @@ const RegisterForm = () => {
             }
             value={formik.errors.email}
             display={!!formik.touched.email && !!formik.errors.email}
-            passStyles={passTextAddOnError}
+            passStyles={passTextAddOnErrorStyles}
           />
           {/*Gender entry*/}
           <TextAddOn
@@ -603,7 +587,7 @@ const RegisterForm = () => {
             }
             value={formik.errors.gender}
             display={!!formik.touched.gender && !!formik.errors.gender}
-            passStyles={passTextAddOnError}
+            passStyles={passTextAddOnErrorStyles}
           />
           {/*Password entry*/}
           <TextAddOn
@@ -624,12 +608,12 @@ const RegisterForm = () => {
                 }
                 value={passReqText}
                 display={true}
-                passStyles={passFormInputTextAddOnHint}
+                passStyles={passFormInputTextAddOnHintStyles}
               />
             }
             value={"password is invalid"}
             display={!!formik.touched.password && !!formik.errors.password}
-            passStyles={passTextAddOnError}
+            passStyles={passTextAddOnErrorStyles}
           />
           {/*Password confirmation entry*/}
           {formik.values.password.length > 0 ? (
@@ -653,7 +637,7 @@ const RegisterForm = () => {
                 !!formik.touched.confirmPassword &&
                 !!formik.errors.confirmPassword
               }
-              passStyles={passTextAddOnError}
+              passStyles={passTextAddOnErrorStyles}
             />
           ) : null}
           {/*dob entry*/}
@@ -668,7 +652,6 @@ const RegisterForm = () => {
                     onDateChange={(date) =>
                       formik.setFieldValue("birthdate", date)
                     }
-                    // onBlur={handleBlurOnlyIfNotEmpty("birthdate")}
                     error={
                       !!formik.touched.birthdate && !!formik.errors.birthdate
                     }
@@ -679,12 +662,12 @@ const RegisterForm = () => {
                   "participants must be at least " + minAge + " years of age"
                 }
                 display={true}
-                passStyles={passFormInputTextAddOnHint}
+                passStyles={passFormInputTextAddOnHintStyles}
               />
             }
             value={formik.errors.birthdate}
             display={!!formik.touched.birthdate && !!formik.errors.birthdate}
-            passStyles={passTextAddOnError}
+            passStyles={passTextAddOnErrorStyles}
           />
           {/*Address entry*/}
           <TextAddOn
@@ -707,19 +690,19 @@ const RegisterForm = () => {
                       "Your address will be used solely to match you with nearby tennis, racquetball, and/or pickleball partners."
                     }
                     display={true}
-                    passStyles={passFormInputTextAddOnHint}
+                    passStyles={passFormInputTextAddOnHintStyles}
                   />
                 }
                 value={
                   "We're committed to helping you find the perfect match within your community!"
                 }
                 display={true}
-                passStyles={passFormInputTextAddOnHint}
+                passStyles={passFormInputTextAddOnHintStyles}
               />
             }
             value={formik.errors.address}
             display={!!formik.touched.address && !!formik.errors.address}
-            passStyles={passTextAddOnError}
+            passStyles={passTextAddOnErrorStyles}
           />
           {/*Terms, Private Policy, Submit*/}
           <TextAddOn
@@ -739,7 +722,7 @@ const RegisterForm = () => {
             display={
               !!formik.touched.termsAccepted && !!formik.errors.termsAccepted
             }
-            passStyles={passTextAddOnErrorTerms}
+            passStyles={passTextAddOnErrorTermsStyles}
           />
           <ViewPrivacyPolicy passStyles={passViewPrivacyPolicyStyles} />
           <ButtonComp
@@ -749,7 +732,7 @@ const RegisterForm = () => {
           />
         </ScrollView>
       </FormikProvider>
-    </LinearGradient>
+    </View>
   );
 };
 

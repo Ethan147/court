@@ -24,6 +24,12 @@ const AddressInputComp: React.FC<AddressInputCompProps> = ({
 
   return (
     <View style={styles.addressInputCompViewContainer}>
+      {/* todo on mobile interacting with this raises an error message
+      "
+        VirtualizedLists should never be nested inside plain ScrollViews with the same orientation
+        because it can break windowing and other functionality - use another
+        VirtualizedList-backed container instead.
+      " */}
       <GooglePlacesAutocomplete
         placeholder="address"
         onPress={(data, details = null) => {
