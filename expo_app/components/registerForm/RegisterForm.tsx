@@ -43,8 +43,8 @@ const RegisterForm = () => {
   const textInputHeight = theme.font.size.large * 2.5;
 
   // todo, pre-final pass
-  // todo, accept toggle is showing up as green-tinted instead of white-tinted
   // todo date selection stuff is a little weird, standardize
+  //  -- not sure if this one still applies, but look into it
 
   // todo, final pass
   ///////////////////
