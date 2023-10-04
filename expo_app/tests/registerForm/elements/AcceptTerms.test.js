@@ -10,6 +10,10 @@ jest.mock("@react-navigation/native", () => ({
   useNavigation: () => mockNavigation,
 }));
 
+jest.mock("react-native-google-places-autocomplete", () => ({
+  GooglePlacesAutocomplete: jest.fn(() => null),
+}));
+
 describe("AcceptTerms", () => {
   it("renders correctly", () => {
     const { getByText } = render(<AcceptTerms />);

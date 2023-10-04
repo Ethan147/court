@@ -41,7 +41,7 @@ const validationSchema = Yup.object().shape({
     .oneOf(["male", "female", "other"], "please select a gender")
     .required("gender is required"),
   age: Yup.number()
-    .min(14, "must be at least 14 years old")
+    .min(minAge, "must be at least 16 years old")
     .required("age is required"),
   birthdate: Yup.string()
     .matches(

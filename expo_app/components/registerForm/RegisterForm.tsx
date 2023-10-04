@@ -44,8 +44,6 @@ const RegisterForm = () => {
 
   // todo, final pass
   ///////////////////
-  // todo clean up style names, remove irrelevant styling
-  // -- in progress: this has almost been completed, just need some to confirm that final todo below
   // get to high 90% unit test coverage
   // update all packages before moving onto the next thing
 
@@ -156,7 +154,6 @@ const RegisterForm = () => {
       fontSize: theme.font.size.small,
     },
     // TextInputComp styling
-    textInputCompOuterView: {},
     textInputCompTextContainer: {
       ...Platform.select({
         web: {
@@ -190,10 +187,6 @@ const RegisterForm = () => {
       top: 0,
       bottom: 0,
       justifyContent: "center",
-    },
-    textInputCompViewStyle: {
-      flexDirection: "row",
-      alignItems: "center",
     },
     textInputCompText: {
       ...Platform.select({
@@ -400,9 +393,6 @@ const RegisterForm = () => {
     },
   });
 
-  // todo need to do a final pass here confirming that all the inner-group styles here are used
-  //  - check of "base" style area has already been completed
-
   // error styling
   const passTextAddOnErrorTopStyles = {
     textAddOnContainerView: styles.formInputViewContainerTop,
@@ -427,20 +417,14 @@ const RegisterForm = () => {
 
   // component styling
   const passTextInputTopStyles = {
-    textInputCompContainer: styles.textInputCompOuterView,
-    textInputCompText: styles.textInputCompText,
     textInputCompTextContainer: styles.textInputCompTextContainer,
     textInputCompIconContainer: styles.textInputCompIconContainer,
-    textInputCompViewStyle: styles.textInputCompViewStyle,
+    textInputCompText: styles.textInputCompText,
   };
   const passTextInputStyles = {
-    formInputViewContainer: styles.formInputViewContainer,
-    formInputViewErrorText: styles.error,
-    textInputCompContainer: styles.textInputCompOuterView,
-    textInputCompText: styles.textInputCompText,
     textInputCompTextContainer: styles.textInputCompTextContainer,
     textInputCompIconContainer: styles.textInputCompIconContainer,
-    textInputCompViewStyle: styles.textInputCompViewStyle,
+    textInputCompText: styles.textInputCompText,
   };
   const passToggleButtonGroupCompStyles = {
     toggleButtonGroupCompContainer: styles.toggleButtonGroupCompContainer,
