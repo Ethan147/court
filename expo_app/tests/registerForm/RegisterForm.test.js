@@ -1,4 +1,4 @@
-import { render, fireEvent, waitFor } from "@testing-library/react-native";
+import { render, fireEvent, waitFor, act } from "@testing-library/react-native";
 import React from "react";
 
 import RegisterForm from "../../components/registerForm/RegisterForm";
@@ -17,50 +17,125 @@ jest.mock("../../components/basic/AddressInputComp", () => {
 });
 
 describe("RegisterForm", () => {
-  // Rendering test
   it("renders correctly", () => {
     const { getByText } = render(<RegisterForm />);
     expect(getByText("Submit")).toBeTruthy();
   });
 
-  // todo continue to fill out here
-  // todo, make sure to remember the snapshot aspect
-  /*
-
-  // Form interaction and validation tests
-  it("shows error messages when fields are left blank and form is submitted", async () => {
+  it("shows error for first name when blank & submitted", async () => {
     const { getByText, queryByText } = render(<RegisterForm />);
     fireEvent.press(getByText("Submit"));
 
     await waitFor(() => {
       expect(queryByText("first name is required")).toBeTruthy();
-      expect(queryByText("last name is required")).toBeTruthy();
-      expect(queryByText("email is required")).toBeTruthy();
-      // ... Add checks for other fields' error messages
     });
   });
 
-  it("accepts valid form data", () => {
-    const { getByLabelText, getByText } = render(<RegisterForm />);
-    fireEvent.changeText(getByLabelText("first name"), "John");
-    fireEvent.changeText(getByLabelText("last name"), "Doe");
-    fireEvent.changeText(getByLabelText("email"), "john.doe@example.com");
-    // ... Input other fields
+  it("shows error for last name when blank & submitted", async () => {
+    const { getByText, queryByText } = render(<RegisterForm />);
     fireEvent.press(getByText("Submit"));
 
-    // This would depend on what happens after successful submission
-    // For example:
-    // expect(queryByText("Registration successful")).toBeTruthy();
+    await waitFor(() => {
+      expect(queryByText("last name is required")).toBeTruthy();
+    });
   });
 
-  // ... Other tests, such as checking validation for each specific field, testing component behaviors, etc.
+  it("shows error for email when blank & submitted", async () => {
+    const { getByText, queryByText } = render(<RegisterForm />);
+    fireEvent.press(getByText("Submit"));
 
-  it("displays hint for password requirements", () => {
+    await waitFor(() => {
+      expect(queryByText("email is required")).toBeTruthy();
+    });
+  });
+
+  it("shows error for password when blank & submitted", async () => {
+    const { getByText, queryByText } = render(<RegisterForm />);
+    fireEvent.press(getByText("Submit"));
+
+    await waitFor(() => {
+      expect(queryByText("password is invalid")).toBeTruthy();
+    });
+  });
+
+  it("shows error for password when blank & submitted", async () => {
+    const { getByText, queryByText } = render(<RegisterForm />);
+    fireEvent.press(getByText("Submit"));
+
+    await waitFor(() => {
+      expect(queryByText("confirm password is required")).toBeFalsy();
+    });
+  });
+
+  it("shows error message when password is provided but confirm password is left blank", async () => {
+    const { getAllByTestId, getByText, queryByText } = render(<RegisterForm />);
+
+    // order of text inputs is: first name, last name, email, password, confirm password
+    const textInputs = getAllByTestId("textInputComp");
+    const passwordInput = textInputs[3];
+
+    // confirm password is only displayed when a first password has been supplied
+    fireEvent.changeText(passwordInput, "ValidP@ssword1");
+    fireEvent.press(getByText("Submit"));
+
+    await waitFor(() => {
+      expect(queryByText("confirm password is required")).toBeTruthy();
+    });
+  });
+
+  it("shows error for address when blank & submitted", async () => {
+    const { getByText, queryByText } = render(<RegisterForm />);
+    fireEvent.press(getByText("Submit"));
+
+    await waitFor(() => {
+      expect(queryByText("address is required")).toBeTruthy();
+    });
+  });
+
+  it("shows error for date of birth when blank & submitted", async () => {
+    const { getByText, queryByText } = render(<RegisterForm />);
+    fireEvent.press(getByText("Submit"));
+
+    await waitFor(() => {
+      expect(queryByText("date of birth is required")).toBeTruthy();
+    });
+  });
+
+  it("shows error for accept terms when blank & submitted", async () => {
+    const { getByText, queryByText } = render(<RegisterForm />);
+    fireEvent.press(getByText("Submit"));
+
+    await waitFor(() => {
+      expect(
+        queryByText("you must accept the terms and conditions")
+      ).toBeTruthy();
+    });
+  });
+
+  it("displays input hints", () => {
     const { getByText } = render(<RegisterForm />);
-    expect(getByText(/password must be 8+ characters/)).toBeTruthy();
+    expect(
+      getByText(
+        "password must be 8+ characters with at least 1 uppercase, 1 lowercase, 1 number, and 1 special character"
+      )
+    ).toBeTruthy();
+    expect(
+      getByText("participants must be at least 16 years of age")
+    ).toBeTruthy();
+    expect(
+      getByText(
+        "Your address will be used solely to match you with nearby tennis, racquetball, and/or pickleball partners."
+      )
+    ).toBeTruthy();
+    expect(
+      getByText(
+        "We're committed to helping you find the perfect match within your community!"
+      )
+    ).toBeTruthy();
   });
 
-  // ... More tests as required
-
-  */
+  it("snapshot", () => {
+    const tree = render(<RegisterForm />).toJSON();
+    expect(tree).toMatchSnapshot();
+  });
 });

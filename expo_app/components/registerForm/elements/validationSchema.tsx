@@ -36,7 +36,7 @@ const validationSchema = Yup.object().shape({
     .required("password is required"),
   confirmPassword: Yup.string()
     .oneOf([Yup.ref("password")], "Passwords must match")
-    .required("Confirm password is required"),
+    .required("confirm password is required"),
   gender: Yup.string()
     .oneOf(["male", "female", "other"], "please select a gender")
     .required("gender is required"),
@@ -48,7 +48,7 @@ const validationSchema = Yup.object().shape({
       /^(0[1-9]|1[0-2])\/(0[1-9]|1[0-9]|2[0-9]|3[01])\/(19|20)\d\d$/,
       "Date of birth must be in the format mm/dd/yyyy"
     )
-    .required("Date of birth is required")
+    .required("date of birth is required")
     .test("minimum-age", "You must be at least 16 years old", function (value) {
       const birthdate = new Date(value);
       return birthdate <= minimumAgeDate;
@@ -56,7 +56,7 @@ const validationSchema = Yup.object().shape({
   address: Yup.string().required("address is required"),
   termsAccepted: Yup.bool().oneOf(
     [true],
-    "You must accept the terms and conditions"
+    "you must accept the terms and conditions"
   ),
 });
 
