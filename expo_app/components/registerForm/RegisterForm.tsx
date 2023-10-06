@@ -44,7 +44,6 @@ const RegisterForm = () => {
 
   // todo, final pass
   ///////////////////
-  // get to high 90% unit test coverage
   // update all packages before moving onto the next thing
 
   const styles = StyleSheet.create({

@@ -39,12 +39,7 @@ export default function App() {
     },
   });
 
-  const privacyPolicyStyles = {
-    privacyPolicyScrollView: styles.termsView,
-    privacyPolicyText: styles.termsText,
-  };
-
-  const termsCondStyles = {
+  const disclaimerStyles = {
     privacyPolicyScrollView: styles.termsView,
     privacyPolicyText: styles.termsText,
   };
@@ -62,13 +57,13 @@ export default function App() {
             name="TermsAndConditions"
             options={{ title: "Terms and Conditions" }}
             children={() => (
-              <TermsAndConditions passStyles={privacyPolicyStyles} />
+              <TermsAndConditions passStyles={disclaimerStyles} />
             )}
           />
           <Stack.Screen
             name="PrivacyPolicy"
             options={{ title: "Privacy Policy" }}
-            children={() => <PrivacyPolicy passStyles={privacyPolicyStyles} />}
+            children={() => <PrivacyPolicy passStyles={disclaimerStyles} />}
           />
         </Stack.Navigator>
       </NavigationContainer>

@@ -1,4 +1,4 @@
-import { render, fireEvent, waitFor, act } from "@testing-library/react-native";
+import { render, fireEvent, waitFor } from "@testing-library/react-native";
 import React from "react";
 
 import RegisterForm from "../../components/registerForm/RegisterForm";
@@ -17,6 +17,12 @@ jest.mock("../../components/basic/AddressInputComp", () => {
 });
 
 describe("RegisterForm", () => {
+  /*
+    Note:
+    we cannot effectively test things like formik's handling of blur, scrolling behavior, etc
+    because that requires rendering, which is not something that our testing environment is currently capable of.
+  */
+
   it("renders correctly", () => {
     const { getByText } = render(<RegisterForm />);
     expect(getByText("Submit")).toBeTruthy();
