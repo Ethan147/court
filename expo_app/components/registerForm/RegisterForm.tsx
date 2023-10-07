@@ -42,10 +42,6 @@ const RegisterForm = () => {
   const borderRad = 12;
   const textInputHeight = theme.font.size.large * 2.5;
 
-  // todo, final pass
-  ///////////////////
-  // update all packages before moving onto the next thing
-
   const styles = StyleSheet.create({
     // RegisterForm styling
     container: {
