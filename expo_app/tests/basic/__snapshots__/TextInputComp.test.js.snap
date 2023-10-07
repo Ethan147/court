@@ -1,0 +1,102 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<TextInputComp /> snapshot 1`] = `
+<View
+  style={{}}
+>
+  <View
+    style={{}}
+  >
+    <View
+      style={
+        [
+          {
+            "backgroundColor": "rgb(228, 228, 228)",
+            "borderTopLeftRadius": 4,
+            "borderTopRightRadius": 4,
+          },
+          {},
+        ]
+      }
+    >
+      <View
+        collapsable={false}
+        style={
+          {
+            "backgroundColor": "rgba(0, 0, 0, 0.26)",
+            "bottom": 0,
+            "height": 2,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "transform": [
+              {
+                "scaleY": 0.5,
+              },
+            ],
+            "zIndex": 1,
+          }
+        }
+      />
+      <View
+        style={
+          [
+            {
+              "paddingBottom": 0,
+              "paddingTop": 0,
+            },
+            {
+              "minHeight": 64,
+            },
+          ]
+        }
+      >
+        <TextInput
+          editable={true}
+          maxFontSizeMultiplier={1.5}
+          multiline={false}
+          onBlur={[Function]}
+          onChangeText={[Function]}
+          onFocus={[Function]}
+          placeholderTextColor="#333333"
+          selectionColor="#40916C"
+          style={
+            [
+              {
+                "flexGrow": 1,
+                "margin": 0,
+              },
+              {
+                "paddingLeft": 12,
+                "paddingRight": 12,
+              },
+              {
+                "height": 64,
+              },
+              {
+                "paddingBottom": 0,
+                "paddingTop": 0,
+              },
+              {
+                "color": "#333333",
+                "fontFamily": "System",
+                "fontSize": 16,
+                "fontVariant": undefined,
+                "fontWeight": undefined,
+                "textAlign": "left",
+                "textAlignVertical": "center",
+              },
+              false,
+              [
+                {},
+              ],
+            ]
+          }
+          testID="textInputComp"
+          underlineColorAndroid="transparent"
+        />
+      </View>
+    </View>
+  </View>
+</View>
+`;

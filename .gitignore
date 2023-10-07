@@ -72,3 +72,6 @@ expo_app/.DS_Store
 
 # Temporary files created by Metro to check the health of the file watcher
 expo_app/.metro-health-check*
+
+# Coverage report files
+expo_app/coverage/

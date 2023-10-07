@@ -1,0 +1,78 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AcceptTerms snapshot 1`] = `
+<View
+  style={{}}
+>
+  <View
+    style={{}}
+  >
+    <RCTSwitch
+      accessibilityRole="switch"
+      onChange={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      onTintColor="#FFD700"
+      style={
+        [
+          {
+            "height": 31,
+            "width": 51,
+          },
+          {
+            "backgroundColor": "#F4EDE6",
+            "borderRadius": 16,
+          },
+        ]
+      }
+      testID="switch"
+      tintColor="#B3B3B3"
+      value={false}
+    />
+  </View>
+  <View
+    style={{}}
+  >
+    <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "opacity": 1,
+        }
+      }
+    >
+      <Text
+        style={{}}
+      >
+        Agree to Terms and Conditions
+      </Text>
+    </View>
+  </View>
+</View>
+`;

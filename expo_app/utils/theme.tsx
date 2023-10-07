@@ -19,6 +19,13 @@ const theme = {
     background: colors.background,
     error: colors.error,
   },
+  font: {
+    size: {
+      small: 14,
+      medium: 16,
+      large: 24,
+    },
+  },
 };
 
 export default theme;
