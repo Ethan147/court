@@ -6,12 +6,24 @@ Resources:
   HelloWorldFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: court/
-      Handler: app.lambda_hello
+      CodeUri: court/lambdas/
+      Handler: user.lambda_hello
       Runtime: python3.9
       Events:
         HelloWorld:
           Type: Api
           Properties:
             Path: /hello
+            Method: GET
+  RegisterFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: court/lambdas/
+      Handler: user.lambda_register
+      Runtime: python3.9
+      Events:
+        HelloWorld:
+          Type: Api
+          Properties:
+            Path: /register
             Method: GET

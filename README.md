@@ -92,6 +92,7 @@ Coverage reports must be run manually.
 
 ## lambdas
 `aws sso login --profile <profile_name>`
+e.g. `aws sso login --profile emiller`
 
 - to run locally
     - in one terminal run `sam local start-api --profile <profile>`
