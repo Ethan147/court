@@ -52,11 +52,11 @@ function init_env_test {
             - `sudo chmod +x /usr/local/bin/docker-credential-secretservice`
 
 - Bring up the docker container
-    1. `docker pull postgres`
+    1. `docker pull postgis/postgis`
     2. spring up docker container
 
 ```
-docker run -d --name db_court -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=court -p 5432:5432 postgres
+docker run -d --name db_court -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=court -p 5432:5432 postgis/postgis
 ```
 
 - Connect to the running instance as needed

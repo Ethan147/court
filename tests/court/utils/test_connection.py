@@ -14,31 +14,31 @@ class TestConnection(unittest.TestCase):
         with CursorTest() as curs:
             curs.execute(
                 """
-                insert into public.account
-                    (first_name, last_name, tennis, pickleball, racquetball)
+                insert into public.user_account
+                    (cognito_user_id, first_name, last_name, email, gender_category, dob, created_at)
                 values
-                    ('first', 'd1990638-e2e1-4d66-aaaa-424349bfeabd', true, false, false);
+                    (42, 'first', 'last', 'email@example.com', 'male', '2000-01-01', now());
                 """
             )
             curs.execute(
                 """
-                select first_name, last_name, tennis, pickleball, racquetball
-                from public.account
-                where first_name = 'first' and last_name = 'd1990638-e2e1-4d66-aaaa-424349bfeabd'
+                select first_name, last_name
+                from public.user_account
+                where first_name = 'first' and last_name = 'last'
                 """
                 )
             account_entry = curs.fetchall()
             self.assertEqual(
                 account_entry,
-                [("first", "d1990638-e2e1-4d66-aaaa-424349bfeabd", True, False, False)]
+                [("first", "last")]
             )
 
         # Confirm that CursorTest data does not persist
         with Cursor() as curs:
             curs.execute(
                 """
-                select * from public.account
-                where first_name = 'first' and last_name = 'd1990638-e2e1-4d66-aaaa-424349bfeabd'
+                select * from public.user_account
+                where first_name = 'first' and last_name = 'last'
                 """
                 )
             account_entry = curs.fetchall()
@@ -68,7 +68,7 @@ class TestConnection(unittest.TestCase):
             )
             tables = curs.fetchall()
 
-        self.assertEqual(tables, [('schema_migrations',)])
+        self.assertEqual(tables, [('geography_columns',), ('geometry_columns',), ('spatial_ref_sys',), ('schema_migrations',)])
 
         # After a full spin-up, the account tables exists
         for _ in range(sql_migration_count):
@@ -84,5 +84,5 @@ class TestConnection(unittest.TestCase):
             ("schema_migrations",) in tables
         )
         self.assertTrue(
-            ("account",) in tables
+            ("user_account",) in tables
         )

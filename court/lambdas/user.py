@@ -38,6 +38,7 @@ def validate_all_fields(body: Dict[str, Any]) -> Tuple[bool, str]:
 
     return True, ""
 
+# TODO: this should also include consent to terms and conditions as well as what version those terms & conditions are
 def lambda_register(event: Dict, _: Any) -> Dict[str, Any]:
     """
     API endpoint for user signups
