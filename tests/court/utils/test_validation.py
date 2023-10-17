@@ -1,5 +1,6 @@
 import unittest
 
+from court.utils.db import CursorRollback
 from court.utils.validation import (validate_address, validate_age,
                                     validate_birthdate, validate_email,
                                     validate_gender, validate_name,
@@ -44,5 +45,10 @@ class TestValidationFunctions(unittest.TestCase):
         self.assertFalse(validate_address(123))  # type: ignore
 
     def test_validate_terms_accepted(self) -> None:
-        self.assertTrue(validate_terms_accepted(True))
-        self.assertFalse(validate_terms_accepted(False))
+        with CursorRollback() as curs:
+            curs.execute("""
+                insert into public.terms_and_conditions (version, terms_text, created_at)
+                values ('x.x.x', 'test', now())
+            """)
+            self.assertTrue(validate_terms_accepted('x.x.x'))
+            self.assertFalse(validate_terms_accepted('anything else'))

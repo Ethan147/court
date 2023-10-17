@@ -1,6 +1,8 @@
 import re
 from datetime import datetime
 
+from court.utils.db import CursorRollback
+
 MIN_AGE = 16
 
 def validate_name(name: str) -> bool:
@@ -32,5 +34,11 @@ def validate_birthdate(birthdate: str) -> bool:
 def validate_address(address: str) -> bool:
     return type(address) is str
 
-def validate_terms_accepted(terms_accepted: bool) -> bool:
-    return terms_accepted
+def validate_terms_accepted(terms_consent_version: str) -> bool:
+    with CursorRollback() as curs:
+        curs.execute(
+            "select version from public.terms_and_conditions order by created_at desc"
+            )
+        most_recent_terms_version = curs.fetchone()
+        raise ValueError(most_recent_terms_version)
+        return most_recent_terms_version == terms_consent_version

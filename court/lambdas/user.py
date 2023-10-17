@@ -9,7 +9,7 @@ from court.utils.db import CursorCommit, CursorRollback
 
 
 def validate_all_fields(body: Dict[str, Any]) -> Tuple[bool, str]:
-    required_fields = ["first_name", "last_name", "email", "gender", "password", "dob", "address", "consent"]
+    required_fields = ["first_name", "last_name", "email", "gender", "password", "dob", "address", "terms_consent_version"]
 
     for field in required_fields:
         if field not in body:
@@ -33,12 +33,11 @@ def validate_all_fields(body: Dict[str, Any]) -> Tuple[bool, str]:
     if not valid.validate_address(body['address']):
         return False, "Invalid address"
 
-    if not valid.validate_terms_accepted(body['consent']):
-        return False, "Consent must be accepted"
+    if not valid.validate_terms_accepted(body['terms_consent_version']):
+        return False, "Most recent terms and condition must be accepted"
 
     return True, ""
 
-# TODO: this should also include consent to terms and conditions as well as what version those terms & conditions are
 def lambda_register(event: Dict, _: Any) -> Dict[str, Any]:
     """
     API endpoint for user signups
@@ -64,7 +63,7 @@ def lambda_register(event: Dict, _: Any) -> Dict[str, Any]:
             INSERT INTO user_characteristics (first_name, last_name, email, gender, dob, address, consent, cognito_user_id)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
             """
-            values = (body["first_name"], body["last_name"], body["email"], body["gender"], body["dob"], body["address"], body["consent"], cognito_user_id)
+            values = (body["first_name"], body["last_name"], body["email"], body["gender"], body["dob"], body["address"], body["terms_consent_version"], cognito_user_id)
             curs.execute(query, values)
 
     except Error as e:
