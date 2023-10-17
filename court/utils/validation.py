@@ -39,6 +39,5 @@ def validate_terms_accepted(terms_consent_version: str) -> bool:
         curs.execute(
             "select version from public.terms_and_conditions order by created_at desc"
             )
-        most_recent_terms_version = curs.fetchone()
-        raise ValueError(most_recent_terms_version)
+        most_recent_terms_version = curs.fetchone()[0]
         return most_recent_terms_version == terms_consent_version

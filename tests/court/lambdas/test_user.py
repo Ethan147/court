@@ -3,6 +3,7 @@ import unittest
 from typing import Any, Dict, List
 
 from court.lambdas.user import lambda_register, validate_all_fields
+from court.utils.db import CursorCommit
 
 
 def _testing_body(missing_headers: List[str]) -> Dict[str, Any]:
@@ -14,7 +15,7 @@ def _testing_body(missing_headers: List[str]) -> Dict[str, Any]:
         "password": "SomePassword1.",
         "dob": "12/12/2000",
         "address": "123 Fake St, Austin TX",
-        "consent": True
+        "terms_consent_version": 'x.x.x'
     }
 
     return {
@@ -24,9 +25,24 @@ def _testing_body(missing_headers: List[str]) -> Dict[str, Any]:
 
 
 class TestValidateAllFields(unittest.TestCase):
+    def setUp(self) -> None:
+        with CursorCommit() as curs:
+            curs.execute("""
+                insert into public.terms_and_conditions
+                    (version, terms_text, created_at)
+                values ('x.x.x', 'test', now())
+            """)
+
+    def tearDown(self) -> None:
+        with CursorCommit() as curs:
+            curs.execute("""
+                delete from public.terms_and_conditions
+                where version = 'x.x.x' and terms_text = 'test'
+            """)
+
 
     def test_missing_fields(self) -> None:
-        for field in ["first_name", "last_name", "email", "gender", "password", "dob", "address", "consent"]:
+        for field in ["first_name", "last_name", "email", "gender", "password", "dob", "address", "terms_consent_version"]:
             body = _testing_body([field])
             is_valid, message = validate_all_fields(body)
             self.assertFalse(is_valid)
