@@ -5,7 +5,7 @@ from psycopg2 import Error, connect
 
 from court.utils import validation as valid
 from court.utils.aws_cognito import cognito_sign_up
-from court.utils.db import Cursor
+from court.utils.db import CursorCommit, CursorRollback
 
 
 def validate_all_fields(body: Dict[str, Any]) -> Tuple[bool, str]:
@@ -59,7 +59,7 @@ def lambda_register(event: Dict, _: Any) -> Dict[str, Any]:
 
     # Store user in database
     try:
-        with Cursor() as curs:
+        with CursorCommit() as curs:
             query = """
             INSERT INTO user_characteristics (first_name, last_name, email, gender, dob, address, consent, cognito_user_id)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s)

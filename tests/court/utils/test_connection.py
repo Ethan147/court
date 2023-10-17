@@ -3,7 +3,7 @@ import subprocess
 import unittest
 from unittest.mock import MagicMock, patch
 
-from court.utils.db import Cursor, CursorTest
+from court.utils.db import CursorRollback
 
 
 class TestConnection(unittest.TestCase):
@@ -11,7 +11,7 @@ class TestConnection(unittest.TestCase):
     def test_cursor_connection_classes(self) -> None:
 
         # Confirm that entered data is accessible
-        with CursorTest() as curs:
+        with CursorRollback() as curs:
             curs.execute(
                 """
                 insert into public.user_account
@@ -33,8 +33,8 @@ class TestConnection(unittest.TestCase):
                 [("first", "last")]
             )
 
-        # Confirm that CursorTest data does not persist
-        with Cursor() as curs:
+        # Confirm that CursorRollback data does not persist
+        with CursorRollback() as curs:
             curs.execute(
                 """
                 select * from public.user_account
@@ -62,7 +62,7 @@ class TestConnection(unittest.TestCase):
             subprocess.run(["dbmate", "down"], stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
 
         # After a full spin-down, only schema_migrations remains
-        with CursorTest() as curs:
+        with CursorRollback() as curs:
             curs.execute(
                 "select table_name from information_schema.tables where table_schema='public'"
             )
@@ -74,7 +74,7 @@ class TestConnection(unittest.TestCase):
         for _ in range(sql_migration_count):
             subprocess.run(["dbmate", "up"], stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
 
-        with CursorTest() as curs:
+        with CursorRollback() as curs:
             curs.execute(
                 "select table_name from information_schema.tables where table_schema='public'"
             )

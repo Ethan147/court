@@ -19,8 +19,7 @@ def get_connection() -> connection:
     return pool.getconn()
 
 
-class Cursor:
-    """Base cursor for use across application"""
+class CursorCommit:
     def __init__(self) -> None:
         self.conn = get_connection()
 
@@ -36,8 +35,7 @@ class Cursor:
         pool.putconn(self.conn)
 
 
-class CursorTest:
-    """Cursor for use by all test cases"""
+class CursorRollback:
     def __init__(self) -> None:
         self.conn = get_connection()
 
