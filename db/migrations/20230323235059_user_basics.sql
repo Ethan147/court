@@ -93,7 +93,7 @@ create table terms_and_conditions (
     updated_at timestamptz default now()
 );
 
-create table user_account_term_consent (
+create table user_account_terms_consent (
     id bigserial primary key,
     user_account_id integer references user_account(id) on delete cascade,
     terms_and_conditions_id integer references terms_and_conditions(id) on delete cascade,
@@ -103,13 +103,13 @@ create table user_account_term_consent (
 );
 
 create index idx_terms_version on terms_and_conditions(version);
-create index idx_user_terms_consent on user_account_term_consent(user_account_id, terms_and_conditions_id);
+create index idx_user_terms_consent on user_account_terms_consent(user_account_id, terms_and_conditions_id);
 
 ---------------
 -- migrate:down
 ---------------
 
-drop table if exists user_account_term_consent;
+drop table if exists user_account_terms_consent;
 drop table if exists terms_and_conditions;
 drop table if exists user_interest_mapping;
 drop table if exists interest;

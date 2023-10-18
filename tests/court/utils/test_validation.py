@@ -10,6 +10,7 @@ from court.utils.validation import (validate_address, validate_age,
 class TestValidationFunctions(unittest.TestCase):
 
     def setUp(self) -> None:
+        super().setUp()
         with CursorCommit() as curs:
             curs.execute("""
                 insert into public.terms_and_conditions
@@ -18,6 +19,7 @@ class TestValidationFunctions(unittest.TestCase):
             """)
 
     def tearDown(self) -> None:
+        super().setUp()
         with CursorCommit() as curs:
             curs.execute("""
                 delete from public.terms_and_conditions

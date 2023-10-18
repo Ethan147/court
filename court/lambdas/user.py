@@ -6,6 +6,7 @@ from psycopg2 import Error, connect
 from court.utils import validation as valid
 from court.utils.aws_cognito import cognito_sign_up
 from court.utils.db import CursorCommit, CursorRollback
+from court.utils.user import create_user
 
 
 def validate_all_fields(body: Dict[str, Any]) -> Tuple[bool, str]:
@@ -56,8 +57,33 @@ def lambda_register(event: Dict, _: Any) -> Dict[str, Any]:
     except Exception as e:
         return {"statusCode": 500, "body": json.dumps({"message": str(e)})}
 
-    # Store user in database
+    """
+    def create_user(
+            cognito_user_id: str,
+            first_name: str,
+            last_name: str,
+            email: str,
+            gender_category: str,
+            date_of_birth: date,
+            terms_consent_version: str,
+            gender_self_specify: Optional[str] = None,
+    ) -> None:
+    """
+
+    # Create user in database (todo corner case where user already exists)
+    # todo update to create address
+    # todo update caller to include gender category
     try:
+        create_user(
+            cognito_user_id,
+            body["first_name"],
+            body["last_name"],
+            body["email"],
+            body["gender"],
+            body["dob"],
+            body["terms_consent_version"],
+        )
+
         with CursorCommit() as curs:
             query = """
             INSERT INTO user_characteristics (first_name, last_name, email, gender, dob, address, consent, cognito_user_id)
