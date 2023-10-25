@@ -2,8 +2,10 @@ import unittest
 import uuid
 from datetime import date
 
+import psycopg2
+
 from court.utils.db import CursorCommit, CursorRollback
-from court.utils.user import create_user
+from court.utils.user import create_or_update_user
 
 
 class TestUserUtilities(unittest.TestCase):
@@ -37,7 +39,7 @@ class TestUserUtilities(unittest.TestCase):
 
         for gender_category, self_specify in valid_gender_categories:
             test_uuid = str(uuid.uuid4())
-            create_user(
+            create_or_update_user(
                 cognito_user_id=test_uuid,
                 first_name='test_first_name_test_create_valid_user',
                 last_name='test_last_name',
@@ -92,3 +94,57 @@ class TestUserUtilities(unittest.TestCase):
                 and last_name = 'test_last_name'
                 """
             )
+
+
+    def test_create_invalid_user(self) -> None:
+        with self.assertRaises(psycopg2.errors.InvalidTextRepresentation):
+            test_uuid = str(uuid.uuid4())
+            create_or_update_user(
+                cognito_user_id=test_uuid,
+                first_name='test_first_name_test_create_valid_user',
+                last_name='test_last_name',
+                email=f"testemail{test_uuid}@example.com",
+                gender_category="invalid gender category",
+                date_of_birth=date(2000,1,1),
+                terms_consent_version='x.x.x',
+            )
+
+
+
+    def test_double_create_or_upsert_user(self) -> None:
+
+        def _matching_user_count() -> int:
+            with CursorRollback() as curs:
+                curs.execute("select count(*) from public.user_account where first_name = 'test_first_name_test_create_valid_user'")
+                count = curs.fetchone()[0]
+
+            return count
+
+        pre_any_insert_count = _matching_user_count()
+
+        test_uuid = str(uuid.uuid4())
+        user_first_insert_id = create_or_update_user(
+            cognito_user_id=test_uuid,
+            first_name='test_first_name_test_create_valid_user',
+            last_name='test_last_name',
+            email=f"testemail{test_uuid}@example.com",
+            gender_category="male",
+            date_of_birth=date(2000,1,1),
+            terms_consent_version='x.x.x',
+        )
+        post_first_insert_count = _matching_user_count()
+
+        user_second_insert_id = create_or_update_user(
+            cognito_user_id=test_uuid,
+            first_name='test_first_name_test_create_valid_user',
+            last_name='test_last_name',
+            email=f"testemail{test_uuid}@example.com",
+            gender_category="male",
+            date_of_birth=date(2000,1,1),
+            terms_consent_version='x.x.x',
+        )
+        post_second_insert_count = _matching_user_count()
+
+        self.assertEqual(post_first_insert_count - pre_any_insert_count, 1)
+        self.assertEqual(post_second_insert_count - pre_any_insert_count, 1)
+        self.assertEqual(user_first_insert_id, user_second_insert_id)
