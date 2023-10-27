@@ -40,5 +40,6 @@ create table user_session_history (
 
 -- migrate:down
 
+drop table if exists user_session_history;
 drop table if exists user_session;
 -- drop table if exists user_device;

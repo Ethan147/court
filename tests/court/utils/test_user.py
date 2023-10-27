@@ -77,24 +77,13 @@ class TestUserUtilities(unittest.TestCase):
 
         # remove changes for test-isolation
         with CursorCommit() as curs:
-            curs.execute(
-                """
+            curs.execute("""
                 delete from public.user_account_terms_consent
-                where user_account_id in (
-                    select id from public.user_account
-                    where first_name = 'test_first_name_test_create_valid_user'
-                    and last_name = 'test_last_name'
-                )
-                """
-            )
+                where user_account_id in (select id from public.user_account where first_name = 'test_first_name_test_create_valid_user')
+            """)
             curs.execute(
-                """
-                delete from public.user_account
-                where first_name = 'test_first_name_test_create_valid_user'
-                and last_name = 'test_last_name'
-                """
+                "delete from public.user_account where first_name = 'test_first_name_test_create_valid_user'"
             )
-
 
     def test_create_invalid_user(self) -> None:
         with self.assertRaises(psycopg2.errors.InvalidTextRepresentation):
@@ -112,10 +101,9 @@ class TestUserUtilities(unittest.TestCase):
 
 
     def test_double_create_or_upsert_user(self) -> None:
-
         def _matching_user_count() -> int:
             with CursorRollback() as curs:
-                curs.execute("select count(*) from public.user_account where first_name = 'test_first_name_test_create_valid_user'")
+                curs.execute("select count(*) from public.user_account where first_name = 'test_double_create_or_upsert_user'")
                 count = curs.fetchone()[0]
 
             return count
@@ -125,7 +113,7 @@ class TestUserUtilities(unittest.TestCase):
         test_uuid = str(uuid.uuid4())
         user_first_insert_id = create_or_update_user(
             cognito_user_id=test_uuid,
-            first_name='test_first_name_test_create_valid_user',
+            first_name='test_double_create_or_upsert_user',
             last_name='test_last_name',
             email=f"testemail{test_uuid}@example.com",
             gender_category="male",
@@ -136,7 +124,7 @@ class TestUserUtilities(unittest.TestCase):
 
         user_second_insert_id = create_or_update_user(
             cognito_user_id=test_uuid,
-            first_name='test_first_name_test_create_valid_user',
+            first_name='test_double_create_or_upsert_user',
             last_name='test_last_name',
             email=f"testemail{test_uuid}@example.com",
             gender_category="male",
@@ -148,3 +136,12 @@ class TestUserUtilities(unittest.TestCase):
         self.assertEqual(post_first_insert_count - pre_any_insert_count, 1)
         self.assertEqual(post_second_insert_count - pre_any_insert_count, 1)
         self.assertEqual(user_first_insert_id, user_second_insert_id)
+
+        with CursorCommit() as curs:
+            curs.execute("""
+                delete from public.user_account_terms_consent
+                where user_account_id in (select id from public.user_account where first_name = 'test_double_create_or_upsert_user')
+            """)
+            curs.execute(
+                "delete from public.user_account where first_name = 'test_double_create_or_upsert_user'"
+            )
