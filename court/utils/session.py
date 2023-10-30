@@ -48,7 +48,7 @@ def get_prune_sessions(user_id: int) -> None:
     with CursorRollback as curs:
         query = "select id from public.user_session where user_id = %s"
         curs.execute(query, (user_id,))
-        user_session_id = curs.fetchone()[0]
+        user_session_id = curs.fetchall()[0]
 
     return user_session_id
 
