@@ -4,8 +4,10 @@ from datetime import date, datetime, timedelta
 from typing import Any, List
 
 from court.utils.db import CursorCommit, CursorRollback
-from court.utils.session import (_create_user_session, _prune_sessions,
-                                 extend_session, get_prune_active_sessions)
+from court.utils.session import (_create_user_session, _prune_expired_sessions,
+                                 _prune_extra_user_device_sessions,
+                                 _prune_sessions, extend_session,
+                                 get_prune_active_sessions)
 from court.utils.user import create_or_update_user
 
 
@@ -39,6 +41,8 @@ class TestSessionManagement(unittest.TestCase):
     def tearDown(self) -> None:
         """ Clear up data created only for these tests to ensure compartmentalization """
         super().tearDown()
+        self._delete_test_sessions()
+
         with CursorCommit() as curs:
             curs.execute(
                 "delete from public.terms_and_conditions where version = 'z.z.z' and terms_text = 'test'"
@@ -47,7 +51,6 @@ class TestSessionManagement(unittest.TestCase):
                 "delete from public.user_account where email = 'testsessionmanagement@example.com'"
             )
 
-        self._delete_test_sessions()
 
     def _create_test_sessions(self) -> None:
         with CursorCommit() as curs:
@@ -64,12 +67,38 @@ class TestSessionManagement(unittest.TestCase):
                 )
             )
 
+    def _create_multiple_active_sessions_for_device(self) -> None:
+        self.session_uuid_single = str(uuid.uuid4())
+        self.session_uuid_duplicate_1 = str(uuid.uuid4())
+        self.session_uuid_duplicate_2 = str(uuid.uuid4())
+        now = datetime.utcnow()
+        one_minute_ago = now - timedelta(minutes=1)
+
+        with CursorCommit() as curs:
+            curs.execute("""
+                insert into public.user_session
+                    (session_uuid, user_id, device_identifier, device_type, platform, expires_at, created_at)
+                values
+                    (%s, %s, 'test_device_identifier_single', 'test_device_type_single', 'web', %s, %s),
+                    (%s, %s, 'test_device_identifier_duplicate', 'test_device_type_remove', 'web', %s, %s),
+                    (%s, %s, 'test_device_identifier_duplicate', 'test_device_type_keep', 'web', %s, %s)
+            """,
+                (
+                    self.session_uuid_single, self.user_id, date(3000, 1, 1), now,
+                    self.session_uuid_duplicate_1, self.user_id, date(3000, 1, 1), one_minute_ago,
+                    self.session_uuid_duplicate_2, self.user_id, date(3000, 1, 1), now
+                )
+            )
+
     def _delete_test_sessions(self) -> None:
         with CursorCommit() as curs:
             curs.execute(
                 """
-                delete from public.user_session_history where session_uuid in (
-                    select session_uuid from public.user_session where user_id = %s
+                delete from public.user_session_history
+                     where session_uuid in (
+                    select session_uuid
+                      from public.user_session
+                     where user_id = %s
                 )
                 """,
                 (self.user_id,)
@@ -78,19 +107,25 @@ class TestSessionManagement(unittest.TestCase):
                 "delete from public.user_session where user_id = %s", (self.user_id,)
             )
 
-
     def _get_session(self, columns: str) -> List[Any]:
         with CursorRollback() as curs:
-            curs.execute(f"select {columns} from user_session where user_id = %s order by device_identifier desc", (self.user_id,))
+            curs.execute(f"""
+                select {columns}
+                  from public.user_session
+                 where user_id = %s
+              order by device_identifier desc, created_at desc
+            """,
+            (self.user_id,))
             sessions_for_user = curs.fetchall()
 
         return sessions_for_user
 
     def _verify_session(self, columns: str, expected_session: List[Any]) -> None:
         sessions_for_user = self._get_session(columns)
+        raise ValueError(sessions_for_user)
         self.assertEqual(sessions_for_user, expected_session)
 
-    def test_prune_sessions(self) -> None:
+    def test_prune_expired_sessions(self) -> None:
         self._create_test_sessions()
 
         # First we have two sessions
@@ -101,11 +136,38 @@ class TestSessionManagement(unittest.TestCase):
         )
 
         # Then we prune sessions and are left only with the active session
-        _prune_sessions(self.user_id)
+        _prune_expired_sessions(self.user_id)
         self._verify_session(
             "session_uuid, user_id, device_identifier, is_active",
             [(self.session_uuid_expired, self.user_id, 'test_device_identifier_expired', False),
              (self.session_uuid_current, self.user_id, 'test_device_identifier_current', True)]
+        )
+
+        self._delete_test_sessions()
+
+    def test_prune_extra_user_device_sessions(self) -> None:
+        # Create multiple active sessions for the same device identifier
+        self._create_multiple_active_sessions_for_device()
+
+        # First, we have three sessions, two for 'test_device_identifier_duplicate' and one for 'test_device_identifier_single'
+        self._verify_session(
+            "session_uuid, user_id, device_identifier, is_active",
+            [
+                (self.session_uuid_single, self.user_id, 'test_device_identifier_single', True),
+                (self.session_uuid_duplicate_1, self.user_id, 'test_device_identifier_duplicate', True),
+                (self.session_uuid_duplicate_2, self.user_id, 'test_device_identifier_duplicate', True)
+            ]
+        )
+
+        # Then we prune sessions, and should be left with one active session for each device_identifier
+        _prune_extra_user_device_sessions(self.user_id)
+        self._verify_session(
+            "session_uuid, user_id, device_identifier, is_active",
+            [
+                (self.session_uuid_single, self.user_id, 'test_device_identifier_single', True),
+                (self.session_uuid_duplicate_1, self.user_id, 'test_device_identifier_duplicate', False),
+                (self.session_uuid_duplicate_2, self.user_id, 'test_device_identifier_duplicate', True)
+            ]
         )
 
         self._delete_test_sessions()
@@ -158,7 +220,6 @@ class TestSessionManagement(unittest.TestCase):
         self.assertEqual(grouped_sessions, [(self.session_uuid_current, 2)])
 
         self._delete_test_sessions()
-
 
     def test_create_user_session(self) -> None:
         return
