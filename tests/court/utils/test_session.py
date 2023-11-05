@@ -7,6 +7,7 @@ from court.utils.db import CursorCommit, CursorRollback
 from court.utils.session import (_create_user_session, _prune_expired_sessions,
                                  _prune_extra_user_device_sessions,
                                  _prune_sessions, extend_session,
+                                 get_prune_active_or_create_session,
                                  get_prune_active_sessions)
 from court.utils.user import create_or_update_user
 
@@ -50,7 +51,6 @@ class TestSessionManagement(unittest.TestCase):
             curs.execute(
                 "delete from public.user_account where email = 'testsessionmanagement@example.com'"
             )
-
 
     def _create_test_sessions(self) -> None:
         with CursorCommit() as curs:
@@ -122,7 +122,7 @@ class TestSessionManagement(unittest.TestCase):
 
     def _verify_session(self, columns: str, expected_session: List[Any]) -> None:
         sessions_for_user = self._get_session(columns)
-        raise ValueError(sessions_for_user)
+        # raise ValueError(sessions_for_user)
         self.assertEqual(sessions_for_user, expected_session)
 
     def test_prune_expired_sessions(self) -> None:
@@ -154,8 +154,8 @@ class TestSessionManagement(unittest.TestCase):
             "session_uuid, user_id, device_identifier, is_active",
             [
                 (self.session_uuid_single, self.user_id, 'test_device_identifier_single', True),
-                (self.session_uuid_duplicate_1, self.user_id, 'test_device_identifier_duplicate', True),
-                (self.session_uuid_duplicate_2, self.user_id, 'test_device_identifier_duplicate', True)
+                (self.session_uuid_duplicate_2, self.user_id, 'test_device_identifier_duplicate', True),
+                (self.session_uuid_duplicate_1, self.user_id, 'test_device_identifier_duplicate', True)
             ]
         )
 
@@ -165,8 +165,39 @@ class TestSessionManagement(unittest.TestCase):
             "session_uuid, user_id, device_identifier, is_active",
             [
                 (self.session_uuid_single, self.user_id, 'test_device_identifier_single', True),
+                (self.session_uuid_duplicate_2, self.user_id, 'test_device_identifier_duplicate', True),
+                (self.session_uuid_duplicate_1, self.user_id, 'test_device_identifier_duplicate', False)
+            ]
+        )
+
+        self._delete_test_sessions()
+
+    def test_prune_sessions(self) -> None:
+        """ the full prune session function should prune both expired and duplicative sessions """
+        self._create_test_sessions()
+        self._create_multiple_active_sessions_for_device()
+
+        self._verify_session(
+            "session_uuid, user_id, device_identifier, is_active",
+            [
+                (self.session_uuid_single, self.user_id, 'test_device_identifier_single', True),
+                (self.session_uuid_expired, self.user_id, 'test_device_identifier_expired', True),
+                (self.session_uuid_duplicate_2, self.user_id, 'test_device_identifier_duplicate', True),
+                (self.session_uuid_duplicate_1, self.user_id, 'test_device_identifier_duplicate', True),
+                (self.session_uuid_current, self.user_id, 'test_device_identifier_current', True)
+            ]
+        )
+
+        _prune_sessions(self.user_id)
+
+        self._verify_session(
+            "session_uuid, user_id, device_identifier, is_active",
+            [
+                (self.session_uuid_single, self.user_id, 'test_device_identifier_single', True),
+                (self.session_uuid_expired, self.user_id, 'test_device_identifier_expired', False),
+                (self.session_uuid_duplicate_2, self.user_id, 'test_device_identifier_duplicate', True),
                 (self.session_uuid_duplicate_1, self.user_id, 'test_device_identifier_duplicate', False),
-                (self.session_uuid_duplicate_2, self.user_id, 'test_device_identifier_duplicate', True)
+                (self.session_uuid_current, self.user_id, 'test_device_identifier_current', True)
             ]
         )
 
@@ -222,43 +253,126 @@ class TestSessionManagement(unittest.TestCase):
         self._delete_test_sessions()
 
     def test_create_user_session(self) -> None:
-        return
-        self._create_test_sessions()
+        self._verify_session("session_uuid, user_id, device_identifier, is_active", [])
 
-        # First we have two sessions
-        # self._verify_session(
-        #     "session_uuid, user_id, token, is_active",
-        #     [(self.session_uuid_expired, self.user_id, 'test_token_expired', True), (self.session_uuid_current, self.user_id, 'test_token_current', True)]
-        # )
-
-        # Then after we create a new session, a new session has been added
-        _create_user_session(self.user_id, "some_rando_web_identifier")
+        web_session_uuid_1 = _create_user_session(self.user_id, "some_rando_web_identifier")
         self._verify_session(
-            "session_uuid, user_id, device_identifier, is_active",
-            [(self.session_uuid_expired, self.user_id, 'test_device_identifier_expired', True),
-             (self.session_uuid_current, self.user_id, 'test_device_identifier_current', True)]
+            "session_uuid, user_id, device_identifier, is_active, platform",
+            [(web_session_uuid_1, self.user_id, 'some_rando_web_identifier', True, 'web')]
+        )
+
+        expo_session_uuid_1 = _create_user_session(self.user_id, "some_expo_device_identifier")
+        self._verify_session(
+            "session_uuid, user_id, device_identifier, is_active, platform",
+            [
+                (web_session_uuid_1, self.user_id, 'some_rando_web_identifier', True, 'web'),
+                (expo_session_uuid_1, self.user_id, 'some_expo_device_identifier', True, 'mobile'),
+            ]
+        )
+
+        web_session_uuid_2 = _create_user_session(self.user_id, "some_other_web_identifier")
+        expo_session_uuid_2 = _create_user_session(self.user_id, "some_other_expo_identifier")
+
+        self._verify_session(
+            "session_uuid, user_id, device_identifier, is_active, platform",
+            [
+                (web_session_uuid_1, self.user_id, 'some_rando_web_identifier', True, 'web'),
+                (web_session_uuid_2, self.user_id, 'some_other_web_identifier', True, 'web'),
+                (expo_session_uuid_2, self.user_id, 'some_other_expo_identifier', True, 'mobile'),
+                (expo_session_uuid_1, self.user_id, 'some_expo_device_identifier', True, 'mobile'),
+            ]
+        )
+
+        # There is no guarding against duplication
+        web_session_uuid_dup_3 = _create_user_session(self.user_id, "some_other_web_identifier")
+        expo_session_uuid_dup_3 = _create_user_session(self.user_id, "some_other_expo_identifier")
+        self._verify_session(
+            "session_uuid, user_id, device_identifier, is_active, platform",
+            [
+                (web_session_uuid_1, self.user_id, 'some_rando_web_identifier', True, 'web'),
+                (web_session_uuid_dup_3, self.user_id, 'some_other_web_identifier', True, 'web'),
+                (web_session_uuid_2, self.user_id, 'some_other_web_identifier', True, 'web'),
+                (expo_session_uuid_dup_3, self.user_id, 'some_other_expo_identifier', True, 'mobile'),
+                (expo_session_uuid_2, self.user_id, 'some_other_expo_identifier', True, 'mobile'),
+                (expo_session_uuid_1, self.user_id, 'some_expo_device_identifier', True, 'mobile'),
+            ]
         )
 
         self._delete_test_sessions()
 
-    # TODO logic for this one is not done
+    def test_get_prune_active_or_create_session(self) -> None:
+        self._verify_session("session_uuid, user_id, device_identifier, is_active", [])
+
+        web_session_uuid_1 = get_prune_active_or_create_session(self.user_id, "some_rando_web_identifier")
+        self._verify_session(
+            "session_uuid, user_id, device_identifier, is_active, platform",
+            [(web_session_uuid_1, self.user_id, 'some_rando_web_identifier', True, 'web')]
+        )
+
+        expo_session_uuid_1 = get_prune_active_or_create_session(self.user_id, "some_expo_device_identifier")
+        self._verify_session(
+            "session_uuid, user_id, device_identifier, is_active, platform",
+            [
+                (web_session_uuid_1, self.user_id, 'some_rando_web_identifier', True, 'web'),
+                (expo_session_uuid_1, self.user_id, 'some_expo_device_identifier', True, 'mobile'),
+            ]
+        )
+
+        web_session_uuid_2 = get_prune_active_or_create_session(self.user_id, "some_other_web_identifier")
+        expo_session_uuid_2 = get_prune_active_or_create_session(self.user_id, "some_other_expo_identifier")
+
+        self._verify_session(
+            "session_uuid, user_id, device_identifier, is_active, platform",
+            [
+                (web_session_uuid_1, self.user_id, 'some_rando_web_identifier', True, 'web'),
+                (web_session_uuid_2, self.user_id, 'some_other_web_identifier', True, 'web'),
+                (expo_session_uuid_2, self.user_id, 'some_other_expo_identifier', True, 'mobile'),
+                (expo_session_uuid_1, self.user_id, 'some_expo_device_identifier', True, 'mobile'),
+            ]
+        )
+
+        # duplicate sessions will not be made as they are guarded against
+        _ = get_prune_active_or_create_session(self.user_id, "some_other_web_identifier")
+        _ = get_prune_active_or_create_session(self.user_id, "some_other_expo_identifier")
+        self._verify_session(
+            "session_uuid, user_id, device_identifier, is_active, platform",
+            [
+                (web_session_uuid_1, self.user_id, 'some_rando_web_identifier', True, 'web'),
+                (web_session_uuid_2, self.user_id, 'some_other_web_identifier', True, 'web'),
+                (expo_session_uuid_2, self.user_id, 'some_other_expo_identifier', True, 'mobile'),
+                (expo_session_uuid_1, self.user_id, 'some_expo_device_identifier', True, 'mobile'),
+            ]
+        )
+
+        self._delete_test_sessions()
+
     def test_get_prune_active_sessions(self) -> None:
-        return
         self._create_test_sessions()
+        self._create_multiple_active_sessions_for_device()
 
         # First we have two sessions
         self._verify_session(
             "session_uuid, user_id, device_identifier, is_active",
-            [(self.session_uuid_expired, self.user_id, 'test_device_identifier_expired', True),
-             (self.session_uuid_current, self.user_id, 'test_device_identifier_current', True)]
+            [
+                (self.session_uuid_single, self.user_id, 'test_device_identifier_single', True),
+                (self.session_uuid_expired, self.user_id, 'test_device_identifier_expired', True),
+                (self.session_uuid_duplicate_2, self.user_id, 'test_device_identifier_duplicate', True),
+                (self.session_uuid_duplicate_1, self.user_id, 'test_device_identifier_duplicate', True),
+                (self.session_uuid_current, self.user_id, 'test_device_identifier_current', True)
+            ]
         )
 
         # Then after we get_prune_active_sessions one of the sessions will be marked inactive & only one active session is returned
-        user_sessions = get_prune_active_sessions(self.user_id)
+        user_sessions = get_prune_active_sessions(self.user_id, 'test_device_identifier_duplicate')
         self._verify_session(
             "session_uuid, user_id, device_identifier, is_active",
-            [(self.session_uuid_expired, self.user_id, 'test_device_identifier_expired', False),
-             (self.session_uuid_current, self.user_id, 'test_device_identifier_current', True)]
+            [
+                (self.session_uuid_single, self.user_id, 'test_device_identifier_single', True),
+                (self.session_uuid_expired, self.user_id, 'test_device_identifier_expired', False),
+                (self.session_uuid_duplicate_2, self.user_id, 'test_device_identifier_duplicate', True),
+                (self.session_uuid_duplicate_1, self.user_id, 'test_device_identifier_duplicate', False),
+                (self.session_uuid_current, self.user_id, 'test_device_identifier_current', True)
+            ]
         )
         self.assertEqual(len(user_sessions), 1)
 

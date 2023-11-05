@@ -7,12 +7,13 @@ DEFAULT_SESSION_TIME = 24
 
 
 def get_prune_active_or_create_session(user_id: int, device_identifier: str) -> str:
-    active_sessions = get_prune_active_sessions(user_id, device_identifier)
+    active_session = get_prune_active_sessions(user_id, device_identifier)
 
-    if not active_sessions:
-        active_session = _create_user_session(user_id, device_identifier)
+    if not active_session:
+        active_session = [_create_user_session(user_id, device_identifier)]
 
-    return active_session
+    return active_session[0]
+
 
 def _create_user_session(user_id: int, device_identifier: str, session_time: int = DEFAULT_SESSION_TIME) -> str:
     with CursorCommit() as curs:
@@ -25,6 +26,7 @@ def _create_user_session(user_id: int, device_identifier: str, session_time: int
         session_uuid = curs.fetchone()[0]
         return session_uuid
 
+
 def get_prune_active_sessions(user_id: int, device_identifier: str) -> List[str]:
     _prune_sessions(user_id)
 
@@ -36,7 +38,7 @@ def get_prune_active_sessions(user_id: int, device_identifier: str) -> List[str]
                and device_identifier = %s
                and is_active is true
         """
-        curs.execute(query, (user_id,))
+        curs.execute(query, (user_id,device_identifier))
         user_session_id = curs.fetchall()
 
     return user_session_id
@@ -72,52 +74,18 @@ def _prune_extra_user_device_sessions(user_id: int) -> None:
     with CursorCommit() as curs:
         query = """
             update public.user_session
-               set is_active = false where id > -99
---             where user_id = %s
-
-               /*
+               set is_active = false
+             where user_id = %s
                and is_active = true
                and session_uuid NOT IN (
-                   select distinct on (device_identifier) session_uuid
-                    from user_session
-                   where user_id = %s
-                     and is_active = true
-                   order by device_identifier, created_at desc
+                    select distinct on (device_identifier) session_uuid
+                      from public.user_session
+                     where user_id = %s
+                       and is_active = true
+                  order by device_identifier, created_at desc
                )
-               */
         """
         curs.execute(query, (user_id, user_id))
-
-    # # this is for testing
-    # with CursorRollback() as curs:
-    #     query = """
-    #         select distinct on (device_identifier) device_type, is_active
-    #                 from user_session
-    #                where user_id = %s
-    #                  and is_active = true
-    #                order by device_identifier, created_at desc
-    #     """
-    #     curs.execute(query, (user_id,))
-    #     raise ValueError(
-    #         curs.fetchall()
-    #     )
-
-    # this is for testing
-    # with CursorRollback() as curs:
-    #     query = """
-    #         select device_type, is_active from public.user_session
-    #         where session_uuid NOT IN (
-    #             select distinct on (device_identifier) session_uuid
-    #                 from user_session
-    #                where user_id = %s
-    #                  and is_active = true
-    #             order by device_identifier, created_at desc
-    #         )
-    #     """
-    #     curs.execute(query, (user_id,))
-    #     raise ValueError(
-    #         curs.fetchall()
-    #     )
 
 
 def _prune_expired_sessions(user_id: int) -> None:
