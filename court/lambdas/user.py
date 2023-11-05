@@ -6,6 +6,7 @@ from psycopg2 import Error, connect
 from court.utils import validation as valid
 from court.utils.aws_cognito import cognito_sign_up
 from court.utils.db import CursorCommit, CursorRollback
+from court.utils.session import handle_session_creation
 from court.utils.user import create_or_update_user
 
 
@@ -41,6 +42,7 @@ def validate_all_fields(body: Dict[str, Any]) -> Tuple[bool, str]:
     return True, ""
 
 # todo find way to account for user sessioning
+@handle_session_creation
 def lambda_register(event: Dict, _: Any) -> Dict[str, Any]:
     """
     API endpoint for user signups

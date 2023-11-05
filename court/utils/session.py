@@ -1,9 +1,74 @@
-import datetime
-from typing import List
+import json
+from typing import Any, Callable, Dict, List, Optional
 
 from court.utils.db import CursorCommit, CursorRollback
 
 DEFAULT_SESSION_TIME = 24
+
+
+"""
+TODO:
+Rate Limiting: Even if you're protected against SQL-injections,
+without some form of rate limiting in place, you're still susceptible to brute-force or flooding attacks.
+Someone might try to overwhelm your service by sending a large number of requests in a short period.
+AWS Lambda, for instance, will scale to meet demand, which could lead to higher costs.
+It would be advisable to implement some form of rate limiting sooner rather than later to avoid unexpected spikes in costs.
+
+Rate limiting can be set at various levels, but for Lambda, you can:
+
+- Set a concurrent execution limit on the function.
+  This will cap the number of instances of your function that can be run simultaneously.
+
+- Use API Gateway's built-in rate limiting features.
+  If your Lambdas are exposed via API Gateway,
+  it offers built-in throttling settings which can be used to specify how many requests per second
+  a caller can make and to set a standard rate and burst rate for all API methods.
+"""
+
+def handle_session_creation(func: Callable) -> Callable:
+    def wrapper(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
+        headers = event.get('headers', {})
+        device_identifier = headers.get('User-Agent', 'unknown')
+
+        # Note: Consider how you're setting and extracting the user's identity. The example provided assumes AWS Cognito with API Gateway.
+        user_id = headers.get('Authorization', '').split(':')[0]
+
+        active_session = get_prune_active_or_create_session(user_id, device_identifier)
+
+        if not active_session:
+            return {
+                "statusCode": 401,
+                "body": json.dumps({"message": "Unable to create or retrieve an active session."})
+            }
+
+        # Modify the event to pass session data to the lambda
+        event['session_uuid'] = active_session
+
+        return func(event, context)
+
+    return wrapper
+
+
+def require_session(func: Callable) -> Callable:
+    def wrapper(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
+        headers = event.get('headers', {})
+        session_uuid = headers.get('Authorization', None)
+        device_identifier = headers.get('User-Agent', 'unknown')
+
+        # Note: Consider how you're setting and extracting the user's identity. The example provided assumes AWS Cognito with API Gateway.
+        user_id = headers.get('Authorization', '').split(':')[0]
+
+        sessions = get_prune_active_sessions(user_id, device_identifier)
+
+        if not sessions or session_uuid not in sessions:
+            return {
+                "statusCode": 401,
+                "body": json.dumps({"message": "Unauthorized: Invalid or expired session."})
+            }
+
+        return func(event, context)
+
+    return wrapper
 
 
 def get_prune_active_or_create_session(user_id: int, device_identifier: str) -> str:
