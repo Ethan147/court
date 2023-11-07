@@ -25,13 +25,77 @@ Rate limiting can be set at various levels, but for Lambda, you can:
   a caller can make and to set a standard rate and burst rate for all API methods.
 """
 
+
+
+# import jwt  # You need a library to decode JWT tokens
+
+"""
+TODO: (a summary of work to be done in this area)
+
+[x] Viability of Approach:
+
+Yes, your approach is reasonable and could work well for a tennis matchmaking app.
+You are correct that session history can provide valuable insights into user behavior.
+It's also prudent to want to maintain agility and the ability to pivot without being too tied to third-party services.
+
+[ ] Encrypting session_uuid:
+
+If session_uuid is exposed to the client (e.g., in a cookie), encrypting it adds a layer of security.
+An encrypted session token prevents easy hijacking if the token were ever exposed in logs or a database breach.
+However, encryption isn't strictly necessary if you're confident in the security of your HTTPS transport, cookie flags (secure, HttpOnly), and overall application security.
+
+
+[ ] Encryption Method:
+
+AES (Advanced Encryption Standard) with a server-side secret is typically sufficient.
+AWS offers services like KMS (Key Management Service) for handling encryption keys securely.
+This service allows you to generate, use, rotate, and control access to encryption keys used to encrypt your data.
+
+[ ] Enforcing HTTPS:
+
+On AWS, you can enforce HTTPS at the load balancer (if using one), API Gateway, or within the application itself by setting up a redirect from HTTP to HTTPS.
+If you're using API Gateway, it supports HTTPS by default and doesn't allow HTTP connections, so there’s nothing extra you need to do.
+
+[x] Performance Concerns:
+
+Given that your app will be making database calls for most operations,
+adding session checks to these calls likely won’t introduce significant overhead.
+The key is to ensure your session management is efficient, the queries are optimized, and the database is well-indexed.
+Use connection pooling and caching strategies where appropriate.
+"""
+
 def handle_session_creation(func: Callable) -> Callable:
+    """
+    TODO:
+    Please note that this code is for illustration purposes and requires further refinement for production use.
+    Specifically:
+
+    - The JWT decoding process needs to verify the signature against the secret or public key that was used to sign the token.
+    - Error handling should be robust to account for all potential JWT-related issues,
+        including expired tokens, incorrect signing, and more.
+    - You may need to use your own secret or public/private key pair depending on your JWT strategy.
+    """
+
     def wrapper(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
         headers = event.get('headers', {})
         device_identifier = headers.get('User-Agent', 'unknown')
+        token = headers.get('Authorization', None)
 
-        # Note: Consider how you're setting and extracting the user's identity. The example provided assumes AWS Cognito with API Gateway.
-        user_id = headers.get('Authorization', '').split(':')[0]
+        if not token:
+            return {
+                "statusCode": 401,
+                "body": json.dumps({"message": "Authorization token is missing."})
+            }
+
+        # Decode the JWT token to get user's identity
+        try:
+            payload = jwt.decode(token, options={"verify_signature": False})  # Make sure to verify the signature in production
+            user_id = payload['sub']  # 'sub' is a commonly used key to store user identity in JWT claims
+        except jwt.DecodeError:
+            return {
+                "statusCode": 401,
+                "body": json.dumps({"message": "Invalid token."})
+            }
 
         active_session = get_prune_active_or_create_session(user_id, device_identifier)
 
@@ -70,7 +134,6 @@ def require_session(func: Callable) -> Callable:
 
     return wrapper
 
-
 def get_prune_active_or_create_session(user_id: int, device_identifier: str) -> str:
     active_session = get_prune_active_sessions(user_id, device_identifier)
 
@@ -78,7 +141,6 @@ def get_prune_active_or_create_session(user_id: int, device_identifier: str) -> 
         active_session = [_create_user_session(user_id, device_identifier)]
 
     return active_session[0]
-
 
 def _create_user_session(user_id: int, device_identifier: str, session_time: int = DEFAULT_SESSION_TIME) -> str:
     with CursorCommit() as curs:
@@ -90,7 +152,6 @@ def _create_user_session(user_id: int, device_identifier: str, session_time: int
         curs.execute(query, (user_id, device_identifier, "mobile" if "expo" in device_identifier else "web", session_time))
         session_uuid = curs.fetchone()[0]
         return session_uuid
-
 
 def get_prune_active_sessions(user_id: int, device_identifier: str) -> List[str]:
     _prune_sessions(user_id)
@@ -107,7 +168,6 @@ def get_prune_active_sessions(user_id: int, device_identifier: str) -> List[str]
         user_session_id = curs.fetchall()
 
     return user_session_id
-
 
 def extend_session(session_uuid: str, extension_reason: str, extend_hours: int = DEFAULT_SESSION_TIME) -> None:
     """ extend session & log this in the user session history """
@@ -127,12 +187,10 @@ def extend_session(session_uuid: str, extension_reason: str, extend_hours: int =
         """
         curs.execute(query, (session_uuid, extend_hours, extension_reason))
 
-
 def _prune_sessions(user_id: int) -> None:
     """ prune expired sessions & make user there is max 1 active session per user & device identifier """
     _prune_expired_sessions(user_id)
     _prune_extra_user_device_sessions(user_id)
-
 
 def _prune_extra_user_device_sessions(user_id: int) -> None:
     """ for some user, enforce a max of 1 active session per user-device pair """
@@ -152,7 +210,6 @@ def _prune_extra_user_device_sessions(user_id: int) -> None:
         """
         curs.execute(query, (user_id, user_id))
 
-
 def _prune_expired_sessions(user_id: int) -> None:
     """ mark expired sessions as inactive for some user """
     with CursorCommit() as curs:
@@ -162,5 +219,14 @@ def _prune_expired_sessions(user_id: int) -> None:
              where user_id = %s
                and expires_at <= now()
                and is_active = true
+        """
+        curs.execute(query, (user_id,))
+
+def remove_all_user_sessions(user_id: int) -> None:
+    with CursorCommit() as curs:
+        query = """
+            update user_session
+               set is_active = false
+             where user_id = %s
         """
         curs.execute(query, (user_id,))

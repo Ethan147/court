@@ -8,7 +8,8 @@ from court.utils.session import (_create_user_session, _prune_expired_sessions,
                                  _prune_extra_user_device_sessions,
                                  _prune_sessions, extend_session,
                                  get_prune_active_or_create_session,
-                                 get_prune_active_sessions)
+                                 get_prune_active_sessions,
+                                 remove_all_user_sessions)
 from court.utils.user import create_or_update_user
 
 
@@ -122,7 +123,6 @@ class TestSessionManagement(unittest.TestCase):
 
     def _verify_session(self, columns: str, expected_session: List[Any]) -> None:
         sessions_for_user = self._get_session(columns)
-        # raise ValueError(sessions_for_user)
         self.assertEqual(sessions_for_user, expected_session)
 
     def test_prune_expired_sessions(self) -> None:
@@ -375,5 +375,34 @@ class TestSessionManagement(unittest.TestCase):
             ]
         )
         self.assertEqual(len(user_sessions), 1)
+
+        self._delete_test_sessions()
+
+    def test_remove_all_user_sessions(self) -> None:
+        self._create_test_sessions()
+        self._create_multiple_active_sessions_for_device()
+
+        self._verify_session(
+            "session_uuid, user_id, device_identifier, is_active",
+            [
+                (self.session_uuid_single, self.user_id, 'test_device_identifier_single', True),
+                (self.session_uuid_expired, self.user_id, 'test_device_identifier_expired', True),
+                (self.session_uuid_duplicate_2, self.user_id, 'test_device_identifier_duplicate', True),
+                (self.session_uuid_duplicate_1, self.user_id, 'test_device_identifier_duplicate', True),
+                (self.session_uuid_current, self.user_id, 'test_device_identifier_current', True)
+            ]
+        )
+
+        remove_all_user_sessions(self.user_id)
+        self._verify_session(
+            "session_uuid, user_id, device_identifier, is_active",
+            [
+                (self.session_uuid_single, self.user_id, 'test_device_identifier_single', False),
+                (self.session_uuid_expired, self.user_id, 'test_device_identifier_expired', False),
+                (self.session_uuid_duplicate_2, self.user_id, 'test_device_identifier_duplicate', False),
+                (self.session_uuid_duplicate_1, self.user_id, 'test_device_identifier_duplicate', False),
+                (self.session_uuid_current, self.user_id, 'test_device_identifier_current', False)
+            ]
+        )
 
         self._delete_test_sessions()

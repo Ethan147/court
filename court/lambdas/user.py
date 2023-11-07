@@ -42,7 +42,7 @@ def validate_all_fields(body: Dict[str, Any]) -> Tuple[bool, str]:
     return True, ""
 
 # todo find way to account for user sessioning
-@handle_session_creation
+# @handle_session_creation
 def lambda_register(event: Dict, _: Any) -> Dict[str, Any]:
     """
     API endpoint for user signups

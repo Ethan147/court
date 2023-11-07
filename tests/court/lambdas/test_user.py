@@ -6,7 +6,7 @@ from court.lambdas.user import lambda_register, validate_all_fields
 from court.utils.db import CursorCommit
 
 
-def _testing_body(missing_headers: List[str]) -> Dict[str, Any]:
+def _get_testing_body() -> Dict[str, Any]:
     test_headers = {
         "first_name": "John",
         "last_name": "Doe",
@@ -17,12 +17,20 @@ def _testing_body(missing_headers: List[str]) -> Dict[str, Any]:
         "address": "123 Fake St, Austin TX",
         "terms_consent_version": 'x.x.x'
     }
+    return test_headers
 
+def _testing_body(missing_headers: List[str]) -> Dict[str, Any]:
+    test_headers = _get_testing_body()
     return {
         key: val for key, val in test_headers.items()
         if key not in missing_headers
     }
 
+def _get_testing_headers() -> Dict[str,Any]:
+    return {
+        "User-Agent": "test_some_user_agent",
+
+    }
 
 class TestValidateAllFields(unittest.TestCase):
     def setUp(self) -> None:
@@ -39,7 +47,6 @@ class TestValidateAllFields(unittest.TestCase):
                 delete from public.terms_and_conditions
                 where version = 'x.x.x' and terms_text = 'test'
             """)
-
 
     def test_missing_fields(self) -> None:
         for field in ["first_name", "last_name", "email", "gender", "password", "dob", "address", "terms_consent_version"]:
@@ -58,7 +65,10 @@ class TestValidateAllFields(unittest.TestCase):
 class TestLambdaRegister(unittest.TestCase):
 
     def test_lambda_register_missing_field(self):
-        event = {'body': json.dumps(_testing_body(["first_name"]))}
+        event = {
+            'body': json.dumps(_testing_body(["first_name"])),
+            'headers': json.dumps(_get_testing_headers())
+        }
         response = lambda_register(event, None)
         self.assertEqual(response['statusCode'], 400)
         self.assertEqual(response['body'], '{"message": "Missing field: first_name"}')
