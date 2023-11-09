@@ -2,7 +2,8 @@ import unittest
 
 from court.utils.db import CursorCommit, CursorRollback
 from court.utils.validation import (validate_address, validate_age,
-                                    validate_birthdate, validate_email,
+                                    validate_birthdate,
+                                    validate_device_identifier, validate_email,
                                     validate_gender, validate_name,
                                     validate_password, validate_terms_accepted)
 
@@ -59,8 +60,14 @@ class TestValidationFunctions(unittest.TestCase):
 
     def test_validate_address(self) -> None:
         self.assertTrue(validate_address("123 Main St"))
+        self.assertFalse(validate_address(""))
         self.assertFalse(validate_address(123))  # type: ignore
 
     def test_validate_terms_accepted(self) -> None:
         self.assertTrue(validate_terms_accepted('x.x.x'))
         self.assertFalse(validate_terms_accepted('anything else'))
+
+    def test_validate_device_identifier(self) -> None:
+        self.assertTrue(validate_device_identifier('mysuperfundevice'))
+        self.assertFalse(validate_device_identifier(''))
+        self.assertFalse(validate_device_identifier(123))  # type: ignore

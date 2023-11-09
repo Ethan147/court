@@ -32,7 +32,7 @@ def validate_birthdate(birthdate: str) -> bool:
         return False
 
 def validate_address(address: str) -> bool:
-    return type(address) is str
+    return type(address) is str and bool(address)
 
 def validate_terms_accepted(terms_consent_version: str) -> bool:
     with CursorRollback() as curs:
@@ -41,3 +41,6 @@ def validate_terms_accepted(terms_consent_version: str) -> bool:
             )
         most_recent_terms_version = curs.fetchone()[0]
         return most_recent_terms_version == terms_consent_version
+
+def validate_device_identifier(device_identifier: str) -> bool:
+    return type(device_identifier) is str and bool(device_identifier)
