@@ -208,3 +208,6 @@ class TestUserUtilities(unittest.TestCase):
             curs.execute(
                 "delete from public.user_account where first_name = 'test_find_user'"
             )
+
+
+# todo test that error is raised when multiple users are found (find_user)
