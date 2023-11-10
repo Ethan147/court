@@ -107,8 +107,8 @@ class TestLambdaRegister(unittest.TestCase):
 
     def test_lambda_register_create_user_issue(self) -> None:
 
-        def cognito_sign_up(body: Dict[str, Any]) -> str:
-            return "cognito_user_id"
+        def cognito_sign_up(body: Dict[str, Any]) -> Dict[str, str]:
+            return {"UserSub": "cognito_user_id"}
 
         def create_or_update_user(
             cognito_user_id: str,
@@ -130,5 +130,23 @@ class TestLambdaRegister(unittest.TestCase):
                 }
                 response = api_user.lambda_register(event, None)
                 self.assertEqual(response['statusCode'], 500)
-                raise TypeError(response)
-                # self.assertEqual(response['body'], '{"message": "test create_or_update_user issue"}')
+                self.assertEqual(response['body'], '{"message": "test create_or_update_user issue"}')
+
+    def test_lambda_register_successful_user_creation(self) -> None:
+        return
+        """
+        def cognito_sign_up(body: Dict[str, Any]) -> Dict[str, str]:
+            return {"UserSub": "cognito_user_id"}
+
+        def _get_user()
+
+
+        with patch('court.lambdas.api_user.cognito_sign_up', side_effect=cognito_sign_up):
+            event = {
+                'body': json.dumps(_testing_body([])),
+                'headers': json.dumps(_get_testing_headers())
+            }
+            response = api_user.lambda_register(event, None)
+            self.assertEqual(response['statusCode'], 500)
+            self.assertEqual(response['body'], '{"message": "test create_or_update_user issue"}')
+        """

@@ -1,11 +1,12 @@
 import unittest
 import uuid
 from datetime import date
+from typing import Optional
 
 import psycopg2
 
 from court.utils.db import CursorCommit, CursorRollback
-from court.utils.user import create_or_update_user
+from court.utils.user import UserAccount, create_or_update_user, find_user
 
 
 class TestUserUtilities(unittest.TestCase):
@@ -19,7 +20,6 @@ class TestUserUtilities(unittest.TestCase):
                 values ('x.x.x', 'test', now())
             """)
 
-
     def tearDown(self) -> None:
         super().setUp()
         with CursorCommit() as curs:
@@ -27,7 +27,6 @@ class TestUserUtilities(unittest.TestCase):
                 delete from public.terms_and_conditions
                 where version = 'x.x.x' and terms_text = 'test'
             """)
-
 
     def test_create_valid_user(self) -> None:
         valid_gender_categories = [
@@ -98,8 +97,6 @@ class TestUserUtilities(unittest.TestCase):
                 terms_consent_version='x.x.x',
             )
 
-
-
     def test_double_create_or_upsert_user(self) -> None:
         def _matching_user_count() -> int:
             with CursorRollback() as curs:
@@ -144,4 +141,70 @@ class TestUserUtilities(unittest.TestCase):
             """)
             curs.execute(
                 "delete from public.user_account where first_name = 'test_double_create_or_upsert_user'"
+            )
+
+    def test_find_user(self) -> None:
+
+        def _confirm_result(expected_user_id: int, found_user_account: Optional[UserAccount]) -> None:
+            self.assertTrue(bool(found_user_account))
+            self.assertEqual(expected_user_id, found_user_account.id)  # type: ignore
+            self.assertTrue(bool(found_user_account.id))  # type: ignore
+            self.assertTrue(bool(found_user_account.user_uuid))  # type: ignore
+            self.assertTrue(bool(found_user_account.cognito_user_id))  # type: ignore
+            self.assertTrue(bool(found_user_account.first_name))  # type: ignore
+            self.assertTrue(bool(found_user_account.last_name))  # type: ignore
+            self.assertTrue(bool(found_user_account.email))  # type: ignore
+            self.assertTrue(bool(found_user_account.gender_category))  # type: ignore
+            self.assertTrue(bool(found_user_account.dob))  # type: ignore
+            self.assertTrue(bool(found_user_account.created_at))  # type: ignore
+            self.assertTrue(bool(found_user_account.updated_at))  # type: ignore
+
+        test_uuid = str(uuid.uuid4())
+        first_name = 'test_find_user'
+        last_name = 'test_last_name'
+        email = f"testemail{test_uuid}@example.com"
+        gender_category = "male"
+        date_of_birth=date(2000,1,1)
+        terms_consent_version='x.x.x'
+
+        expected_user_id = create_or_update_user(
+            cognito_user_id=test_uuid,
+            first_name=first_name,
+            last_name=last_name,
+            email=email,
+            gender_category=gender_category,
+            date_of_birth=date_of_birth,
+            terms_consent_version=terms_consent_version,
+        )
+
+        with CursorRollback() as curs:
+            curs.execute("select user_uuid from public.user_account where id = %s", (expected_user_id,))
+            expected_user_uuid = curs.fetchone()[0]
+
+        # find_user will discover a user according to an array of identifiers
+        _confirm_result(expected_user_id, find_user(user_uuid=expected_user_uuid))
+        _confirm_result(expected_user_id, find_user(cognito_user_id=test_uuid))
+        _confirm_result(expected_user_id, find_user(email=email))
+        _confirm_result(expected_user_id, find_user(first_name=first_name, last_name=last_name, dob=date_of_birth))
+        _confirm_result(expected_user_id, find_user(
+            user_uuid=expected_user_uuid,
+            cognito_user_id=test_uuid,
+            email=email,
+            first_name=first_name,
+            last_name=last_name,
+            dob=date_of_birth,
+        ))
+
+        # find user will not find a user unless first_name, last_name, and dob are all passed in
+        self.assertTrue(find_user(first_name=None, last_name=last_name, dob=date_of_birth) is None)
+        self.assertTrue(find_user(first_name=first_name, last_name=None, dob=date_of_birth) is None)
+        self.assertTrue(find_user(first_name=first_name, last_name=last_name, dob=None) is None)
+
+        with CursorCommit() as curs:
+            curs.execute("""
+                delete from public.user_account_terms_consent
+                where user_account_id in (select id from public.user_account where first_name = 'test_find_user')
+            """)
+            curs.execute(
+                "delete from public.user_account where first_name = 'test_find_user'"
             )
