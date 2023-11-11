@@ -20,7 +20,6 @@ class UserAccount:
     created_at: datetime
     updated_at: datetime
 
-
 def find_user(
         user_uuid: Optional[str] = None,
         cognito_user_id: Optional[str] = None,
@@ -86,7 +85,6 @@ def find_user(
         created_at=user[9],
         updated_at=user[10],
     )
-
 
 def create_or_update_user(
         cognito_user_id: str,

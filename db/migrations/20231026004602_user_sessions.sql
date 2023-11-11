@@ -9,7 +9,7 @@ end $$;
 create table user_session (
     id bigserial primary key,
     session_uuid uuid not null unique default uuid_generate_v4(), -- this functions as the 'session token'
-    user_id integer not null references user_account(id),
+    user_account_id integer not null references user_account(id),
     device_identifier varchar(255) not null,  -- mobile: expo installationid; web: generated session id
     device_type varchar(255),  -- e.g., "iphone 12", "web browser", etc. as much specificity as we can manage
     platform platform not null,
@@ -18,7 +18,7 @@ create table user_session (
     is_active boolean not null default true
 );
 
-create index idx_user_session_active_user_session on user_session(user_id) WHERE is_active = true;
+create index idx_user_session_active_user_session on user_session(user_account_id) WHERE is_active = true;
 
 
 create table user_session_history (

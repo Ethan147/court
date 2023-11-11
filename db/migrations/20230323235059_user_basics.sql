@@ -46,7 +46,8 @@ create table user_play_location (
     postal_code text not null,
     location geography(point, 4326), -- WGS 84 SRID
     created_at timestamp not null,
-    updated_at timestamp not null default now()
+    updated_at timestamp not null default now(),
+    is_active boolean not null default true
 );
 
 create index idx_user_play_location on user_play_location using gist(location);
@@ -62,7 +63,8 @@ create table user_mailing_address (
     country text not null,
     postal_code text not null,
     created_at timestamp not null,
-    updated_at timestamp not null default now()
+    updated_at timestamp not null default now(),
+    is_active boolean not null default true
 );
 
 create index idx_user_mailing_address_user_id on user_mailing_address(user_account_id);

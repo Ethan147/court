@@ -209,5 +209,41 @@ class TestUserUtilities(unittest.TestCase):
                 "delete from public.user_account where first_name = 'test_find_user'"
             )
 
+    def test_find_user_multiple_found_error(self) -> None:
+        test_uuid_1 = str(uuid.uuid4())
+        create_or_update_user(
+            cognito_user_id=test_uuid_1,
+            first_name='test_find_user_multiple_found_error',
+            last_name='test_last_name',
+            email=f"testemail{test_uuid_1}@example.com",
+            gender_category="male",
+            date_of_birth=date(2000,1,1),
+            terms_consent_version='x.x.x',
+        )
 
-# todo test that error is raised when multiple users are found (find_user)
+        test_uuid_2 = str(uuid.uuid4())
+        create_or_update_user(
+            cognito_user_id=test_uuid_2,
+            first_name='test_find_user_multiple_found_error',
+            last_name='test_last_name',
+            email=f"testemail{test_uuid_2}@example.com",
+            gender_category="female",
+            date_of_birth=date(2000,1,1),
+            terms_consent_version='x.x.x',
+        )
+
+        with self.assertRaises(ValueError):
+            find_user(
+                first_name='test_find_user_multiple_found_error',
+                last_name='test_last_name',
+                dob=date(2000,1,1)
+            )
+
+        with CursorCommit() as curs:
+            curs.execute("""
+                delete from public.user_account_terms_consent
+                where user_account_id in (select id from public.user_account where first_name = 'test_find_user_multiple_found_error')
+            """)
+            curs.execute(
+                "delete from public.user_account where first_name = 'test_find_user_multiple_found_error'"
+            )

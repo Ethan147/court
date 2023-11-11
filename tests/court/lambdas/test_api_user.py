@@ -5,7 +5,8 @@ from typing import Any, Dict, List, Optional
 from unittest.mock import patch
 
 from court.lambdas import api_user
-from court.utils.db import CursorCommit
+from court.utils.db import CursorCommit, CursorRollback
+from court.utils.user import find_user
 
 
 def _get_testing_body() -> Dict[str, Any]:
@@ -133,20 +134,59 @@ class TestLambdaRegister(unittest.TestCase):
                 self.assertEqual(response['body'], '{"message": "test create_or_update_user issue"}')
 
     def test_lambda_register_successful_user_creation(self) -> None:
-        return
-        """
         def cognito_sign_up(body: Dict[str, Any]) -> Dict[str, str]:
             return {"UserSub": "cognito_user_id"}
 
-        def _get_user()
-
+        self.assertTrue(find_user(email='test@email.com') is None)
 
         with patch('court.lambdas.api_user.cognito_sign_up', side_effect=cognito_sign_up):
             event = {
                 'body': json.dumps(_testing_body([])),
                 'headers': json.dumps(_get_testing_headers())
             }
-            response = api_user.lambda_register(event, None)
-            self.assertEqual(response['statusCode'], 500)
-            self.assertEqual(response['body'], '{"message": "test create_or_update_user issue"}')
-        """
+            _ = api_user.lambda_register(event, None)
+
+        found_user = find_user(email='test@email.com')
+        self.assertTrue(found_user is not None)
+
+        # User terms consent will be inserted, a session will be created,
+        # no history will be created because there is not an extension
+        with CursorRollback() as curs:
+            curs.execute(
+                "select count(*) from public.user_account_terms_consent where user_account_id = %s",
+                (found_user.id,)   # type: ignore
+            )
+            _count_user_accounts = curs.fetchone()[0]
+            self.assertEqual(_count_user_accounts, 1)
+
+            curs.execute(
+                "select count(*) from public.user_session where user_account_id = %s",
+                (found_user.id,)   # type: ignore
+            )
+            _count_user_sessions = curs.fetchone()[0]
+            self.assertEqual(_count_user_sessions, 1)
+
+            curs.execute(
+                """
+                    select count(*) from public.user_session_history ush
+                    join public.user_session us
+                    on us.session_uuid = ush.session_uuid
+                    where us.user_account_id = %s
+                """,
+                (found_user.id,)  # type: ignore
+            )
+            _count_user_session_history = curs.fetchone()[0]
+            self.assertEqual(_count_user_session_history, 0)
+
+        with CursorCommit() as curs:
+            curs.execute("""
+                delete from public.user_session
+                where user_account_id in (select id from public.user_account where email = 'test@email.com')
+            """)
+            curs.execute("""
+                delete from public.user_account_terms_consent
+                where user_account_id in (select id from public.user_account where email = 'test@email.com')
+            """)
+            curs.execute(
+                "delete from public.user_account where email = 'test@email.com'"
+            )

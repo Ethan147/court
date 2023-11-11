@@ -57,7 +57,7 @@ class TestSessionManagement(unittest.TestCase):
         with CursorCommit() as curs:
             curs.execute("""
                 insert into public.user_session
-                    (session_uuid, user_id, device_identifier, device_type, platform, expires_at)
+                    (session_uuid, user_account_id, device_identifier, device_type, platform, expires_at)
                 values
                     (%s, %s, 'test_device_identifier_current', 'test_device_type', 'web', %s),
                     (%s, %s, 'test_device_identifier_expired', 'test_device_type', 'web', %s)
@@ -78,7 +78,7 @@ class TestSessionManagement(unittest.TestCase):
         with CursorCommit() as curs:
             curs.execute("""
                 insert into public.user_session
-                    (session_uuid, user_id, device_identifier, device_type, platform, expires_at, created_at)
+                    (session_uuid, user_account_id, device_identifier, device_type, platform, expires_at, created_at)
                 values
                     (%s, %s, 'test_device_identifier_single', 'test_device_type_single', 'web', %s, %s),
                     (%s, %s, 'test_device_identifier_duplicate', 'test_device_type_remove', 'web', %s, %s),
@@ -99,13 +99,13 @@ class TestSessionManagement(unittest.TestCase):
                      where session_uuid in (
                     select session_uuid
                       from public.user_session
-                     where user_id = %s
+                     where user_account_id = %s
                 )
                 """,
                 (self.user_id,)
             )
             curs.execute(
-                "delete from public.user_session where user_id = %s", (self.user_id,)
+                "delete from public.user_session where user_account_id = %s", (self.user_id,)
             )
 
     def _get_session(self, columns: str) -> List[Any]:
@@ -113,7 +113,7 @@ class TestSessionManagement(unittest.TestCase):
             curs.execute(f"""
                 select {columns}
                   from public.user_session
-                 where user_id = %s
+                 where user_account_id = %s
               order by device_identifier desc, created_at desc
             """,
             (self.user_id,))
@@ -130,7 +130,7 @@ class TestSessionManagement(unittest.TestCase):
 
         # First we have two sessions
         self._verify_session(
-            "session_uuid, user_id, device_identifier, is_active",
+            "session_uuid, user_account_id, device_identifier, is_active",
             [(self.session_uuid_expired, self.user_id, 'test_device_identifier_expired', True),
              (self.session_uuid_current, self.user_id, 'test_device_identifier_current', True)]
         )
@@ -138,7 +138,7 @@ class TestSessionManagement(unittest.TestCase):
         # Then we prune sessions and are left only with the active session
         _prune_expired_sessions(self.user_id)
         self._verify_session(
-            "session_uuid, user_id, device_identifier, is_active",
+            "session_uuid, user_account_id, device_identifier, is_active",
             [(self.session_uuid_expired, self.user_id, 'test_device_identifier_expired', False),
              (self.session_uuid_current, self.user_id, 'test_device_identifier_current', True)]
         )
@@ -151,7 +151,7 @@ class TestSessionManagement(unittest.TestCase):
 
         # First, we have three sessions, two for 'test_device_identifier_duplicate' and one for 'test_device_identifier_single'
         self._verify_session(
-            "session_uuid, user_id, device_identifier, is_active",
+            "session_uuid, user_account_id, device_identifier, is_active",
             [
                 (self.session_uuid_single, self.user_id, 'test_device_identifier_single', True),
                 (self.session_uuid_duplicate_2, self.user_id, 'test_device_identifier_duplicate', True),
@@ -162,7 +162,7 @@ class TestSessionManagement(unittest.TestCase):
         # Then we prune sessions, and should be left with one active session for each device_identifier
         _prune_extra_user_device_sessions(self.user_id)
         self._verify_session(
-            "session_uuid, user_id, device_identifier, is_active",
+            "session_uuid, user_account_id, device_identifier, is_active",
             [
                 (self.session_uuid_single, self.user_id, 'test_device_identifier_single', True),
                 (self.session_uuid_duplicate_2, self.user_id, 'test_device_identifier_duplicate', True),
@@ -178,7 +178,7 @@ class TestSessionManagement(unittest.TestCase):
         self._create_multiple_active_sessions_for_device()
 
         self._verify_session(
-            "session_uuid, user_id, device_identifier, is_active",
+            "session_uuid, user_account_id, device_identifier, is_active",
             [
                 (self.session_uuid_single, self.user_id, 'test_device_identifier_single', True),
                 (self.session_uuid_expired, self.user_id, 'test_device_identifier_expired', True),
@@ -191,7 +191,7 @@ class TestSessionManagement(unittest.TestCase):
         _prune_sessions(self.user_id)
 
         self._verify_session(
-            "session_uuid, user_id, device_identifier, is_active",
+            "session_uuid, user_account_id, device_identifier, is_active",
             [
                 (self.session_uuid_single, self.user_id, 'test_device_identifier_single', True),
                 (self.session_uuid_expired, self.user_id, 'test_device_identifier_expired', False),
@@ -208,7 +208,7 @@ class TestSessionManagement(unittest.TestCase):
 
         # First we have two sessions
         self._verify_session(
-            "session_uuid, user_id, device_identifier, is_active",
+            "session_uuid, user_account_id, device_identifier, is_active",
             [(self.session_uuid_expired, self.user_id, 'test_device_identifier_expired', True),
              (self.session_uuid_current, self.user_id, 'test_device_identifier_current', True)]
         )
@@ -253,17 +253,17 @@ class TestSessionManagement(unittest.TestCase):
         self._delete_test_sessions()
 
     def test_create_user_session(self) -> None:
-        self._verify_session("session_uuid, user_id, device_identifier, is_active", [])
+        self._verify_session("session_uuid, user_account_id, device_identifier, is_active", [])
 
         web_session_uuid_1 = _create_user_session(self.user_id, "some_rando_web_identifier")
         self._verify_session(
-            "session_uuid, user_id, device_identifier, is_active, platform",
+            "session_uuid, user_account_id, device_identifier, is_active, platform",
             [(web_session_uuid_1, self.user_id, 'some_rando_web_identifier', True, 'web')]
         )
 
         expo_session_uuid_1 = _create_user_session(self.user_id, "some_expo_device_identifier")
         self._verify_session(
-            "session_uuid, user_id, device_identifier, is_active, platform",
+            "session_uuid, user_account_id, device_identifier, is_active, platform",
             [
                 (web_session_uuid_1, self.user_id, 'some_rando_web_identifier', True, 'web'),
                 (expo_session_uuid_1, self.user_id, 'some_expo_device_identifier', True, 'mobile'),
@@ -274,7 +274,7 @@ class TestSessionManagement(unittest.TestCase):
         expo_session_uuid_2 = _create_user_session(self.user_id, "some_other_expo_identifier")
 
         self._verify_session(
-            "session_uuid, user_id, device_identifier, is_active, platform",
+            "session_uuid, user_account_id, device_identifier, is_active, platform",
             [
                 (web_session_uuid_1, self.user_id, 'some_rando_web_identifier', True, 'web'),
                 (web_session_uuid_2, self.user_id, 'some_other_web_identifier', True, 'web'),
@@ -287,7 +287,7 @@ class TestSessionManagement(unittest.TestCase):
         web_session_uuid_dup_3 = _create_user_session(self.user_id, "some_other_web_identifier")
         expo_session_uuid_dup_3 = _create_user_session(self.user_id, "some_other_expo_identifier")
         self._verify_session(
-            "session_uuid, user_id, device_identifier, is_active, platform",
+            "session_uuid, user_account_id, device_identifier, is_active, platform",
             [
                 (web_session_uuid_1, self.user_id, 'some_rando_web_identifier', True, 'web'),
                 (web_session_uuid_dup_3, self.user_id, 'some_other_web_identifier', True, 'web'),
@@ -301,17 +301,17 @@ class TestSessionManagement(unittest.TestCase):
         self._delete_test_sessions()
 
     def test_get_prune_active_or_create_session(self) -> None:
-        self._verify_session("session_uuid, user_id, device_identifier, is_active", [])
+        self._verify_session("session_uuid, user_account_id, device_identifier, is_active", [])
 
         web_session_uuid_1 = get_prune_active_or_create_session(self.user_id, "some_rando_web_identifier")
         self._verify_session(
-            "session_uuid, user_id, device_identifier, is_active, platform",
+            "session_uuid, user_account_id, device_identifier, is_active, platform",
             [(web_session_uuid_1, self.user_id, 'some_rando_web_identifier', True, 'web')]
         )
 
         expo_session_uuid_1 = get_prune_active_or_create_session(self.user_id, "some_expo_device_identifier")
         self._verify_session(
-            "session_uuid, user_id, device_identifier, is_active, platform",
+            "session_uuid, user_account_id, device_identifier, is_active, platform",
             [
                 (web_session_uuid_1, self.user_id, 'some_rando_web_identifier', True, 'web'),
                 (expo_session_uuid_1, self.user_id, 'some_expo_device_identifier', True, 'mobile'),
@@ -322,7 +322,7 @@ class TestSessionManagement(unittest.TestCase):
         expo_session_uuid_2 = get_prune_active_or_create_session(self.user_id, "some_other_expo_identifier")
 
         self._verify_session(
-            "session_uuid, user_id, device_identifier, is_active, platform",
+            "session_uuid, user_account_id, device_identifier, is_active, platform",
             [
                 (web_session_uuid_1, self.user_id, 'some_rando_web_identifier', True, 'web'),
                 (web_session_uuid_2, self.user_id, 'some_other_web_identifier', True, 'web'),
@@ -335,7 +335,7 @@ class TestSessionManagement(unittest.TestCase):
         _ = get_prune_active_or_create_session(self.user_id, "some_other_web_identifier")
         _ = get_prune_active_or_create_session(self.user_id, "some_other_expo_identifier")
         self._verify_session(
-            "session_uuid, user_id, device_identifier, is_active, platform",
+            "session_uuid, user_account_id, device_identifier, is_active, platform",
             [
                 (web_session_uuid_1, self.user_id, 'some_rando_web_identifier', True, 'web'),
                 (web_session_uuid_2, self.user_id, 'some_other_web_identifier', True, 'web'),
@@ -352,7 +352,7 @@ class TestSessionManagement(unittest.TestCase):
 
         # First we have two sessions
         self._verify_session(
-            "session_uuid, user_id, device_identifier, is_active",
+            "session_uuid, user_account_id, device_identifier, is_active",
             [
                 (self.session_uuid_single, self.user_id, 'test_device_identifier_single', True),
                 (self.session_uuid_expired, self.user_id, 'test_device_identifier_expired', True),
@@ -365,7 +365,7 @@ class TestSessionManagement(unittest.TestCase):
         # Then after we get_prune_active_sessions one of the sessions will be marked inactive & only one active session is returned
         user_sessions = get_prune_active_sessions(self.user_id, 'test_device_identifier_duplicate')
         self._verify_session(
-            "session_uuid, user_id, device_identifier, is_active",
+            "session_uuid, user_account_id, device_identifier, is_active",
             [
                 (self.session_uuid_single, self.user_id, 'test_device_identifier_single', True),
                 (self.session_uuid_expired, self.user_id, 'test_device_identifier_expired', False),
@@ -383,7 +383,7 @@ class TestSessionManagement(unittest.TestCase):
         self._create_multiple_active_sessions_for_device()
 
         self._verify_session(
-            "session_uuid, user_id, device_identifier, is_active",
+            "session_uuid, user_account_id, device_identifier, is_active",
             [
                 (self.session_uuid_single, self.user_id, 'test_device_identifier_single', True),
                 (self.session_uuid_expired, self.user_id, 'test_device_identifier_expired', True),
@@ -395,7 +395,7 @@ class TestSessionManagement(unittest.TestCase):
 
         remove_all_user_sessions(self.user_id)
         self._verify_session(
-            "session_uuid, user_id, device_identifier, is_active",
+            "session_uuid, user_account_id, device_identifier, is_active",
             [
                 (self.session_uuid_single, self.user_id, 'test_device_identifier_single', False),
                 (self.session_uuid_expired, self.user_id, 'test_device_identifier_expired', False),

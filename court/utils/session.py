@@ -1,5 +1,5 @@
 import json
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Callable, Dict, List
 
 from court.utils.db import CursorCommit, CursorRollback
 
@@ -65,9 +65,9 @@ def get_prune_active_or_create_session(user_id: int, device_identifier: str) -> 
 def _create_user_session(user_id: int, device_identifier: str, session_time: int = DEFAULT_SESSION_TIME) -> str:
     with CursorCommit() as curs:
         query = """
-            insert into user_session (user_id, device_identifier, platform, expires_at)
+            insert into public.user_session (user_account_id, device_identifier, platform, expires_at)
             values (%s, %s, %s, now() + interval '%s hour')
-            returning session_uuid;
+            returning session_uuid
         """
         curs.execute(query, (user_id, device_identifier, "mobile" if "expo" in device_identifier else "web", session_time))
         session_uuid = curs.fetchone()[0]
@@ -80,7 +80,7 @@ def get_prune_active_sessions(user_id: int, device_identifier: str) -> List[str]
         query = """
             select session_uuid
               from public.user_session
-             where user_id = %s
+             where user_account_id = %s
                and device_identifier = %s
                and is_active is true
         """
@@ -93,17 +93,17 @@ def extend_session(session_uuid: str, extension_reason: str, extend_hours: int =
     """ extend session & log this in the user session history """
     with CursorCommit() as curs:
         query = """
-            update user_session
+            update public.user_session
                set expires_at = now() + interval '%s hour'
-             where session_uuid = %s;
+             where session_uuid = %s
         """
         curs.execute(query, (extend_hours, session_uuid,))
 
         query = """
-            insert into user_session_history
+            insert into public.user_session_history
                 (session_uuid, previous_expires_at, new_expires_at, extension_reason)
             values
-                (%s, now(), now() + interval '%s hour', %s);
+                (%s, now(), now() + interval '%s hour', %s)
         """
         curs.execute(query, (session_uuid, extend_hours, extension_reason))
 
@@ -118,12 +118,12 @@ def _prune_extra_user_device_sessions(user_id: int) -> None:
         query = """
             update public.user_session
                set is_active = false
-             where user_id = %s
+             where user_account_id = %s
                and is_active = true
                and session_uuid NOT IN (
                     select distinct on (device_identifier) session_uuid
                       from public.user_session
-                     where user_id = %s
+                     where user_account_id = %s
                        and is_active = true
                   order by device_identifier, created_at desc
                )
@@ -134,9 +134,9 @@ def _prune_expired_sessions(user_id: int) -> None:
     """ mark expired sessions as inactive for some user """
     with CursorCommit() as curs:
         query = """
-            update user_session
+            update public.user_session
                set is_active = false
-             where user_id = %s
+             where user_account_id = %s
                and expires_at <= now()
                and is_active = true
         """
@@ -145,8 +145,8 @@ def _prune_expired_sessions(user_id: int) -> None:
 def remove_all_user_sessions(user_id: int) -> None:
     with CursorCommit() as curs:
         query = """
-            update user_session
+            update public.user_session
                set is_active = false
-             where user_id = %s
+             where user_account_id = %s
         """
         curs.execute(query, (user_id,))
