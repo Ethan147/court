@@ -2,11 +2,14 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Optional
 
+from court.utils import location as loc
 from court.utils.db import CursorCommit, CursorRollback
 
 """
 todo: should the sign-in API request address at all?
 If so, mailing address? play location? both? neither?
+
+A: yes, a first play location that they can add onto later (later, maybe expand to multiple play locations?)
 """
 
 @dataclass
@@ -94,7 +97,7 @@ def find_user_mailing_address(
 ) -> Optional[UserMailingAddress]:
     with CursorRollback() as curs:
         query = """
-            select id, user_acccount_id, address_line_1, address_line_2,
+            select id, user_account_id, address_line_1, address_line_2,
                    city, state, country, postal_code, created_at, updated_at,
                    is_active
               from public.user_mailing_address
@@ -103,6 +106,7 @@ def find_user_mailing_address(
                and address_line_2 = %s
                and city = %s
                and state = %s
+               and country = %s
                and postal_code = %s
                and is_active is %s
         """
@@ -113,7 +117,7 @@ def find_user_mailing_address(
         rows = curs.fetchall()
 
     if len(rows) > 1:
-        raise ValueError("Multiple users found")
+        raise ValueError("Multiple mailing addresses found")
 
     if len(rows) == 0:
         return None
@@ -156,7 +160,6 @@ def _insert_user_mailing_address(
             (user_account_id, address_line_1, address_line_2, city, state, country, postal_code)
         )
         user_mailing_address_id, created_at, updated_at = curs.fetchall()[0]
-
 
     return UserMailingAddress(
         id=user_mailing_address_id,
@@ -218,8 +221,8 @@ def find_user_play_location(
                    state,
                    country,
                    postal_code,
-                   ST_Y(ST_GeographyFromText(ST_AsText(location))) AS latitude,
-                   ST_X(ST_GeographyFromText(ST_AsText(location))) AS longitude
+                   ST_Y(location::geometry) AS latitude,
+                   ST_X(location::geometry) AS longitude,
                    created_at,
                    updated_at,
                    is_active
@@ -229,6 +232,7 @@ def find_user_play_location(
                and address_line_2 = %s
                and city = %s
                and state = %s
+               and country = %s
                and postal_code = %s
                and is_active is %s
         """
@@ -277,14 +281,14 @@ def insert_user_play_location(
     with CursorCommit() as curs:
         query = """
             insert into public.user_play_location
-            (user_account_id, address_line_1, city, state, country, postal_code, location, created_at)
+            (user_account_id, address_line_1, address_line_2, city, state, country, postal_code, location, created_at, is_active)
             values
-            (%s, %s, %s, %s, %s, %s, ST_SetSRID(ST_MakePoint(%s, %s), 4326), now())
+            (%s, %s, %s, %s, %s, %s, %s, ST_SetSRID(ST_MakePoint(%s, %s), 4326), now())
             returning id, created_at, updated_at
         """
         curs.execute(
             query,
-            (user_account_id, address_line_1, address_line_2, city, state, country, postal_code, is_active)
+            (user_account_id, address_line_1, address_line_2, city, state, country, postal_code, longitude, latitude, is_active)
         )
         user_play_location_id, created_at, updated_at = curs.fetchall()[0]
 
