@@ -125,7 +125,7 @@ class TestUserLocationManagement(unittest.TestCase):
                 (test_address.id,)
             )
 
-    def test_find_user_mailing_address_value_error(self):
+    def test_find_user_mailing_address_value_error(self) -> None:
         # Insert two identical addresses for the same user
         with CursorCommit() as curs:
             query = """
@@ -158,50 +158,43 @@ class TestUserLocationManagement(unittest.TestCase):
                 (self.user_account_id,)
             )
 
-    def test_find_user_play_location(self) -> None:
+    def test_insert_find_user_play_location(self) -> None:
         # No user play location exists at first
         existing_location = loc.find_user_play_location(
             self.user_account_id, self.address_line_1, self.address_line_2,
             self.city, self.state, self.country, self.postal_code
         )
 
-
-
-        return
-        # Assuming you have a setup that creates a user_play_location entry
-        # Test finding an existing user play location
+        # Then after we insert it's locatable
+        loc.insert_user_play_location(
+            self.user_account_id, self.address_line_1, self.address_line_2,
+            self.city, self.state, self.country, self.postal_code,
+            39.7817, -89.6501, True
+        )
         existing_location = loc.find_user_play_location(
             self.user_account_id, self.address_line_1, self.address_line_2,
             self.city, self.state, self.country, self.postal_code
         )
+
         self.assertIsNotNone(existing_location)
-        self.assertEqual(existing_location.city, self.city)
+        self.assertTrue(bool(existing_location.id))  # type: ignore
+        self.assertEqual(existing_location.user_account_id, self.user_account_id)  # type: ignore
+        self.assertEqual(existing_location.address_line_1, self.address_line_1)  # type: ignore
+        self.assertEqual(existing_location.address_line_2, self.address_line_2)  # type: ignore
+        self.assertEqual(existing_location.city, self.city)  # type: ignore
+        self.assertEqual(existing_location.state, self.state)  # type: ignore
+        self.assertEqual(existing_location.country, self.country)  # type: ignore
+        self.assertEqual(existing_location.postal_code, self.postal_code)  # type: ignore
+        self.assertEqual(existing_location.latitude, 39.7817)  # type: ignore
+        self.assertEqual(existing_location.longitude, -89.6501)  # type: ignore
+        self.assertIsNotNone(existing_location.created_at)  # type: ignore
+        self.assertIsNotNone(existing_location.updated_at)  # type: ignore
+        self.assertEqual(existing_location.is_active, True)  # type: ignore
 
-        # Test finding a non-existent user play location
-        non_existent_location = loc.find_user_play_location(
-            self.user_account_id, "Nonexistent Street", None,
-            "Nonexistent City", "XX", "Nonexistent Country", "00000"
-        )
-        self.assertIsNone(non_existent_location)
-
-    def test_insert_user_play_location(self) -> None:
-        return
-        # Test inserting a new user play location
-        new_latitude = 40.7128
-        new_longitude = -74.0060
-        new_location = loc.insert_user_play_location(
-            self.user_account_id, "New Street", None,
-            "New City", "NY", "USA", "10001",
-            new_latitude, new_longitude
-        )
-        self.assertEqual(new_location.latitude, new_latitude)
-        self.assertEqual(new_location.longitude, new_longitude)
-
-        # Cleanup - Delete the created location
         with CursorCommit() as curs:
             curs.execute(
                 "delete from public.user_play_location where id = %s",
-                (new_location.id,)
+                (existing_location.id,)  # type: ignore
             )
 
     def test_find_or_create_user_play_location(self) -> None:

@@ -283,7 +283,7 @@ def insert_user_play_location(
             insert into public.user_play_location
             (user_account_id, address_line_1, address_line_2, city, state, country, postal_code, location, created_at, is_active)
             values
-            (%s, %s, %s, %s, %s, %s, %s, ST_SetSRID(ST_MakePoint(%s, %s), 4326), now())
+            (%s, %s, %s, %s, %s, %s, %s, ST_SetSRID(ST_MakePoint(%s, %s), 4326), now(), %s)
             returning id, created_at, updated_at
         """
         curs.execute(
