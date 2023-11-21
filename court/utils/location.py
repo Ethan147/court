@@ -5,12 +5,6 @@ from typing import Optional
 from court.utils import location as loc
 from court.utils.db import CursorCommit, CursorRollback
 
-"""
-todo: should the sign-in API request address at all?
-If so, mailing address? play location? both? neither?
-
-A: yes, a first play location that they can add onto later (later, maybe expand to multiple play locations?)
-"""
 
 @dataclass
 class UserMailingAddress:
@@ -35,21 +29,6 @@ class UserPlayLocation:
     """
         Representation of a user play location;
         this is distinct from a user mailing location
-
-    create table user_play_location (
-        id bigserial primary key,
-        user_account_id integer not null references user_account(id) on delete cascade,
-        address_line_1 text not null,
-        address_line_2 text,
-        city text not null,
-        state text not null,
-        country text not null,
-        postal_code text not null,
-        location geography(point, 4326), -- WGS 84 SRID
-        created_at timestamp not null,
-        updated_at timestamp not null default now(),
-        is_active boolean not null default true
-    );
     """
     id: int
     user_account_id: int

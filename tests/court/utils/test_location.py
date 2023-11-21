@@ -87,7 +87,7 @@ class TestUserLocationManagement(unittest.TestCase):
                 (address.id,)
             )
 
-    def test_find_and_find_user_mailing_address(self) -> None:
+    def test_find_and_insert_user_mailing_address(self) -> None:
         # At first, the address will not exist
         found_address = loc.find_user_mailing_address(
             self.user_account_id, self.address_line_1, self.address_line_2,
@@ -158,12 +158,13 @@ class TestUserLocationManagement(unittest.TestCase):
                 (self.user_account_id,)
             )
 
-    def test_insert_find_user_play_location(self) -> None:
+    def test_find_and_insert_user_play_location(self) -> None:
         # No user play location exists at first
-        existing_location = loc.find_user_play_location(
+        found_location = loc.find_user_play_location(
             self.user_account_id, self.address_line_1, self.address_line_2,
             self.city, self.state, self.country, self.postal_code
         )
+        self.assertIsNone(found_location)
 
         # Then after we insert it's locatable
         loc.insert_user_play_location(
@@ -198,30 +199,81 @@ class TestUserLocationManagement(unittest.TestCase):
             )
 
     def test_find_or_create_user_play_location(self) -> None:
-        return
+        # No user play location exists at first
+        found_location = loc.find_user_play_location(
+            self.user_account_id, self.address_line_1, self.address_line_2,
+            self.city, self.state, self.country, self.postal_code
+        )
+        self.assertIsNone(found_location)
+
         # Test that a new play location is created if it does not exist
         new_latitude = 34.0522
         new_longitude = -118.2437
         play_location = loc.find_or_create_user_play_location(
-            self.user_account_id, "Some Street", None,
-            "Los Angeles", "CA", "USA", "90001",
+            self.user_account_id, self.address_line_1, self.address_line_2,
+            self.city, self.state, self.country, self.postal_code,
             new_latitude, new_longitude
         )
         self.assertIsNotNone(play_location)
-        self.assertEqual(play_location.latitude, new_latitude)
-        self.assertEqual(play_location.longitude, new_longitude)
+        self.assertTrue(bool(play_location.id))  # type: ignore
+        self.assertEqual(play_location.user_account_id, self.user_account_id)  # type: ignore
+        self.assertEqual(play_location.address_line_1, self.address_line_1)  # type: ignore
+        self.assertEqual(play_location.address_line_2, self.address_line_2)  # type: ignore
+        self.assertEqual(play_location.city, self.city)  # type: ignore
+        self.assertEqual(play_location.state, self.state)  # type: ignore
+        self.assertEqual(play_location.country, self.country)  # type: ignore
+        self.assertEqual(play_location.postal_code, self.postal_code)  # type: ignore
+        self.assertEqual(play_location.latitude, new_latitude)  # type: ignore
+        self.assertEqual(play_location.longitude, new_longitude)  # type: ignore
+        self.assertIsNotNone(play_location.created_at)  # type: ignore
+        self.assertIsNotNone(play_location.updated_at)  # type: ignore
+        self.assertEqual(play_location.is_active, True)  # type: ignore
 
         # Test that the same play location is returned if it already exists
         same_play_location = loc.find_or_create_user_play_location(
-            self.user_account_id, "Some Street", None,
-            "Los Angeles", "CA", "USA", "90001",
+            self.user_account_id, self.address_line_1, self.address_line_2,
+            self.city, self.state, self.country, self.postal_code,
             new_latitude, new_longitude
         )
-        self.assertEqual(play_location.id, same_play_location.id)
+        self.assertEqual(play_location, same_play_location)
 
         # Cleanup - Delete the created play location
         with CursorCommit() as curs:
             curs.execute(
                 "delete from public.user_play_location where id = %s",
                 (play_location.id,)
+            )
+
+    def test_find_user_play_location_value_error(self) -> None:
+        # Insert two identical addresses for the same user
+        with CursorCommit() as curs:
+            query = """
+                insert into public.user_play_location
+                (
+                    user_account_id, address_line_1, address_line_2, city, state, country,
+                    postal_code, location, created_at, is_active
+                )
+                values (%s, %s, %s, %s, %s, %s, %s, ST_GeogFromText('POINT(-89.6501 39.7817)'), now(), true),
+                    (%s, %s, %s, %s, %s, %s, %s, ST_GeogFromText('POINT(-89.6501 39.7817)'), now(), true);
+            """
+            values = (
+                self.user_account_id, self.address_line_1, self.address_line_2,
+                self.city, self.state, self.country, self.postal_code,
+                self.user_account_id, self.address_line_1, self.address_line_2,
+                self.city, self.state, self.country, self.postal_code
+            )
+            curs.execute(query, values)
+
+        # Multiple addresses will lead to a ValueError condition
+        with self.assertRaises(ValueError) as context:
+            _ = loc.find_user_play_location(
+                self.user_account_id, self.address_line_1, self.address_line_2,
+                self.city, self.state, self.country, self.postal_code
+            )
+            self.assertTrue("Multiple user play locations found" in str(context.exception))
+
+        with CursorCommit() as curs:
+            curs.execute(
+                "delete from public.user_mailing_address where user_account_id = %s",
+                (self.user_account_id,)
             )
