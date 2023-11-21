@@ -17,6 +17,7 @@ aws-sam-cli = "^1.78.0"
 faker = "^18.4.0"
 geopy = "^2.3.0"
 glicko2 = "^2.0.0"
+connexion = "^3.0.2"
 
 
 [tool.poetry.group.dev.dependencies]
