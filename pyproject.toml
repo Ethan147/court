@@ -21,6 +21,7 @@ connexion = "^3.0.2"
 pydantic = "^2.5.2"
 python-dateutil = "^2.8.2"
 types-python-dateutil = "^2.8.19.14"
+email-validator = "^2.1.0.post1"
 
 
 [tool.poetry.group.dev.dependencies]

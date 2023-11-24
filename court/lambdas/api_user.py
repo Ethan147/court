@@ -1,14 +1,53 @@
 import json
-from typing import Any, Dict
+import re
+from datetime import datetime
+from typing import Any, Dict, Optional
 
-from pydantic import ValidationError
+from dateutil.relativedelta import relativedelta
+from pydantic import BaseModel, EmailStr, ValidationError, constr, validator
 
 from court.utils.aws_cognito import cognito_sign_up
 from court.utils.db import CursorCommit, CursorRollback
 from court.utils.session import get_prune_active_or_create_session
 from court.utils.user import create_or_update_user
-from court.utils.validation import SignupRequest
 
+MIN_AGE = 16
+
+class SignupRequest(BaseModel):
+    first_name: constr(min_length=1, pattern="^[a-zA-Z]+$")  # type: ignore
+    last_name: constr(min_length=1, pattern="^[a-zA-Z]+$")  # type: ignore
+    email: EmailStr
+    gender: constr(pattern="^(male|female|other)$")  # type: ignore
+    password: str
+    dob: datetime
+    address: constr(min_length=1)  # type: ignore
+    terms_consent_version: constr(min_length=1)  # type: ignore
+    device_identifier: constr(min_length=1)  # type: ignore
+
+    @validator('password')
+    def validate_password(cls, v: str) -> str:
+        if len(v) < 8:
+            raise ValidationError("Password must be at least 8 characters long")
+
+        if not bool(re.match(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.])[A-Za-z\d@$!%*?&.]{8,}$", v)):
+            raise ValidationError("Weak password")
+
+        return v
+
+    @validator('dob')
+    def validate_age(cls, v: datetime) -> datetime:
+        if relativedelta(datetime.now(), v).years < MIN_AGE:
+            raise ValidationError(f"Age must be at least {MIN_AGE} years")
+        return v
+
+    @validator('terms_consent_version')
+    def validate_terms_accepted(cls, v: str) -> str:
+        with CursorRollback() as curs:
+            curs.execute("select version from public.terms_and_conditions order by created_at desc")
+            most_recent_version = curs.fetchone()
+            if not most_recent_version or most_recent_version[0] != v:
+                raise ValidationError("Terms and conditions version does not match the most recent version.")
+            return v
 
 def lambda_register(event: Dict, _: Any) -> Dict[str, Any]:
     """
@@ -21,7 +60,6 @@ def lambda_register(event: Dict, _: Any) -> Dict[str, Any]:
     """
 
     try:
-        # Parse and validate the request body using Pydantic
         signup_request = SignupRequest(**json.loads(event.get("body", "{}")))
 
         response = cognito_sign_up(signup_request.dict())
