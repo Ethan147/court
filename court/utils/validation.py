@@ -1,46 +1,35 @@
 import re
 from datetime import datetime
 
+from dateutil.relativedelta import relativedelta
+from pydantic import BaseModel, EmailStr, constr, validator
+
 from court.utils.db import CursorRollback
 
 MIN_AGE = 16
 
-def validate_name(name: str) -> bool:
-    return bool(re.match("^[a-zA-Z]+$", name))
+class SignupRequest(BaseModel):
+    first_name: constr(min_length=1, strip_whitespace=True, regex=r"^[a-zA-Z]+$")  # type: ignore
+    last_name: constr(min_length=1, strip_whitespace=True, regex=r"^[a-zA-Z]+$")  # type: ignore
+    email: EmailStr
+    gender: constr(regex=r"^(male|female|other)$")  # type: ignore
+    password: constr(min_length=8, regex=r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.])[A-Za-z\d@$!%*?&.]{8,}$")  # type: ignore
+    dob: datetime
+    address: constr(min_length=1)  # type: ignore
+    terms_consent_version: constr(min_length=1)  # type: ignore
+    device_identifier: constr(min_length=1)  # type: ignore
 
-def validate_email(email: str) -> bool:
-    return bool(re.match(r"[^@]+@[^@]+\.[^@]+", email))
+    @validator('dob')
+    def validate_age(cls, v: datetime) -> datetime:
+        if relativedelta(datetime.now(), v).years < MIN_AGE:
+            raise ValueError(f"Age must be at least {MIN_AGE} years")
+        return v
 
-def validate_password(password: str) -> bool:
-    if len(password) < 8:
-        return False
-
-    return bool(re.match(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.])[A-Za-z\d@$!%*?&.]{8,}$", password))
-
-def validate_gender(gender: str) -> bool:
-    return gender.lower() in ["male", "female", "other"]
-
-def validate_age(age: int) -> bool:
-    return age > MIN_AGE
-
-def validate_birthdate(birthdate: str) -> bool:
-    """ date format MM/DD/YYYY """
-    try:
-        datetime.strptime(birthdate, "%m/%d/%Y")
-        return True
-    except ValueError:
-        return False
-
-def validate_address(address: str) -> bool:
-    return type(address) is str and bool(address)
-
-def validate_terms_accepted(terms_consent_version: str) -> bool:
-    with CursorRollback() as curs:
-        curs.execute(
-            "select version from public.terms_and_conditions order by created_at desc"
-            )
-        most_recent_terms_version = curs.fetchone()[0]
-        return most_recent_terms_version == terms_consent_version
-
-def validate_device_identifier(device_identifier: str) -> bool:
-    return type(device_identifier) is str and bool(device_identifier)
+    @validator('terms_consent_version')
+    def validate_terms_accepted(cls, v: str) -> str:
+        with CursorRollback() as curs:
+            curs.execute("select version from public.terms_and_conditions order by created_at desc")
+            most_recent_version = curs.fetchone()
+            if not most_recent_version or most_recent_version[0] != v:
+                raise ValueError("Terms and conditions version does not match the most recent version.")
+            return v
