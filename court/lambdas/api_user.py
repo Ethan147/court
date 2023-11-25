@@ -27,17 +27,17 @@ class SignupRequest(BaseModel):
     @validator('password')
     def validate_password(cls, v: str) -> str:
         if len(v) < 8:
-            raise ValidationError("Password must be at least 8 characters long")
+            raise ValueError("Password must be at least 8 characters long")
 
         if not bool(re.match(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.])[A-Za-z\d@$!%*?&.]{8,}$", v)):
-            raise ValidationError("Weak password")
+            raise ValueError("Weak password")
 
         return v
 
     @validator('dob')
     def validate_age(cls, v: datetime) -> datetime:
         if relativedelta(datetime.now(), v).years < MIN_AGE:
-            raise ValidationError(f"Age must be at least {MIN_AGE} years")
+            raise ValueError(f"Age must be at least {MIN_AGE} years")
         return v
 
     @validator('terms_consent_version')
@@ -46,7 +46,7 @@ class SignupRequest(BaseModel):
             curs.execute("select version from public.terms_and_conditions order by created_at desc")
             most_recent_version = curs.fetchone()
             if not most_recent_version or most_recent_version[0] != v:
-                raise ValidationError("Terms and conditions version does not match the most recent version.")
+                raise ValueError("Terms and conditions version does not match the most recent version.")
             return v
 
 def lambda_register(event: Dict, _: Any) -> Dict[str, Any]:
