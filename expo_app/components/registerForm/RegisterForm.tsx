@@ -655,25 +655,34 @@ const RegisterForm = () => {
                 component={
                   <TextAddOn
                     component={
-                      <AddressInputComp // TODO - get API set up & continue from there
-                        onPlaceSelected={(data, details) =>
-                          formik.setFieldValue("address", {
-                            place_id: data.place_id,
-                            formatted_address: details.formatted_address,
-                          })
+                      <TextAddOn
+                        component={
+                          <AddressInputComp // TODO - get API set up & continue from there
+                            onPlaceSelected={(data, details) =>
+                              formik.setFieldValue("address", {
+                                place_id: data.place_id,
+                                formatted_address: details.formatted_address,
+                              })
+                            }
+                            passStyles={passAddressInputStyles}
+                          />
                         }
-                        passStyles={passAddressInputStyles}
+                        value={
+                          "Enter an address as your play hub for tennis or pickleball - it could be home, work, or anywhere in between."
+                        }
+                        display={true}
+                        passStyles={passFormInputTextAddOnHintStyles}
                       />
                     }
                     value={
-                      "Your address will be used solely to match you with nearby tennis, racquetball, and/or pickleball partners."
+                      "You can always expand your play zone by adding more locations later!"
                     }
                     display={true}
                     passStyles={passFormInputTextAddOnHintStyles}
                   />
                 }
                 value={
-                  "We're committed to helping you find the perfect match within your community!"
+                  "Your address will be used solely to match you with nearby tennis and/or pickleball partners."
                 }
                 display={true}
                 passStyles={passFormInputTextAddOnHintStyles}
