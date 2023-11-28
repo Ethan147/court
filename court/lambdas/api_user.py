@@ -23,6 +23,7 @@ class SignupRequest(BaseModel):
     address: constr(min_length=1)  # type: ignore
     terms_consent_version: constr(min_length=1)  # type: ignore
     device_identifier: constr(min_length=1)  # type: ignore
+    google_place_id: constr(min_length=1)  # type: ignore
 
     @validator('password')
     def validate_password(cls, v: str) -> str:

@@ -503,7 +503,7 @@ const RegisterForm = () => {
       <FormikProvider value={formik}>
         <ScrollView
           contentContainerStyle={styles.container}
-          keyboardShouldPersistTaps="never"
+          keyboardShouldPersistTaps="handled"
           ref={scrollViewRef}
         >
           {/*First name entry*/}
