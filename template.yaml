@@ -3,24 +3,11 @@ Transform: AWS::Serverless-2016-10-31
 Description: Lambda project for use with court lambda-functions
 
 Resources:
-  HelloWorldFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: court/lambdas/
-      Handler: user.lambda_hello
-      Runtime: python3.9
-      Events:
-        HelloWorld:
-          Type: Api
-          Properties:
-            Path: /hello
-            Method: GET
-
   RegisterFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: court/lambdas/
-      Handler: user.lambda_register
+      Handler: api_user.lambda_register
       Runtime: python3.9
       Events:
         Register:
@@ -34,11 +21,11 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: court/lambdas/
-      Handler: proxy.lambda_google_places_proxy
+      Handler: api_location.google_places_proxy
       Runtime: python3.9
       Environment:
         Variables:
-          GOOGLE_PLACES_API_KEY: "your_google_api_key"
+          GOOGLE_PLACES_API_KEY: '{{resolve:secretsmanager:MySecretName:SecretString:APIKey}}'
       Events:
         GooglePlacesProxy:
           Type: Api
