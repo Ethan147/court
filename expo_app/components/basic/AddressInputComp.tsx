@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, ViewStyle, Platform, StyleProp } from "react-native";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { debounce } from "lodash";
-import TextInputComp from "./TextInputComp";
+import TextInputDropdownComp from "./TextInputDropdownComp";
 
 interface AddressInputCompProps {
   onPlaceSelected: (data: any, details: any) => void;
@@ -24,7 +24,8 @@ const AddressInputComp: React.FC<AddressInputCompProps> = ({
       passStyles?.addressInputCompGooglePlacesAutoCompete || {},
   };
 
-  const [suggestions, setSuggestions] = useState([]); // State to store suggestions
+  const passTextInputDropdownCompStyles = {};
+  const [suggestions, setSuggestions] = useState([]);
 
   const fetchPlaces = (text: string) => {
     fetch("https://your-backend-endpoint.com/google-places", {
@@ -39,23 +40,36 @@ const AddressInputComp: React.FC<AddressInputCompProps> = ({
       .catch((error) => console.error("Error:", error));
   };
 
-  // 300 ms debounce
-  const debouncedFetchPlaces = debounce(fetchPlaces, 300);
+  const debouncedFetchPlaces = debounce(fetchPlaces, 300); // 300 ms
 
   useEffect(() => {
-    // Cleanup debounce
     return () => debouncedFetchPlaces.cancel();
   }, []);
 
   if (Platform.OS === "web") {
+    const [inputValue, setInputValue] = useState("");
+    // const dropdownOptions = suggestions.map(suggestion => suggestion.description); // Assuming each suggestion has a 'description'
+    const dropdownOptions = ["Option 1", "Option 2", "Option 3"];
+
+    const handleInputChange = (text: string) => {
+      setInputValue(text);
+      debouncedFetchPlaces(text);
+    };
+
+    const handleSelectDropdown = (selectedOption: string) => {
+      setInputValue(selectedOption);
+      // onPlaceSelected(selectedOption); // Additional handling when an option is selected (if needed)
+    };
+
     return (
-      <TextInputComp
-        label="first name"
-        // value={formik.values.firstName}
-        // onChangeText={formik.handleChange("firstName")}
-        // onBlur={handleBlurOnlyIfNotEmpty("firstName")}
-        // error={!!formik.touched.firstName && !!formik.errors.firstName}
-        // passStyles={passTextInputTopStyles}
+      <TextInputDropdownComp
+        label="Address"
+        value={inputValue}
+        dropdown={dropdownOptions}
+        onChangeText={handleInputChange}
+        onBlur={() => {}}
+        // passStyles={passTextInputDropdownCompStyles}
+        // onDropdownSelect={handleSelectDropdown}
       />
     );
   }
