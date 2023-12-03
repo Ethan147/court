@@ -10,6 +10,16 @@ interface AddressInputCompProps {
   passStyles?: {
     addressInputCompViewContainer?: StyleProp<ViewStyle>;
     addressInputCompGooglePlacesAutoCompete?: StyleProp<ViewStyle>;
+    // textInputDropdownComp
+    textInputDropdownCompOuterView: StyleProp<ViewStyle>;
+    textInputDropdownCompContainer: StyleProp<ViewStyle>;
+    textInputDropdownCompTouchableOpacity: StyleProp<ViewStyle>;
+    textInputDropdownCompOptionText: StyleProp<ViewStyle>;
+    // textInputComp
+    textInputCompOuterView?: StyleProp<ViewStyle>;
+    textInputCompTextContainer?: StyleProp<ViewStyle>;
+    textInputCompIconContainer?: StyleProp<ViewStyle>;
+    textInputCompText?: StyleProp<ViewStyle>;
   };
 }
 
@@ -22,6 +32,30 @@ const AddressInputComp: React.FC<AddressInputCompProps> = ({
       passStyles?.addressInputCompViewContainer || {},
     addressInputCompGooglePlacesAutoCompete:
       passStyles?.addressInputCompGooglePlacesAutoCompete || {},
+    textInputDropdownCompOuterView:
+      passStyles?.textInputDropdownCompOuterView || {},
+    textInputDropdownCompContainer:
+      passStyles?.textInputDropdownCompContainer || {},
+    textInputDropdownCompTouchableOpacity:
+      passStyles?.textInputDropdownCompTouchableOpacity || {},
+    textInputDropdownCompOptionText:
+      passStyles?.textInputDropdownCompOptionText || {},
+    textInputCompOuterView: passStyles?.textInputCompOuterView || {},
+    textInputCompTextContainer: passStyles?.textInputCompTextContainer || {},
+    textInputCompIconContainer: passStyles?.textInputCompIconContainer || {},
+    textInputCompText: passStyles?.textInputCompText || {},
+  };
+
+  const passTextInputDropdownStyles = {
+    textInputDropdownCompOuterView: styles.textInputDropdownCompOuterView,
+    textInputDropdownCompContainer: styles.textInputDropdownCompContainer,
+    textInputDropdownCompTouchableOpacity:
+      styles.textInputDropdownCompTouchableOpacity,
+    textInputDropdownCompOptionText: styles.textInputDropdownCompOptionText,
+    textInputCompOuterView: styles.textInputCompOuterView,
+    textInputCompTextContainer: styles.textInputCompTextContainer,
+    textInputCompIconContainer: styles.textInputCompIconContainer,
+    textInputCompText: styles.textInputCompText,
   };
 
   const passTextInputDropdownCompStyles = {};
@@ -68,7 +102,7 @@ const AddressInputComp: React.FC<AddressInputCompProps> = ({
         dropdown={dropdownOptions}
         onChangeText={handleInputChange}
         onBlur={() => {}}
-        // passStyles={passTextInputDropdownCompStyles}
+        passStyles={passTextInputDropdownStyles}
         // onDropdownSelect={handleSelectDropdown}
       />
     );

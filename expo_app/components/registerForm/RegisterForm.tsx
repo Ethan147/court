@@ -312,12 +312,37 @@ const RegisterForm = () => {
         },
       }),
     },
+    textInputDropdownCompContainer: {
+      ...Platform.select({
+        web: {
+          width: windowDimensions.width * formInputWidthWeb,
+          paddingVertical: windowDimensions.width * 0.01,
+        },
+        ios: {
+          width: wp(formInputWidthApp),
+        },
+        android: {
+          // todo
+        },
+      }),
+      borderColor: colors.text,
+      selectionColor: colors.primary,
+      backgroundColor: colors.setting,
+      borderRadius: 10,
+    },
     addressInputCompGooglePlacesAutoCompete: {
       height: textInputHeight,
       fontSize: theme.font.size.medium,
       color: colors.text,
       backgroundColor: colors.setting,
     },
+    textInputDropdownCompOuterView: {},
+    textInputDropdownCompTouchableOpacity: {},
+    textInputDropdownCompOptionText: {},
+    textInputCompOuterView: {},
+    // textInputCompTextContainer: {},
+    // textInputCompIconContainer: {},
+    // textInputCompText: {},
     // accept terms
     termsSwitchOuterView: {
       flexDirection: "row",
@@ -445,6 +470,15 @@ const RegisterForm = () => {
     addressInputCompViewContainer: styles.addressInputCompViewContainer,
     addressInputCompGooglePlacesAutoCompete:
       styles.addressInputCompGooglePlacesAutoCompete,
+    textInputDropdownCompOuterView: styles.textInputDropdownCompOuterView,
+    textInputDropdownCompContainer: styles.textInputDropdownCompContainer,
+    textInputDropdownCompTouchableOpacity:
+      styles.textInputDropdownCompTouchableOpacity,
+    textInputDropdownCompOptionText: styles.textInputDropdownCompOptionText,
+    textInputCompOuterView: styles.textInputCompOuterView,
+    textInputCompTextContainer: styles.textInputCompTextContainer,
+    textInputCompIconContainer: styles.textInputCompIconContainer,
+    textInputCompText: styles.textInputCompText,
   };
   const passAcceptTermsStyles = {
     acceptTermsSwitchOuterView: styles.termsSwitchOuterView,
@@ -657,7 +691,7 @@ const RegisterForm = () => {
                     component={
                       <TextAddOn
                         component={
-                          <AddressInputComp // TODO - get API set up & continue from there
+                          <AddressInputComp
                             onPlaceSelected={(data, details) =>
                               formik.setFieldValue("address", {
                                 place_id: data.place_id,

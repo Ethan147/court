@@ -8,8 +8,6 @@ import {
   StyleProp,
   ViewStyle,
 } from "react-native";
-import colors from "../../utils/colors";
-import theme from "../../utils/theme";
 import TextInputComp from "./TextInputComp";
 
 const TextInputDropdownComp = ({
@@ -31,6 +29,10 @@ const TextInputDropdownComp = ({
   secureTextEntry?: boolean;
   passStyles?: {
     textInputDropdownCompOuterView: StyleProp<ViewStyle>;
+    textInputDropdownCompContainer: StyleProp<ViewStyle>;
+    textInputDropdownCompTouchableOpacity: StyleProp<ViewStyle>;
+    textInputDropdownCompOptionText: StyleProp<ViewStyle>;
+    // textInputComp
     textInputCompOuterView?: StyleProp<ViewStyle>;
     textInputCompTextContainer?: StyleProp<ViewStyle>;
     textInputCompIconContainer?: StyleProp<ViewStyle>;
@@ -40,10 +42,22 @@ const TextInputDropdownComp = ({
   const styles = {
     textInputDropdownCompOuterView:
       passStyles?.textInputDropdownCompOuterView || {},
+    textInputDropdownCompContainer:
+      passStyles?.textInputDropdownCompContainer || {},
+    textInputDropdownCompTouchableOpacity:
+      passStyles?.textInputDropdownCompTouchableOpacity || {},
+    textInputDropdownCompOptionText:
+      passStyles?.textInputDropdownCompOptionText || {},
     textInputCompOuterView: passStyles?.textInputCompOuterView || {},
     textInputCompTextContainer: passStyles?.textInputCompTextContainer || {},
     textInputCompIconContainer: passStyles?.textInputCompIconContainer || {},
     textInputCompText: passStyles?.textInputCompText || {},
+  };
+  const passTextInputCompStyles = {
+    textInputCompOuterView: styles.textInputCompOuterView,
+    textInputCompTextContainer: styles.textInputCompTextContainer,
+    textInputCompIconContainer: styles.textInputCompIconContainer,
+    textInputCompText: styles.textInputCompText,
   };
 
   const handleSelectOption = (option: string) => {
@@ -61,19 +75,19 @@ const TextInputDropdownComp = ({
         onBlur={onBlur}
         error={error}
         secureTextEntry={secureTextEntry}
-        passStyles={passStyles}
+        passStyles={passTextInputCompStyles}
       />
       {dropdown && dropdown.length > 0 && (
-        // <View style={styles.dropdownContainer}>
-        <View>
+        <View style={styles.textInputDropdownCompContainer}>
           {dropdown.map((option, index) => (
             <TouchableOpacity
               key={index}
-              //   style={styles.dropdownOption}
               onPress={() => handleSelectOption(option)}
+              style={styles.textInputDropdownCompTouchableOpacity}
             >
-              <Text>{option}</Text>
-              {/* <Text style={styles.dropdownOptionText}>{option}</Text> */}
+              <Text style={styles.textInputDropdownCompOptionText}>
+                {option}
+              </Text>
             </TouchableOpacity>
           ))}
         </View>
