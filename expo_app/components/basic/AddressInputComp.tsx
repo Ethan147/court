@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { View, ViewStyle, Platform, StyleProp } from "react-native";
-import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { debounce } from "lodash";
 import TextInputDropdownComp from "./TextInputDropdownComp";
 
@@ -62,7 +61,7 @@ const AddressInputComp: React.FC<AddressInputCompProps> = ({
   const [suggestions, setSuggestions] = useState([]);
 
   const fetchPlaces = (text: string) => {
-    fetch("https://your-backend-endpoint.com/google-places", {
+    fetch("http://127.0.0.1:3000/google-places", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ input_text: text }),
@@ -108,23 +107,23 @@ const AddressInputComp: React.FC<AddressInputCompProps> = ({
     );
   }
 
-  return (
-    <View style={passStyles?.addressInputCompViewContainer}>
-      <GooglePlacesAutocomplete
-        placeholder="address"
-        onPress={(data, details = null) => {
-          onPlaceSelected(data, details);
-        }}
-        query={{
-          key: "YOUR API KEY", // todo figure out API integration etc
-          language: "en",
-        }}
-        styles={{
-          textInput: styles.addressInputCompGooglePlacesAutoCompete,
-        }}
-      />
-    </View>
-  );
+  // return (
+  //   <View style={passStyles?.addressInputCompViewContainer}>
+  //     <GooglePlacesAutocomplete
+  //       placeholder="address"
+  //       onPress={(data, details = null) => {
+  //         onPlaceSelected(data, details);
+  //       }}
+  //       query={{
+  //         key: "YOUR API KEY", // todo figure out API integration etc
+  //         language: "en",
+  //       }}
+  //       styles={{
+  //         textInput: styles.addressInputCompGooglePlacesAutoCompete,
+  //       }}
+  //     />
+  //   </View>
+  // );
 };
 
 export default AddressInputComp;

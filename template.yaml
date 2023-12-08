@@ -32,3 +32,4 @@ Resources:
           Properties:
             Path: /google-places
             Method: POST
+            Cors: "'*'"  # Enables CORS and allows all origins

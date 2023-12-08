@@ -1,24 +1,42 @@
+import json
 import os
 
-import requests
 from pydantic import BaseModel, ValidationError
 
 
 class GooglePlacesRequest(BaseModel):
     input_text: str
 
-def lambda_google_places_proxy():
+def lambda_google_places_proxy(event, _):
     try:
-        request_data = GooglePlacesRequest(**request.json)
-        google_api_key = os.environ.get('AIzaSyClwgKE5HDLlxvktWXNfnvJnRULpOicTcc')
-        google_places_url = f"https://maps.googleapis.com/maps/api/place/autocomplete/json?input={request_data.input_text}&key={google_api_key}"
+        # Parse request body
+        request_data = GooglePlacesRequest(**json.loads(event['body']))
 
-        response = requests.get(google_places_url)
+        # Static response for testing
+        response = {'this is my': 'response'}
 
+
+        # google_api_key = os.environ.get('apikey')
+        # google_places_url = f"https://maps.googleapis.com/maps/api/place/autocomplete/json?input={request_data.input_text}&key={google_api_key}"
+
+        # response = requests.get(google_places_url)
     except ValidationError as e:
-        return {"statusCode": 400, "body": json.dumps({"message": str(e)})}
+        return {
+            "statusCode": 400,
+            "headers": {"Content-Type": "application/json"},
+            "body": json.dumps({"message": str(e)})
+        }
 
     except Exception as e:
-        return {"statusCode": 500, "body": json.dumps({"message": str(e)})}
+        return {
+            "statusCode": 500,
+            "headers": {"Content-Type": "application/json"},
+            "body": json.dumps({"message": str(e)})
+        }
 
-    return {"statusCode": 200, "body": response.json()}
+    # Return the static response
+    return {
+        "statusCode": 200,
+        "headers": {"Content-Type": "application/json"},
+        "body": json.dumps(response)
+    }
