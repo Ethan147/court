@@ -2,6 +2,16 @@ AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: Lambda project for use with court lambda-functions
 
+Globals:
+  Function:
+    Timeout: 20
+  Api:
+    Cors:
+      AllowMethods: "'GET,POST,OPTIONS'"
+      AllowHeaders: "'content-type'"
+      AllowOrigin: "'*'"
+      AllowCredentials: true
+
 Resources:
   RegisterFunction:
     Type: AWS::Serverless::Function
@@ -30,6 +40,5 @@ Resources:
         GooglePlacesProxy:
           Type: Api
           Properties:
-            Path: /google-places
-            Method: POST
-            Cors: "'*'"  # Enables CORS and allows all origins
+            Path: "/{proxy+}"
+            Method: ANY

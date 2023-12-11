@@ -9,11 +9,26 @@ class GooglePlacesRequest(BaseModel):
 
 def lambda_google_places_proxy(event, _):
     try:
+        if event['httpMethod'] == 'OPTIONS':
+            return {
+                'statusCode': 200,
+                'headers': {
+                    'Access-Control-Allow-Origin': '*',  # or specify your domain
+                    'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
+                    'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+                },
+                'body': None  # No need for a body in OPTIONS response
+            }
+
+
+
         # Parse request body
         request_data = GooglePlacesRequest(**json.loads(event['body']))
 
         # Static response for testing
         response = {'this is my': 'response'}
+        response['headers'] = {"Access-Control-Allow-Origin": "*"}
+        return response
 
 
         # google_api_key = os.environ.get('apikey')
