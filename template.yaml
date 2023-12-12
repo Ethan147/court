@@ -18,7 +18,7 @@ Resources:
     Properties:
       CodeUri: court/lambdas/
       Handler: api_user.lambda_register
-      Runtime: python3.9
+      Runtime: python3.10
       Events:
         Register:
           Type: Api
@@ -32,7 +32,7 @@ Resources:
     Properties:
       CodeUri: court/lambdas/
       Handler: api_location.google_places_proxy
-      Runtime: python3.9
+      Runtime: python3.10
       Environment:
         Variables:
           GOOGLE_PLACES_API_KEY: '{{resolve:secretsmanager:MySecretName:SecretString:APIKey}}'
