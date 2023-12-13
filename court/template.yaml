@@ -16,7 +16,7 @@ Resources:
   RegisterFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: court/lambdas/
+      CodeUri: lambdas/api_user/
       Handler: api_user.lambda_register
       Runtime: python3.10
       Events:
@@ -24,21 +24,20 @@ Resources:
           Type: Api
           Properties:
             Path: /register
-            Method: GET
+            Method: POST
 
-  # todo: prove this out and make sure everything else works
   GooglePlacesProxyFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: court/lambdas/
-      Handler: api_location.google_places_proxy
+      CodeUri: lambdas/api_location/
+      Handler: api_location.lambda_google_places_proxy
       Runtime: python3.10
-      Environment:
-        Variables:
-          GOOGLE_PLACES_API_KEY: '{{resolve:secretsmanager:MySecretName:SecretString:APIKey}}'
+      # Environment:
+      #   Variables:
+      #     GOOGLE_PLACES_API_KEY: '{{resolve:secretsmanager:MySecretName:SecretString:APIKey}}'
       Events:
         GooglePlacesProxy:
           Type: Api
           Properties:
-            Path: "/{proxy+}"
-            Method: ANY
+            Path: /google-places
+            Method: POST

@@ -75,3 +75,6 @@ expo_app/.metro-health-check*
 
 # Coverage report files
 expo_app/coverage/
+
+# AWS SAM build folder
+.aws-sam/
