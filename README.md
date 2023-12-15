@@ -99,6 +99,16 @@ e.g. `aws sso login --profile emiller`
     - in a second, run `curl http://127.0.0.1:3000/hello`
         - this will return `{"message": "Hello, World!"}`
 
+- to handle lambdas requirements
+    - `poetry` is handled at the project root
+    - each project needs a dedicated `requirements.txt`
+    - poetry should be exported to the intended .txt via the following command (then prune away unused packages)
+
+```
+poetry export -f requirements.txt --output court/lambdas/api_location/requirements.txt --without-hashes
+```
+
+
 ## expo-setup
 
 - nvm install

@@ -1,6 +1,7 @@
 import json
 import os
 
+import requests
 from pydantic import BaseModel, ValidationError
 
 
@@ -17,23 +18,27 @@ def lambda_google_places_proxy(event, _):
                     'Access-Control-Allow-Methods': 'POST',
                     'Access-Control-Allow-Headers': 'Content-Type, Authorization'
                 },
-                'body': None  # No need for a body in OPTIONS response
+                'body': None
             }
 
         # Parse request body
         request_data = GooglePlacesRequest(**json.loads(event['body']))
 
+        # google_api_key = os.environ.get('apikey')
+        google_api_key = 'key_here'
+        google_places_url = f"https://maps.googleapis.com/maps/api/place/autocomplete/json?input={request_data.input_text}&key={google_api_key}"
+
+        response_body = requests.get(google_places_url)
+        raise ValueError(response_body)
+
         # Static response for testing
         response = {
             "statusCode": 200,
             "headers": {"Access-Control-Allow-Origin": "*","Content-Type": "application/json"},
-            "body": json.dumps({'this is my': 'response'})
+            # "body": response_body
+            "body": {"this is my": "response"}
         }
 
-        # google_api_key = os.environ.get('apikey')
-        # google_places_url = f"https://maps.googleapis.com/maps/api/place/autocomplete/json?input={request_data.input_text}&key={google_api_key}"
-
-        # response = requests.get(google_places_url)
     except ValidationError as e:
         return {
             "statusCode": 400,
