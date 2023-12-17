@@ -57,73 +57,68 @@ const AddressInputComp: React.FC<AddressInputCompProps> = ({
     textInputCompText: styles.textInputCompText,
   };
 
-  const passTextInputDropdownCompStyles = {};
+  const [isTyping, setIsTyping] = useState(false);
+  const [inputValue, setInputValue] = useState("");
   const [suggestions, setSuggestions] = useState([]);
 
   const fetchPlaces = (text: string) => {
     fetch("http://127.0.0.1:3000/google-places", {
+      // todo URL conditional selection
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ input_text: text }),
     })
       .then((response) => response.json())
       .then((data) => {
-        setSuggestions(data.predictions); // Assuming 'data.predictions' contains your suggestions
+        setSuggestions(data.predictions);
       })
       .catch((error) => console.error("Error:", error));
   };
 
-  const debouncedFetchPlaces = debounce(fetchPlaces, 300); // 300 ms
+  // const debouncedFetchPlaces = debounce(fetchPlaces, 600); // ms
+
+  const debouncedFetchPlaces = debounce((text) => {
+    if (isTyping) {
+      fetchPlaces(text);
+    }
+  }, 600);
 
   useEffect(() => {
+    if (inputValue && isTyping) {
+      debouncedFetchPlaces(inputValue);
+    }
+
     return () => debouncedFetchPlaces.cancel();
-  }, []);
+  }, [inputValue, isTyping]);
 
-  if (Platform.OS === "web") {
-    const [inputValue, setInputValue] = useState("");
-    // const dropdownOptions = suggestions.map(suggestion => suggestion.description); // Assuming each suggestion has a 'description'
-    const dropdownOptions = ["Option 1", "Option 2", "Option 3"];
+  const dropdownOptions = suggestions.map(
+    (suggestion) => suggestion.description
+  );
 
-    const handleInputChange = (text: string) => {
-      setInputValue(text);
-      debouncedFetchPlaces(text);
-    };
+  const handleInputChange = (text: string) => {
+    setInputValue(text);
+    setIsTyping(true); // Set isTyping to true when user is typing
+  };
 
-    const handleSelectDropdown = (selectedOption: string) => {
-      setInputValue(selectedOption);
-      // onPlaceSelected(selectedOption); // Additional handling when an option is selected (if needed)
-    };
+  // const handleSelectDropdown = (selectedOption: string) => {
+  //   setInputValue(selectedOption);
+  //   setSuggestions([]);
+  //   setIsTyping(false);  // Set isTyping to false when a selection is made
+  //   // Trigger any additional action on place selection
+  //   // onPlaceSelected(selectedOption);
+  // };
 
-    return (
-      <TextInputDropdownComp
-        label="Address"
-        value={inputValue}
-        dropdown={dropdownOptions}
-        onChangeText={handleInputChange}
-        onBlur={() => {}}
-        passStyles={passTextInputDropdownStyles}
-        // onDropdownSelect={handleSelectDropdown}
-      />
-    );
-  }
-
-  // return (
-  //   <View style={passStyles?.addressInputCompViewContainer}>
-  //     <GooglePlacesAutocomplete
-  //       placeholder="address"
-  //       onPress={(data, details = null) => {
-  //         onPlaceSelected(data, details);
-  //       }}
-  //       query={{
-  //         key: "YOUR API KEY", // todo figure out API integration etc
-  //         language: "en",
-  //       }}
-  //       styles={{
-  //         textInput: styles.addressInputCompGooglePlacesAutoCompete,
-  //       }}
-  //     />
-  //   </View>
-  // );
+  return (
+    <TextInputDropdownComp
+      label="Address"
+      value={inputValue}
+      dropdown={dropdownOptions}
+      onChangeText={handleInputChange}
+      // onDropdownSelect={handleSelectDropdown}  // Ensure you pass and handle this prop in TextInputDropdownComp
+      onBlur={() => {}}
+      passStyles={passTextInputDropdownStyles}
+    />
+  );
 };
 
 export default AddressInputComp;
