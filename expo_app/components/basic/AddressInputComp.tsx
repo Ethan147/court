@@ -59,7 +59,9 @@ const AddressInputComp: React.FC<AddressInputCompProps> = ({
 
   const [isTyping, setIsTyping] = useState(false);
   const [inputValue, setInputValue] = useState("");
-  const [suggestions, setSuggestions] = useState([]);
+  const [suggestions, setSuggestions] = useState<Array<Record<string, any>>>(
+    []
+  );
 
   const fetchPlaces = (text: string) => {
     fetch("http://127.0.0.1:3000/google-places", {
@@ -110,7 +112,7 @@ const AddressInputComp: React.FC<AddressInputCompProps> = ({
 
   return (
     <TextInputDropdownComp
-      label="Address"
+      label="address"
       value={inputValue}
       dropdown={dropdownOptions}
       onChangeText={handleInputChange}
