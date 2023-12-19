@@ -77,8 +77,6 @@ const AddressInputComp: React.FC<AddressInputCompProps> = ({
       .catch((error) => console.error("Error:", error));
   };
 
-  // const debouncedFetchPlaces = debounce(fetchPlaces, 600); // ms
-
   const debouncedFetchPlaces = debounce((text) => {
     if (isTyping) {
       fetchPlaces(text);
@@ -99,16 +97,14 @@ const AddressInputComp: React.FC<AddressInputCompProps> = ({
 
   const handleInputChange = (text: string) => {
     setInputValue(text);
-    setIsTyping(true); // Set isTyping to true when user is typing
+    setIsTyping(true);
   };
 
-  // const handleSelectDropdown = (selectedOption: string) => {
-  //   setInputValue(selectedOption);
-  //   setSuggestions([]);
-  //   setIsTyping(false);  // Set isTyping to false when a selection is made
-  //   // Trigger any additional action on place selection
-  //   // onPlaceSelected(selectedOption);
-  // };
+  const handleSelectDropdown = (selectedOption: string) => {
+    setInputValue(selectedOption);
+    setSuggestions([]);
+    setIsTyping(false);
+  };
 
   return (
     <TextInputDropdownComp
@@ -116,7 +112,7 @@ const AddressInputComp: React.FC<AddressInputCompProps> = ({
       value={inputValue}
       dropdown={dropdownOptions}
       onChangeText={handleInputChange}
-      // onDropdownSelect={handleSelectDropdown}  // Ensure you pass and handle this prop in TextInputDropdownComp
+      onDropdownSelect={handleSelectDropdown}
       onBlur={() => {}}
       passStyles={passTextInputDropdownStyles}
     />
