@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, ViewStyle, Platform, StyleProp } from "react-native";
 import { debounce } from "lodash";
 import TextInputDropdownComp from "./TextInputDropdownComp";
+// import { API_URL } from '@env';
 
 interface AddressInputCompProps {
   onPlaceSelected: (data: any, details: any) => void;
@@ -63,8 +64,11 @@ const AddressInputComp: React.FC<AddressInputCompProps> = ({
     []
   );
 
+  // const API_URL = "http://127.0.0.1:3000";
+  const API_URL = process.env.EXPO_PUBLIC_API_URL;
+
   const fetchPlaces = (text: string) => {
-    fetch("http://127.0.0.1:3000/google-places", {
+    fetch(`${API_URL}/google-places`, {
       // todo URL conditional selection
       method: "POST",
       headers: { "Content-Type": "application/json" },
