@@ -58,7 +58,7 @@ const AddressInputComp: React.FC<AddressInputCompProps> = ({
   };
 
   const [isTyping, setIsTyping] = useState(false);
-  const [inputValue, setInputValue] = useState("");
+  const [inputValue, setInputValue] = useState<string>("");
   const [suggestions, setSuggestions] = useState<Array<Record<string, any>>>(
     []
   );
@@ -91,17 +91,13 @@ const AddressInputComp: React.FC<AddressInputCompProps> = ({
     return () => debouncedFetchPlaces.cancel();
   }, [inputValue, isTyping]);
 
-  const dropdownOptions = suggestions.map(
-    (suggestion) => suggestion.description
-  );
-
   const handleInputChange = (text: string) => {
     setInputValue(text);
     setIsTyping(true);
   };
 
-  const handleSelectDropdown = (selectedOption: string) => {
-    setInputValue(selectedOption);
+  const handleSelectDropdown = (selectedOption: Record<string, any>) => {
+    setInputValue(selectedOption.description);
     setSuggestions([]);
     setIsTyping(false);
   };
@@ -110,7 +106,7 @@ const AddressInputComp: React.FC<AddressInputCompProps> = ({
     <TextInputDropdownComp
       label="address"
       value={inputValue}
-      dropdown={dropdownOptions}
+      dropdown={suggestions}
       onChangeText={handleInputChange}
       onDropdownSelect={handleSelectDropdown}
       onBlur={() => {}}

@@ -692,10 +692,10 @@ const RegisterForm = () => {
                       <TextAddOn
                         component={
                           <AddressInputComp
-                            onPlaceSelected={(data, details) =>
+                            onPlaceSelected={(place) =>
                               formik.setFieldValue("address", {
-                                place_id: data.place_id,
-                                formatted_address: details.formatted_address,
+                                place_id: place.place_id,
+                                formatted_address: place.description,
                               })
                             }
                             passStyles={passAddressInputStyles}

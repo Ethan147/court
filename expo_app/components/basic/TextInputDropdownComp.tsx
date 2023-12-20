@@ -23,9 +23,9 @@ const TextInputDropdownComp = ({
 }: {
   label?: string;
   value?: string;
-  dropdown?: Array<string>;
+  dropdown?: Record<string, any>[];
   onChangeText?: (text: string) => void;
-  onDropdownSelect?: (selectedOption: string) => void;
+  onDropdownSelect?: (selectedOption: Record<string, any>) => void;
   onBlur?: (e: NativeSyntheticEvent<TextInputFocusEventData>) => void;
   error?: boolean;
   secureTextEntry?: boolean;
@@ -62,13 +62,13 @@ const TextInputDropdownComp = ({
     textInputCompText: styles.textInputCompText,
   };
 
-  const handleSelectOption = (option: string) => {
+  const handleSelectOption = (option: Record<string, any>) => {
     if (onDropdownSelect) {
       onDropdownSelect(option);
     }
 
     if (onChangeText) {
-      onChangeText(option);
+      onChangeText(option.description);
     }
   };
 
@@ -88,7 +88,7 @@ const TextInputDropdownComp = ({
         !(
           value &&
           dropdown.length === 1 &&
-          dropdown[0].toLowerCase() === value.toLowerCase()
+          dropdown[0].description.toLowerCase() === value.toLowerCase()
         ) && (
           <View style={styles.textInputDropdownCompContainer}>
             {dropdown.map((option, index) => (
@@ -98,7 +98,7 @@ const TextInputDropdownComp = ({
                 style={styles.textInputDropdownCompTouchableOpacity}
               >
                 <Text style={styles.textInputDropdownCompOptionText}>
-                  {option}
+                  {option.description}
                 </Text>
               </TouchableOpacity>
             ))}
