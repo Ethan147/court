@@ -12,8 +12,6 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 
-require("dotenv").config();
-
 const Stack = createNativeStackNavigator();
 
 export default function App() {
