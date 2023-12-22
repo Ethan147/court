@@ -312,11 +312,14 @@ const RegisterForm = () => {
         },
       }),
     },
-    textInputDropdownCompContainer: {
+    textInputDropdownCompContainer: {},
+    textInputDropdownCompOuterView: {},
+    textInputDropdownCompTouchableOpacity: {
       ...Platform.select({
         web: {
-          width: windowDimensions.width * formInputWidthWeb,
-          paddingVertical: windowDimensions.width * 0.01,
+          paddingVertical: windowDimensions.width * 0.002,
+          paddingLeft: windowDimensions.width * 0.005,
+          width: windowDimensions.width * formInputWidthWeb * 0.9,
         },
         ios: {
           width: wp(formInputWidthApp),
@@ -325,20 +328,25 @@ const RegisterForm = () => {
           // todo
         },
       }),
-      borderColor: colors.text,
-      selectionColor: colors.primary,
-      backgroundColor: colors.setting,
-      borderRadius: 10,
     },
-    addressInputCompGooglePlacesAutoCompete: {
-      height: textInputHeight,
+    textInputDropdownCompOptionText: {
+      ...Platform.select({
+        web: {
+          paddingLeft: windowDimensions.width * 0.005,
+          paddingTop: windowDimensions.width * 0.00085,
+        },
+        ios: {
+          // width: wp(formInputWidthApp), // will need to update ios in this area
+        },
+        android: {
+          // todo
+        },
+      }),
+      backgroundColor: colors.setting,
+      borderRadius: 3,
       fontSize: theme.font.size.medium,
       color: colors.text,
-      backgroundColor: colors.setting,
     },
-    textInputDropdownCompOuterView: {},
-    textInputDropdownCompTouchableOpacity: {},
-    textInputDropdownCompOptionText: {},
     textInputCompOuterView: {},
     // textInputCompTextContainer: {},
     // textInputCompIconContainer: {},
@@ -468,8 +476,6 @@ const RegisterForm = () => {
   };
   const passAddressInputStyles = {
     addressInputCompViewContainer: styles.addressInputCompViewContainer,
-    addressInputCompGooglePlacesAutoCompete:
-      styles.addressInputCompGooglePlacesAutoCompete,
     textInputDropdownCompOuterView: styles.textInputDropdownCompOuterView,
     textInputDropdownCompContainer: styles.textInputDropdownCompContainer,
     textInputDropdownCompTouchableOpacity:
@@ -506,6 +512,7 @@ const RegisterForm = () => {
       gender: "",
       age: "",
       birthdate: "",
+      place_id: "",
       address: "",
       termsAccepted: false,
     },
@@ -692,12 +699,10 @@ const RegisterForm = () => {
                       <TextAddOn
                         component={
                           <AddressInputComp
-                            onPlaceSelected={(place) =>
-                              formik.setFieldValue("address", {
-                                place_id: place.place_id,
-                                formatted_address: place.description,
-                              })
-                            }
+                            onPlaceSelected={(place_id, address) => {
+                              formik.setFieldValue("address", address);
+                              formik.setFieldValue("place_id", place_id);
+                            }}
                             passStyles={passAddressInputStyles}
                           />
                         }

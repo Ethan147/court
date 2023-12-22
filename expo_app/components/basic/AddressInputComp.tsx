@@ -4,7 +4,7 @@ import { debounce } from "lodash";
 import TextInputDropdownComp from "./TextInputDropdownComp";
 
 interface AddressInputCompProps {
-  onPlaceSelected: (data: any, details: any) => void;
+  onPlaceSelected: (place_id: string, address: string) => void;
   error?: boolean;
   passStyles?: {
     addressInputCompViewContainer?: StyleProp<ViewStyle>;
@@ -81,7 +81,7 @@ const AddressInputComp: React.FC<AddressInputCompProps> = ({
     if (isTyping) {
       fetchPlaces(text);
     }
-  }, 600);
+  }, 500);
 
   useEffect(() => {
     if (inputValue && isTyping) {
@@ -100,6 +100,10 @@ const AddressInputComp: React.FC<AddressInputCompProps> = ({
     setInputValue(selectedOption.description);
     setSuggestions([]);
     setIsTyping(false);
+    onPlaceSelected(
+      selectedOption.place_id.toString(),
+      selectedOption.description.toString()
+    );
   };
 
   return (

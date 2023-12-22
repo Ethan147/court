@@ -53,12 +53,8 @@ const validationSchema = Yup.object().shape({
       const birthdate = new Date(value);
       return birthdate <= minimumAgeDate;
     }),
-  address: Yup.object()
-    .shape({
-      place_id: Yup.string().required("Place ID is required"),
-      formatted_address: Yup.string().required("Formatted address is required"),
-    })
-    .required("Address is required"),
+  place_id: Yup.string().min(1).required("Place ID is required"),
+  address: Yup.string().min(1).required("Formatted address is required"),
   termsAccepted: Yup.bool().oneOf(
     [true],
     "you must accept the terms and conditions"
