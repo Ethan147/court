@@ -1,6 +1,6 @@
 import React from "react";
 import {
-  TouchableOpacity,
+  Pressable,
   Text,
   StyleProp,
   TextStyle,
@@ -11,7 +11,7 @@ interface ButtonCompProps {
   text?: string;
   onPress?: () => void;
   passStyles?: {
-    buttonCompTouchableOpacity?: StyleProp<ViewStyle>;
+    buttonCompPressable?: StyleProp<ViewStyle>;
     buttonCompText?: StyleProp<TextStyle>;
   };
 }
@@ -22,18 +22,18 @@ const ButtonComp: React.FC<ButtonCompProps> = ({
   passStyles,
 }) => {
   const styles = {
-    buttonCompTouchableOpacity: passStyles?.buttonCompTouchableOpacity || {},
+    buttonCompPressable: passStyles?.buttonCompPressable || {},
     buttonCompText: passStyles?.buttonCompText || {},
   };
 
   return (
-    <TouchableOpacity
+    <Pressable
       onPress={onPress}
-      style={styles.buttonCompTouchableOpacity}
+      style={styles.buttonCompPressable}
       testID="buttonComp"
     >
       <Text style={styles.buttonCompText}>{text}</Text>
-    </TouchableOpacity>
+    </Pressable>
   );
 };
 

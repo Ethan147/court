@@ -314,7 +314,7 @@ const RegisterForm = () => {
     },
     textInputDropdownCompContainer: {},
     textInputDropdownCompOuterView: {},
-    textInputDropdownCompTouchableOpacity: {
+    textInputDropdownCompPressable: {
       ...Platform.select({
         web: {
           paddingVertical: windowDimensions.width * 0.002,
@@ -394,7 +394,7 @@ const RegisterForm = () => {
       textDecorationLine: "underline",
     },
     // submit button
-    buttonCompTouchableOpacity: {
+    buttonCompPressable: {
       ...Platform.select({
         web: {
           borderRadius: windowDimensions.width * 0.04,
@@ -478,8 +478,7 @@ const RegisterForm = () => {
     addressInputCompViewContainer: styles.addressInputCompViewContainer,
     textInputDropdownCompOuterView: styles.textInputDropdownCompOuterView,
     textInputDropdownCompContainer: styles.textInputDropdownCompContainer,
-    textInputDropdownCompTouchableOpacity:
-      styles.textInputDropdownCompTouchableOpacity,
+    textInputDropdownCompPressable: styles.textInputDropdownCompPressable,
     textInputDropdownCompOptionText: styles.textInputDropdownCompOptionText,
     textInputCompOuterView: styles.textInputCompOuterView,
     textInputCompTextContainer: styles.textInputCompTextContainer,
@@ -496,7 +495,7 @@ const RegisterForm = () => {
     viewPrivacyPolicyText: styles.viewPrivacyPolicyText,
   };
   const passSubmitStyles = {
-    buttonCompTouchableOpacity: styles.buttonCompTouchableOpacity,
+    buttonCompPressable: styles.buttonCompPressable,
     buttonCompText: styles.buttonCompText,
   };
 
@@ -512,8 +511,7 @@ const RegisterForm = () => {
       gender: "",
       age: "",
       birthdate: "",
-      place_id: "",
-      address: "",
+      placeSelection: "",
       termsAccepted: false,
     },
     validationSchema,
@@ -707,11 +705,7 @@ const RegisterForm = () => {
                     component={
                       <AddressInputComp
                         onPlaceSelected={(selection) => {
-                          formik.setFieldValue(
-                            "address",
-                            selection?.description
-                          );
-                          formik.setFieldValue("place_id", selection?.place_id);
+                          formik.setFieldValue("placeSelection", selection);
                         }}
                         passStyles={passAddressInputStyles}
                       />
@@ -730,8 +724,10 @@ const RegisterForm = () => {
                 passStyles={passFormInputTextAddOnHintStyles}
               />
             }
-            value={formik.errors.address}
-            display={!!formik.touched.address && !!formik.errors.address}
+            value={"A valid selected address is required"}
+            display={
+              !!formik.touched.placeSelection && !!formik.errors.placeSelection
+            }
             passStyles={passTextAddOnErrorStyles}
           />
           {/*Terms, Private Policy, Submit*/}

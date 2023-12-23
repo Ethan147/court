@@ -53,10 +53,16 @@ const validationSchema = Yup.object().shape({
       const birthdate = new Date(value);
       return birthdate <= minimumAgeDate;
     }),
-  place_id: Yup.string()
-    .min(1)
-    .required("a valid selected address is required"),
-  address: Yup.string().min(1).required("a valid selected address is required"),
+  placeSelection: Yup.object().shape({
+    description: Yup.string()
+      .min(1)
+      .required("A valid description is required"),
+    place_id: Yup.string().min(1).required("A valid place_id is required"),
+    structured_formatting: Yup.object().shape({
+      main_text: Yup.string().required("Main text is required"),
+      secondary_text: Yup.string().required("Secondary text is required"),
+    }),
+  }),
   termsAccepted: Yup.bool().oneOf(
     [true],
     "you must accept the terms and conditions"

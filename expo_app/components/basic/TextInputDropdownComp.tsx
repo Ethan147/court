@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import {
   NativeSyntheticEvent,
   TextInputFocusEventData,
-  TouchableOpacity,
+  Pressable,
   View,
   Text,
   StyleProp,
@@ -32,7 +32,7 @@ const TextInputDropdownComp = ({
   passStyles?: {
     textInputDropdownCompOuterView: StyleProp<ViewStyle>;
     textInputDropdownCompContainer: StyleProp<ViewStyle>;
-    textInputDropdownCompTouchableOpacity: StyleProp<ViewStyle>;
+    textInputDropdownCompPressable: StyleProp<ViewStyle>;
     textInputDropdownCompOptionText: StyleProp<ViewStyle>;
     // textInputComp
     textInputCompOuterView?: StyleProp<ViewStyle>;
@@ -46,8 +46,8 @@ const TextInputDropdownComp = ({
       passStyles?.textInputDropdownCompOuterView || {},
     textInputDropdownCompContainer:
       passStyles?.textInputDropdownCompContainer || {},
-    textInputDropdownCompTouchableOpacity:
-      passStyles?.textInputDropdownCompTouchableOpacity || {},
+    textInputDropdownCompPressable:
+      passStyles?.textInputDropdownCompPressable || {},
     textInputDropdownCompOptionText:
       passStyles?.textInputDropdownCompOptionText || {},
     textInputCompOuterView: passStyles?.textInputCompOuterView || {},
@@ -87,15 +87,15 @@ const TextInputDropdownComp = ({
         ) && (
           <View style={styles.textInputDropdownCompContainer}>
             {dropdown.map((option, index) => (
-              <TouchableOpacity
+              <Pressable
                 key={index}
                 onPress={() => handleSelectOption(option)}
-                style={styles.textInputDropdownCompTouchableOpacity}
+                style={styles.textInputDropdownCompPressable}
               >
                 <Text style={styles.textInputDropdownCompOptionText}>
                   {option.description}
                 </Text>
-              </TouchableOpacity>
+              </Pressable>
             ))}
           </View>
         )}

@@ -12,7 +12,7 @@ interface AddressInputCompProps {
     // textInputDropdownComp
     textInputDropdownCompOuterView: StyleProp<ViewStyle>;
     textInputDropdownCompContainer: StyleProp<ViewStyle>;
-    textInputDropdownCompTouchableOpacity: StyleProp<ViewStyle>;
+    textInputDropdownCompPressable: StyleProp<ViewStyle>;
     textInputDropdownCompOptionText: StyleProp<ViewStyle>;
     // textInputComp
     textInputCompOuterView?: StyleProp<ViewStyle>;
@@ -35,8 +35,8 @@ const AddressInputComp: React.FC<AddressInputCompProps> = ({
       passStyles?.textInputDropdownCompOuterView || {},
     textInputDropdownCompContainer:
       passStyles?.textInputDropdownCompContainer || {},
-    textInputDropdownCompTouchableOpacity:
-      passStyles?.textInputDropdownCompTouchableOpacity || {},
+    textInputDropdownCompPressable:
+      passStyles?.textInputDropdownCompPressable || {},
     textInputDropdownCompOptionText:
       passStyles?.textInputDropdownCompOptionText || {},
     textInputCompOuterView: passStyles?.textInputCompOuterView || {},
@@ -48,8 +48,7 @@ const AddressInputComp: React.FC<AddressInputCompProps> = ({
   const passTextInputDropdownStyles = {
     textInputDropdownCompOuterView: styles.textInputDropdownCompOuterView,
     textInputDropdownCompContainer: styles.textInputDropdownCompContainer,
-    textInputDropdownCompTouchableOpacity:
-      styles.textInputDropdownCompTouchableOpacity,
+    textInputDropdownCompPressable: styles.textInputDropdownCompPressable,
     textInputDropdownCompOptionText: styles.textInputDropdownCompOptionText,
     textInputCompOuterView: styles.textInputCompOuterView,
     textInputCompTextContainer: styles.textInputCompTextContainer,
@@ -93,7 +92,7 @@ const AddressInputComp: React.FC<AddressInputCompProps> = ({
   }, [inputValue, isTyping]);
 
   useEffect(() => {
-    if (selection?.description.toLowerCase() != inputValue.toLowerCase()) {
+    if (!(selection?.description.toLowerCase() === inputValue.toLowerCase())) {
       setSelection(null);
       onPlaceSelected(null);
     }
@@ -102,8 +101,6 @@ const AddressInputComp: React.FC<AddressInputCompProps> = ({
   const handleInputChange = (text: string) => {
     setInputValue(text);
     setIsTyping(true);
-
-    console.log(selection);
   };
 
   const handleSelectDropdown = (selectedOption: Record<string, any>) => {

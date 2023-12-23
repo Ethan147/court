@@ -5,7 +5,7 @@ import {
   TextStyle,
   ViewStyle,
   StyleProp,
-  TouchableOpacity,
+  Pressable,
   Switch,
 } from "react-native";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
@@ -60,11 +60,11 @@ const AcceptTerms: React.FC<AcceptTermsProps> = ({
         />
       </View>
       <View style={styles?.acceptTermsTextView}>
-        <TouchableOpacity onPress={handlePress}>
+        <Pressable onPress={handlePress}>
           <Text style={styles?.acceptTermsAgreeText}>
             Agree to Terms and Conditions
           </Text>
-        </TouchableOpacity>
+        </Pressable>
       </View>
     </View>
   );

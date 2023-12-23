@@ -5,7 +5,7 @@ import {
   TextStyle,
   ViewStyle,
   StyleProp,
-  TouchableOpacity,
+  Pressable,
 } from "react-native";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
 
@@ -36,9 +36,9 @@ const ViewPrivacyPolicy: React.FC<ViewPrivacyPolicyProps> = ({
   return (
     <View>
       <View style={styles?.viewPrivacyPolicyView}>
-        <TouchableOpacity onPress={handlePress}>
+        <Pressable onPress={handlePress}>
           <Text style={styles?.viewPrivacyPolicyText}>View Privacy Policy</Text>
-        </TouchableOpacity>
+        </Pressable>
       </View>
     </View>
   );
