@@ -12,8 +12,8 @@ import { useNavigation, NavigationProp } from "@react-navigation/native";
 import colors from "../../../utils/colors";
 
 interface AcceptTermsProps {
-  acceptTerms?: boolean;
-  onPress?: () => void;
+  defaultTermsState: boolean;
+  onPress: (isAccepted: boolean) => void;
   passStyles?: {
     acceptTermsSwitchOuterView?: StyleProp<ViewStyle>;
     acceptTermsSwitchView?: StyleProp<ViewStyle>;
@@ -25,7 +25,7 @@ interface AcceptTermsProps {
 type TermsNavigationProp = NavigationProp<any, "TermsAndConditions">;
 
 const AcceptTerms: React.FC<AcceptTermsProps> = ({
-  acceptTerms = false,
+  defaultTermsState,
   onPress,
   passStyles,
 }) => {
@@ -37,17 +37,15 @@ const AcceptTerms: React.FC<AcceptTermsProps> = ({
   };
 
   const navigation = useNavigation<TermsNavigationProp>();
-  const [isAccepted, setIsAccepted] = useState(acceptTerms);
+  const [isAccepted, setIsAccepted] = useState(defaultTermsState);
 
   const handlePress = () => {
     navigation.navigate("TermsAndConditions");
-    if (onPress) {
-      onPress();
-    }
   };
 
   const handleSwitch = () => {
     setIsAccepted(!isAccepted);
+    onPress(!isAccepted);
   };
 
   return (

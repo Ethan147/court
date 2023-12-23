@@ -598,11 +598,20 @@ const RegisterForm = () => {
           {/*Gender entry*/}
           <TextAddOn
             component={
-              <ToggleButtonGroupComp
-                label="please select your gender"
-                buttons={["male", "female", "other / unspecified"]}
-                onValueChange={(value) => console.log("Selected value:", value)}
-                passStyles={passToggleButtonGroupCompStyles}
+              <TextAddOn
+                component={
+                  <ToggleButtonGroupComp
+                    label="please select your gender"
+                    buttons={["male", "female", "non-binary/other"]}
+                    onValueChange={formik.handleChange("gender")}
+                    passStyles={passToggleButtonGroupCompStyles}
+                  />
+                }
+                value={
+                  "Select your gender to ensure proper league placement and fair play. This affects available events and your sporting experience."
+                }
+                display={true}
+                passStyles={passFormInputTextAddOnHintStyles}
               />
             }
             value={formik.errors.gender}
@@ -696,32 +705,26 @@ const RegisterForm = () => {
                 component={
                   <TextAddOn
                     component={
-                      <TextAddOn
-                        component={
-                          <AddressInputComp
-                            onPlaceSelected={(place_id, address) => {
-                              formik.setFieldValue("address", address);
-                              formik.setFieldValue("place_id", place_id);
-                            }}
-                            passStyles={passAddressInputStyles}
-                          />
-                        }
-                        value={
-                          "Enter an address as your play hub for tennis or pickleball - it could be home, work, or anywhere in between."
-                        }
-                        display={true}
-                        passStyles={passFormInputTextAddOnHintStyles}
+                      <AddressInputComp
+                        onPlaceSelected={(selection) => {
+                          formik.setFieldValue(
+                            "address",
+                            selection?.description
+                          );
+                          formik.setFieldValue("place_id", selection?.place_id);
+                        }}
+                        passStyles={passAddressInputStyles}
                       />
                     }
                     value={
-                      "You can always expand your play zone by adding more locations later!"
+                      "Enter an address as your play hub for tennis or pickleball - it could be home, work, or anywhere in between. Your address will be used solely to match you with nearby tennis and/or pickleball partners."
                     }
                     display={true}
                     passStyles={passFormInputTextAddOnHintStyles}
                   />
                 }
                 value={
-                  "Your address will be used solely to match you with nearby tennis and/or pickleball partners."
+                  "You can always expand your play zone by adding more locations later!"
                 }
                 display={true}
                 passStyles={passFormInputTextAddOnHintStyles}
@@ -735,12 +738,9 @@ const RegisterForm = () => {
           <TextAddOn
             component={
               <AcceptTerms
-                acceptTerms={formik.values.termsAccepted}
-                onPress={() =>
-                  formik.setFieldValue(
-                    "termsAccepted",
-                    !formik.values.termsAccepted
-                  )
+                defaultTermsState={formik.values.termsAccepted}
+                onPress={(isAccepted) =>
+                  formik.setFieldValue("termsAccepted", isAccepted)
                 }
                 passStyles={passAcceptTermsStyles}
               />

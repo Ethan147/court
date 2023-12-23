@@ -4,7 +4,7 @@ import { debounce } from "lodash";
 import TextInputDropdownComp from "./TextInputDropdownComp";
 
 interface AddressInputCompProps {
-  onPlaceSelected: (place_id: string, address: string) => void;
+  onPlaceSelected: (selection: Record<string, any> | null) => void;
   error?: boolean;
   passStyles?: {
     addressInputCompViewContainer?: StyleProp<ViewStyle>;
@@ -59,6 +59,7 @@ const AddressInputComp: React.FC<AddressInputCompProps> = ({
 
   const [isTyping, setIsTyping] = useState(false);
   const [inputValue, setInputValue] = useState<string>("");
+  const [selection, setSelection] = useState<Record<string, any> | null>(null);
   const [suggestions, setSuggestions] = useState<Array<Record<string, any>>>(
     []
   );
@@ -91,19 +92,23 @@ const AddressInputComp: React.FC<AddressInputCompProps> = ({
     return () => debouncedFetchPlaces.cancel();
   }, [inputValue, isTyping]);
 
+  useEffect(() => {
+    onPlaceSelected(selection);
+  }, [selection]);
+
   const handleInputChange = (text: string) => {
     setInputValue(text);
     setIsTyping(true);
+    if (selection?.description != text) {
+      setSelection(null);
+    }
   };
 
   const handleSelectDropdown = (selectedOption: Record<string, any>) => {
     setInputValue(selectedOption.description);
     setSuggestions([]);
     setIsTyping(false);
-    onPlaceSelected(
-      selectedOption.place_id.toString(),
-      selectedOption.description.toString()
-    );
+    setSelection(selection);
   };
 
   return (

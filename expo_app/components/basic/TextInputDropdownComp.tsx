@@ -24,8 +24,8 @@ const TextInputDropdownComp = ({
   label?: string;
   value?: string;
   dropdown?: Record<string, any>[];
-  onChangeText?: (text: string) => void;
-  onDropdownSelect?: (selectedOption: Record<string, any>) => void;
+  onChangeText: (text: string) => void;
+  onDropdownSelect: (selectedOption: Record<string, any>) => void;
   onBlur?: (e: NativeSyntheticEvent<TextInputFocusEventData>) => void;
   error?: boolean;
   secureTextEntry?: boolean;
@@ -63,13 +63,8 @@ const TextInputDropdownComp = ({
   };
 
   const handleSelectOption = (option: Record<string, any>) => {
-    if (onDropdownSelect) {
-      onDropdownSelect(option);
-    }
-
-    if (onChangeText) {
-      onChangeText(option.description);
-    }
+    onDropdownSelect(option);
+    onChangeText(option.description);
   };
 
   return (
