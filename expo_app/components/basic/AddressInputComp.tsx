@@ -93,22 +93,25 @@ const AddressInputComp: React.FC<AddressInputCompProps> = ({
   }, [inputValue, isTyping]);
 
   useEffect(() => {
-    onPlaceSelected(selection);
-  }, [selection]);
+    if (selection?.description.toLowerCase() != inputValue.toLowerCase()) {
+      setSelection(null);
+      onPlaceSelected(null);
+    }
+  }, [selection, inputValue]);
 
   const handleInputChange = (text: string) => {
     setInputValue(text);
     setIsTyping(true);
-    if (selection?.description != text) {
-      setSelection(null);
-    }
+
+    console.log(selection);
   };
 
   const handleSelectDropdown = (selectedOption: Record<string, any>) => {
     setInputValue(selectedOption.description);
     setSuggestions([]);
     setIsTyping(false);
-    setSelection(selection);
+    setSelection(selectedOption);
+    onPlaceSelected(selectedOption);
   };
 
   return (
