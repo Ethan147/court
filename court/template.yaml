@@ -32,9 +32,6 @@ Resources:
       CodeUri: lambdas/api_location/
       Handler: api_location.lambda_google_places_proxy
       Runtime: python3.10
-      # Environment:
-      #   Variables:
-      #     GOOGLE_PLACES_API_KEY: '{{resolve:secretsmanager:MySecretName:SecretString:APIKey}}'
       Events:
         GooglePlacesProxy:
           Type: Api

@@ -204,14 +204,9 @@ const RegisterForm = () => {
     toggleButtonGroupCompContainer: {
       ...Platform.select({
         web: {
-          paddingVertical: windowDimensions.width * 0.01,
-          paddingHorizontal: windowDimensions.width * 0.01,
-          marginRight: windowDimensions.width * 0.01,
+          width: windowDimensions.width * formInputWidthWeb,
         },
         ios: {
-          paddingVertical: wp("1%"),
-          paddingHorizontal: wp("1%"),
-          marginRight: wp("1%"),
           width: wp(formInputWidthApp),
         },
         android: {
@@ -225,7 +220,7 @@ const RegisterForm = () => {
     toggleButtonGroupCompLabel: {
       ...Platform.select({
         web: {
-          marginLeft: windowDimensions.width * 0.001,
+          marginLeft: windowDimensions.width * 0.005,
           marginTop: windowDimensions.width * 0.005,
           marginBottom: windowDimensions.width * 0.005,
           fontSize: theme.font.size.small,
@@ -509,14 +504,34 @@ const RegisterForm = () => {
       password: "",
       confirmPassword: "",
       gender: "",
-      age: "",
       birthdate: "",
       placeSelection: "",
       termsAccepted: false,
     },
     validationSchema,
     onSubmit: (values) => {
-      console.log("Submitted values:", values);
+      fetch(`${process.env.EXPO_PUBLIC_API_URL}/register`, {
+        // stored in .env
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          first_name: values.firstName,
+          last_name: values.lastName,
+          email: values.email,
+          gender: values.gender,
+          password: values.password,
+          dob: values.birthdate,
+          address: values.placeSelection?.description,
+          terms_consent_version: "v1",
+          device_identifier: "my_identifier_todo",
+          google_place_id: values.placeSelection?.place_id,
+        }),
+      })
+        // .then((response) => response.json())
+        // .then((data) => {
+        //   setSuggestions(data.predictions);
+        // })
+        .catch((error) => console.error("Error:", error));
     },
   });
 

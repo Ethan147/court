@@ -40,9 +40,6 @@ const validationSchema = Yup.object().shape({
   gender: Yup.string()
     .oneOf(["male", "female", "non-binary/other"], "please select a gender")
     .required("gender is required"),
-  age: Yup.number()
-    .min(minAge, "must be at least 16 years old")
-    .required("age is required"),
   birthdate: Yup.string()
     .matches(
       /^(0[1-9]|1[0-2])\/(0[1-9]|1[0-9]|2[0-9]|3[01])\/(19|20)\d\d$/,

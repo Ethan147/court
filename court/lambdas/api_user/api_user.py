@@ -61,6 +61,17 @@ def lambda_register(event: Dict, _: Any) -> Dict[str, Any]:
     """
 
     try:
+        if event['httpMethod'] == 'OPTIONS':
+            return {
+                'statusCode': 200,
+                'headers': {
+                    'Access-Control-Allow-Origin': '*',  # or specify your domain
+                    'Access-Control-Allow-Methods': 'POST',
+                    'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+                },
+                'body': None
+            }
+
         signup_request = SignupRequest(**json.loads(event.get("body", "{}")))
 
         response = cognito_sign_up(signup_request.model_dump())
