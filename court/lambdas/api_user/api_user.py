@@ -5,11 +5,10 @@ from typing import Any, Dict, Optional
 
 from dateutil.relativedelta import relativedelta
 from pydantic import BaseModel, EmailStr, ValidationError, constr, validator
-
-from court.utils.aws_cognito import cognito_sign_up
-from court.utils.db import CursorCommit, CursorRollback
-from court.utils.session import get_prune_active_or_create_session
-from court.utils.user import create_or_update_user
+from utils.aws_cognito import cognito_sign_up
+from utils.db import CursorCommit, CursorRollback
+from utils.session import get_prune_active_or_create_session
+from utils.user import create_or_update_user
 
 MIN_AGE = 16
 

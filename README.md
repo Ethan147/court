@@ -108,6 +108,16 @@ e.g. `aws sso login --profile emiller`
 poetry export -f requirements.txt --output court/lambdas/api_location/requirements.txt --without-hashes
 ```
 
+- to get lambdas layers functioning correctly, must do the following (todo generalize)
+
+`export PYTHONPATH=$PWD/local_layers`
+
+and then things must be called as follows to begin the process
+
+```
+sam build
+sam local start-api --env-vars env.json
+```
 
 ## expo-setup
 
