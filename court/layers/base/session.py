@@ -1,7 +1,7 @@
 import json
 from typing import Any, Callable, Dict, List
 
-from court.utils.db import CursorCommit, CursorRollback
+from db_connector import CursorCommit, CursorRollback
 
 DEFAULT_SESSION_TIME = 24
 

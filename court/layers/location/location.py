@@ -2,8 +2,8 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Optional
 
-from court.utils import location as loc
-from court.utils.db import CursorCommit, CursorRollback
+import location as loc
+from db_connector import CursorCommit, CursorRollback
 
 
 @dataclass

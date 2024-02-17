@@ -4,8 +4,7 @@ Utilities for interacting with aws cognito
 from typing import Any, Dict
 
 import boto3
-
-from court.utils.env_conf import cognito_client_id
+from env_conf import cognito_client_id
 
 client = boto3.client('cognito-idp', region_name= 'us-east-2')
 

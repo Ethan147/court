@@ -1,9 +1,8 @@
 from typing import Any, Optional
 
+from env_conf import db_host, db_name, db_pass, db_port, db_user
 from psycopg2 import pool
 from psycopg2.extensions import connection, cursor
-
-from court.utils.env_conf import db_host, db_name, db_pass, db_port, db_user
 
 pool = pool.ThreadedConnectionPool(
     minconn=1,
