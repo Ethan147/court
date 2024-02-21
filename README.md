@@ -13,6 +13,9 @@ Anyone with this [trello court link](https://trello.com/invite/b/oS5Fz6bN/ATTI19
 
 - Some quality of life additions
 ```bash
+
+export PYTHONPATH=~/court/court/opt/python/lib/python3.10/site-packages/:$PYTHONPATH
+
 function poetry_activate {
     source "$(poetry env info --path)/bin/activate"
 }
