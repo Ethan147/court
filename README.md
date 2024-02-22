@@ -14,7 +14,7 @@ Anyone with this [trello court link](https://trello.com/invite/b/oS5Fz6bN/ATTI19
 - Some quality of life additions
 ```bash
 
-export PYTHONPATH=~/court/court/opt/python/lib/python3.10/site-packages/:$PYTHONPATH
+export PYTHONPATH=~/court/backend/opt/python/lib/python3.10/site-packages/:$PYTHONPATH
 
 function poetry_activate {
     source "$(poetry env info --path)/bin/activate"
@@ -43,7 +43,7 @@ function init_env_test {
     - `source "$( poetry env list --full-path | grep Activated | cut -d' ' -f1 )/bin/activate"`
 
 
-## docker cheat sheet
+## Docker cheat sheet
 
 - Docker one-time setup
     - using `Docker version 20.10.17, build 100c70180f` installed with snap
@@ -67,7 +67,7 @@ docker run -d --name db_court -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=pos
     - `docker exec -it db_court bash`
 
 
-## database management with dbmate
+## Database management with dbmate
 
 - install (linux)
 ```
@@ -86,14 +86,14 @@ sudo chmod +x /usr/local/bin/dbmate
 - frontend: jest test `npm test` from expo_app\.
 
 
-## test coverage reports
+## Test coverage reports
 Coverage reports must be run manually.
 
 - `coverage run -m unittest discover`
 - `coverage report`
 
 
-## lambdas
+## Lambdas
 `aws sso login --profile <profile_name>`
 e.g. `aws sso login --profile emiller`
 
@@ -122,7 +122,31 @@ sam build
 sam local start-api --env-vars env.json
 ```
 
-## expo-setup
+
+### Lambda layers
+
+#### Basics
+Deploy lambda layers via
+- cd `layers/base` then `zip -r base.zip python/`
+- cd `layers/location` then `zip -r location.zip python/`
+- cd `layers/user` then `zip -r user.zip python/`
+
+These layers should sit in their respected backend/layers folders.
+The .zip files will be uploaded to AWS lambdas for production use.
+
+#### Local Testing
+
+The `backend/python/lib/python3.10/site-packages` directory is used to mimic the AWS structure for accessing the contents of layers
+
+To set this up, run the following from the root directory
+```
+unzip backend/layers/base/base.zip -d backend/opt
+unzip backend/layers/location/location.zip -d backend/opt
+unzip backend/layers/user/user.zip -d backend/opt
+```
+
+
+## Expo setup
 
 - nvm install
     - `curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash`

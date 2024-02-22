@@ -1,3 +1,0 @@
-- cd `layers/base` then `zip -r base.zip python/`
-- cd `layers/location` then `zip -r location.zip python/`
-- cd `layers/user` then `zip -r user.zip python/`

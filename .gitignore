@@ -78,3 +78,6 @@ expo_app/coverage/
 
 # AWS SAM build folder
 .aws-sam/
+
+# Redundant code for local testing
+backend/opt/
