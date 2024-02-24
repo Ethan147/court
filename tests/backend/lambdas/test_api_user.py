@@ -4,13 +4,13 @@ from datetime import date, datetime
 from typing import Any, Dict, List, Optional
 from unittest.mock import patch
 
+from db_connector import CursorCommit, CursorRollback
 from pydantic import ValidationError
+from user import find_user
 
-from court.lambdas import api_user
-from court.lambdas.api_user import SignupRequest
-from court.utils.db import CursorCommit, CursorRollback
-from court.utils.user import find_user
+from backend.lambdas.api_user import api_user
 
+# from aws_cognito import cognito_sign_up
 
 def _get_testing_body() -> Dict[str, Any]:
     test_headers = {
@@ -59,41 +59,41 @@ class TestValidateAllFields(unittest.TestCase):
             with self.subTest(field=field):
                 data = {k: v for k, v in _get_testing_body().items() if k != field}
                 with self.assertRaises(ValidationError):
-                    SignupRequest(**data)
+                    api_user.SignupRequest(**data)
 
     def test_valid_data_no_raised_error(self) -> None:
-        SignupRequest(**_get_testing_body())
+        api_user.SignupRequest(**_get_testing_body())
 
     def test_password_too_short(self) -> None:
         data = _get_testing_body()
         data['password'] = 'weak'
 
         with self.assertRaises(ValidationError):
-            SignupRequest(**data)
+            api_user.SignupRequest(**data)
 
     def test_weak_password(self) -> None:
         data = _get_testing_body()
         data['password'] = 'Thispasswordislongbutweak'
 
         with self.assertRaises(ValidationError):
-            SignupRequest(**data)
+            api_user.SignupRequest(**data)
 
     def test_age_restriction(self) -> None:
         data = _get_testing_body().copy()
         data['dob'] = datetime.now()
 
         with self.assertRaises(ValidationError):
-            SignupRequest(**data)
+            api_user.SignupRequest(**data)
 
     def test_terms_consent_version(self):
         latest_version = 'x.x.x'
         data = _get_testing_body().copy()
         data['terms_consent_version'] = 'old-version'
         with self.assertRaises(ValidationError):
-            SignupRequest(**data)
+            api_user.SignupRequest(**data)
 
         data['terms_consent_version'] = latest_version
-        SignupRequest(**data)  # should not raise
+        api_user.SignupRequest(**data)  # should not raise
 
 class TestLambdaRegister(unittest.TestCase):
 
@@ -127,7 +127,7 @@ class TestLambdaRegister(unittest.TestCase):
         def cognito_sign_up(body: Dict[str, Any]) -> None:
             raise ValueError("test cognito sign up issue")
 
-        with patch('court.lambdas.api_user.cognito_sign_up', side_effect=cognito_sign_up):
+        with patch('aws_cognito.cognito_sign_up', side_effect=cognito_sign_up):
             event = {
                 'body': json.dumps(_testing_body([])),
                 'headers': json.dumps(_get_testing_headers())
@@ -153,8 +153,8 @@ class TestLambdaRegister(unittest.TestCase):
         ) -> None:
             raise ValueError("test create_or_update_user issue")
 
-        with patch('court.lambdas.api_user.cognito_sign_up', side_effect=cognito_sign_up):
-            with patch('court.lambdas.api_user.create_or_update_user', side_effect=create_or_update_user):
+        with patch('aws_cognito.cognito_sign_up', side_effect=cognito_sign_up):
+            with patch('user.create_or_update_user', side_effect=create_or_update_user):
                 event = {
                     'body': json.dumps(_testing_body([])),
                     'headers': json.dumps(_get_testing_headers())
@@ -169,7 +169,7 @@ class TestLambdaRegister(unittest.TestCase):
 
         self.assertTrue(find_user(email='test@email.com') is None)
 
-        with patch('court.lambdas.api_user.cognito_sign_up', side_effect=cognito_sign_up):
+        with patch('aws_cognito.cognito_sign_up', side_effect=cognito_sign_up):
             event = {
                 'body': json.dumps(_testing_body([])),
                 'headers': json.dumps(_get_testing_headers())

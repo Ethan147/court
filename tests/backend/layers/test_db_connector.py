@@ -3,7 +3,7 @@ import subprocess
 import unittest
 from unittest.mock import MagicMock, patch
 
-from court.utils.db import CursorRollback
+from db_connector import CursorRollback
 
 
 class TestConnection(unittest.TestCase):

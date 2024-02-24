@@ -3,14 +3,12 @@ import uuid
 from datetime import date, datetime, timedelta
 from typing import Any, List
 
-from court.utils.db import CursorCommit, CursorRollback
-from court.utils.session import (_create_user_session, _prune_expired_sessions,
-                                 _prune_extra_user_device_sessions,
-                                 _prune_sessions, extend_session,
-                                 get_prune_active_or_create_session,
-                                 get_prune_active_sessions,
-                                 remove_all_user_sessions)
-from court.utils.user import create_or_update_user
+from db_connector import CursorCommit, CursorRollback
+from session import (_create_user_session, _prune_expired_sessions,
+                     _prune_extra_user_device_sessions, _prune_sessions,
+                     extend_session, get_prune_active_or_create_session,
+                     get_prune_active_sessions, remove_all_user_sessions)
+from user import create_or_update_user
 
 
 class TestSessionManagement(unittest.TestCase):

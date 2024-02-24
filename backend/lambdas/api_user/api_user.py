@@ -3,12 +3,12 @@ import re
 from datetime import datetime
 from typing import Any, Dict, Optional
 
+from aws_cognito import cognito_sign_up
 from dateutil.relativedelta import relativedelta
+from db_connector import CursorCommit, CursorRollback
 from pydantic import BaseModel, EmailStr, ValidationError, constr, validator
-from utils.aws_cognito import cognito_sign_up
-from utils.db import CursorCommit, CursorRollback
-from utils.session import get_prune_active_or_create_session
-from utils.user import create_or_update_user
+from session import get_prune_active_or_create_session
+from user import create_or_update_user
 
 MIN_AGE = 16
 

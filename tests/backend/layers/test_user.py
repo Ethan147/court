@@ -4,9 +4,8 @@ from datetime import date
 from typing import Optional
 
 import psycopg2
-
-from court.utils.db import CursorCommit, CursorRollback
-from court.utils.user import UserAccount, create_or_update_user, find_user
+from db_connector import CursorCommit, CursorRollback
+from user import UserAccount, create_or_update_user, find_user
 
 
 class TestUserUtilities(unittest.TestCase):

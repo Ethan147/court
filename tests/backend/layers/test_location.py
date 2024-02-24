@@ -4,9 +4,9 @@ from copy import deepcopy
 from datetime import date, datetime, timedelta
 from typing import Any, List
 
-from court.utils import location as loc
-from court.utils import user
-from court.utils.db import CursorCommit, CursorRollback
+import location as loc
+import user
+from db_connector import CursorCommit, CursorRollback
 
 
 class TestUserLocationManagement(unittest.TestCase):
