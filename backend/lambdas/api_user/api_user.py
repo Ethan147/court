@@ -51,14 +51,9 @@ class SignupRequest(BaseModel):
 
 def lambda_register(event: Dict, _: Any) -> Dict[str, Any]:
     """
-    API endpoint for user signups
-
-    todo: should the sign-in API request address at all?
-    If so, mailing address? play location? both? neither?
-
-    A: yes, a first play location that they can add onto later (later, maybe expand to multiple play locations?)
+    As a first request for a user,
+    only gather the expected primary play location for the user
     """
-
     try:
         if event.get('httpMethod') == 'OPTIONS':
             return {

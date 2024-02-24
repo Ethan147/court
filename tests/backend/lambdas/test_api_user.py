@@ -127,14 +127,14 @@ class TestLambdaRegister(unittest.TestCase):
         def cognito_sign_up(body: Dict[str, Any]) -> None:
             raise ValueError("test cognito sign up issue")
 
-        with patch('aws_cognito.cognito_sign_up', side_effect=cognito_sign_up):
+        with patch('backend.lambdas.api_user.api_user.cognito_sign_up', side_effect=cognito_sign_up):
             event = {
                 'body': json.dumps(_testing_body([])),
                 'headers': json.dumps(_get_testing_headers())
             }
             response = api_user.lambda_register(event, None)
             self.assertEqual(response['statusCode'], 500)
-            self.assertTrue('Parameter validation failed:' in response['body'])
+            self.assertEqual(response, {'statusCode': 500, 'body': '{"message": "test cognito sign up issue"}'})
 
     def test_lambda_register_create_user_issue(self) -> None:
 
@@ -153,15 +153,15 @@ class TestLambdaRegister(unittest.TestCase):
         ) -> None:
             raise ValueError("test create_or_update_user issue")
 
-        with patch('aws_cognito.cognito_sign_up', side_effect=cognito_sign_up):
-            with patch('user.create_or_update_user', side_effect=create_or_update_user):
+        with patch('backend.lambdas.api_user.api_user.cognito_sign_up', side_effect=cognito_sign_up):
+            with patch('backend.lambdas.api_user.api_user.create_or_update_user', side_effect=create_or_update_user):
                 event = {
                     'body': json.dumps(_testing_body([])),
                     'headers': json.dumps(_get_testing_headers())
                 }
                 response = api_user.lambda_register(event, None)
                 self.assertEqual(response['statusCode'], 500)
-                self.assertTrue('Parameter validation failed:' in response['body'])
+                self.assertEqual(response['body'], '{"message": "test create_or_update_user issue"}')
 
     def test_lambda_register_successful_user_creation(self) -> None:
         def cognito_sign_up(body: Dict[str, Any]) -> Dict[str, str]:
@@ -169,12 +169,12 @@ class TestLambdaRegister(unittest.TestCase):
 
         self.assertTrue(find_user(email='test@email.com') is None)
 
-        with patch('aws_cognito.cognito_sign_up', side_effect=cognito_sign_up):
+        with patch('backend.lambdas.api_user.api_user.cognito_sign_up', side_effect=cognito_sign_up):
             event = {
                 'body': json.dumps(_testing_body([])),
                 'headers': json.dumps(_get_testing_headers())
             }
-            _ = api_user.lambda_register(event, None)
+            response = api_user.lambda_register(event, None)
 
         found_user = find_user(email='test@email.com')
         self.assertTrue(found_user is not None)
