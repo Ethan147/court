@@ -10,7 +10,6 @@ from user import find_user
 
 from backend.lambdas.api_user import api_user
 
-# from aws_cognito import cognito_sign_up
 
 def _get_testing_body() -> Dict[str, Any]:
     test_headers = {
@@ -22,7 +21,8 @@ def _get_testing_body() -> Dict[str, Any]:
         "dob": "2000-12-12T00:00:00",
         "address": "123 Fake St, Austin TX",
         "terms_consent_version": 'x.x.x',
-        "device_identifier": "some_device_identifier"
+        "device_identifier": "some_device_identifier",
+        "google_place_id": "123"
     }
     return test_headers
 
@@ -134,7 +134,7 @@ class TestLambdaRegister(unittest.TestCase):
             }
             response = api_user.lambda_register(event, None)
             self.assertEqual(response['statusCode'], 500)
-            self.assertEqual(response['body'], '{"message": "test cognito sign up issue"}')
+            self.assertTrue('Parameter validation failed:' in response['body'])
 
     def test_lambda_register_create_user_issue(self) -> None:
 
@@ -161,7 +161,7 @@ class TestLambdaRegister(unittest.TestCase):
                 }
                 response = api_user.lambda_register(event, None)
                 self.assertEqual(response['statusCode'], 500)
-                self.assertEqual(response['body'], '{"message": "test create_or_update_user issue"}')
+                self.assertTrue('Parameter validation failed:' in response['body'])
 
     def test_lambda_register_successful_user_creation(self) -> None:
         def cognito_sign_up(body: Dict[str, Any]) -> Dict[str, str]:

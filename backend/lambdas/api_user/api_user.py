@@ -60,7 +60,7 @@ def lambda_register(event: Dict, _: Any) -> Dict[str, Any]:
     """
 
     try:
-        if event['httpMethod'] == 'OPTIONS':
+        if event.get('httpMethod') == 'OPTIONS':
             return {
                 'statusCode': 200,
                 'headers': {
