@@ -145,6 +145,10 @@ unzip backend/layers/location/location.zip -d backend/opt
 unzip backend/layers/user/user.zip -d backend/opt
 ```
 
+## AWS cloudformation
+
+`aws cloudformation deploy --template-file path/to/iam_ssm_access_role.yaml --stack-name <stack-name> --capabilities CAPABILITY_IAM --profile emiller`
+
 
 ## Expo setup
 
