@@ -33,6 +33,8 @@ Resources:
       CodeUri: lambdas/api_hello/
       Handler: api_hello.lambda_hello
       Runtime: python3.10
+      Layers:
+        - !Ref TestLayer
       Events:
         CatchAll:
           Type: Api
