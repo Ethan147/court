@@ -44,6 +44,7 @@ Resources:
       Runtime: python3.10
       Layers:
         - !Ref TestLayer
+        - !Ref BaseLayer
       Events:
         CatchAll:
           Type: Api
