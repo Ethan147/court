@@ -27,6 +27,15 @@ Resources:
         - python3.10
       Description: "Test layer"
 
+  BaseLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: base-layer
+      ContentUri: layers/base/
+      CompatibleRuntimes:
+        - python3.10
+      Description: "Base layer with common utilities"
+
   ApiHelloFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -45,14 +54,7 @@ Resources:
               Ref: HelloApi
 
 
-  # BaseLayer:
-  #   Type: AWS::Serverless::LayerVersion
-  #   Properties:
-  #     LayerName: base-layer
-  #     CodeUri: layers/base/
-  #     CompatibleRuntimes:
-  #       - python3.10
-  #     Description: "Base layer with common utilities"
+
 
   # LocationLayer:
   #   Type: AWS::Serverless::LayerVersion
