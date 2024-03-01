@@ -38,7 +38,7 @@ Resources:
           Type: Api
           Properties:
             Path: /hello
-            Method: ANY
+            Method: GET
             RestApiId:
               Ref: HelloApi
 
