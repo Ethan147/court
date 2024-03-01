@@ -34,11 +34,11 @@ Resources:
       Handler: api_hello.lambda_hello
       Runtime: python3.10
       Events:
-        Hello:
+        CatchAll:
           Type: Api
           Properties:
             Path: /hello
-            Method: POST, GET
+            Method: ANY
             RestApiId:
               Ref: HelloApi
 
