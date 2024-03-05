@@ -98,7 +98,9 @@ Coverage reports must be run manually.
 e.g. `aws sso login --profile emiller`
 
 - to run locally
-    - in one terminal run `sam local start-api --profile <profile>`
+    - enter `court/backend/`
+    - run `sam build`
+    - in one terminal run `sam local start-api --profile <profile> --env-vars env.json`
     - in a second, run `curl http://127.0.0.1:3000/hello`
         - this will return `{"message": "Hello, World!"}`
 
@@ -119,7 +121,7 @@ and then things must be called as follows to begin the process
 
 ```
 sam build
-sam local start-api --env-vars env.json
+sam local start-api --profile <profile> --env-vars env.json
 ```
 
 
@@ -148,6 +150,22 @@ unzip backend/layers/user/user.zip -d backend/opt
 ## Secrets manger
 
 This projcet uses AWS Parameter Store for storing secure, encrypted values for access within the lambdas ecosystem.
+
+For local testing within the Parameter store framework a file will be kept at `court/backend/env.json` with local db testing environmental variables
+
+NOTE: this may invalidate the "init_env_test" function within the "~/.zshrc setup" area (must investigate)
+```
+{
+  "MyLambdaFunction": {
+    "DB_NAME": "court",
+    "DB_HOST": "127.0.0.2",
+    "DB_PORT": "5432",
+    "DB_PASS": "postgres",
+    "DB_USER": "postgres",
+    "DATABASE_URL": "postgres://postgres:postgres@127.0.0.1:5432/court?sslmode=disable"
+  }
+}
+```
 
 ## AWS cloudformation
 
