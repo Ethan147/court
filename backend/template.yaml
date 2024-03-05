@@ -35,6 +35,13 @@ Resources:
       CompatibleRuntimes:
         - python3.10
       Description: "Base layer with common utilities"
+      Environment:
+        Variables:
+          DB_USER: '{{resolve:ssm:/secrets/DB_USER:1}}'
+          DB_PASS: '{{resolve:ssm:/secrets/DB_PASS:1}}'
+      Policies:
+        - SSMParameterReadPolicy:
+            ParameterName: /secrets/*
 
   ApiHelloFunction:
     Type: AWS::Serverless::Function

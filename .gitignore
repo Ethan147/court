@@ -81,3 +81,6 @@ expo_app/coverage/
 
 # Redundant code for local testing
 backend/opt/
+
+# .env for backend local testing
+backend/.env
