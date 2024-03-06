@@ -156,14 +156,14 @@ For local testing within the Parameter store framework a file will be kept at `c
 NOTE: this may invalidate the "init_env_test" function within the "~/.zshrc setup" area (must investigate)
 ```
 {
-  "MyLambdaFunction": {
-    "DB_NAME": "court",
-    "DB_HOST": "127.0.0.2",
-    "DB_PORT": "5432",
-    "DB_PASS": "postgres",
-    "DB_USER": "postgres",
-    "DATABASE_URL": "postgres://postgres:postgres@127.0.0.1:5432/court?sslmode=disable"
-  }
+    "MyLambdaFunction": {
+      "DB_NAME": "court",
+      "DB_HOST": "host.docker.internal",
+      "DB_PORT": "5432",
+      "DB_PASS": "postgres",
+      "DB_USER": "postgres",
+      "DATABASE_URL": "postgres://postgres:postgres@host.docker.internal:5432/court?sslmode=disable"
+    }
 }
 ```
 

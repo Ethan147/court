@@ -55,8 +55,12 @@ Resources:
               Ref: HelloApi
       Environment:
         Variables:
-          DB_USER: '{{resolve:ssm:/secrets/DB_USER:1}}'
+          DB_NAME: '{{resolve:ssm:/secrets/DB_NAME:1}}'
+          DB_HOST: '{{resolve:ssm:/secrets/DB_HOST:1}}'
+          DB_PORT: '{{resolve:ssm:/secrets/DB_PORT:1}}'
           DB_PASS: '{{resolve:ssm:/secrets/DB_PASS:1}}'
+          DB_PASS: '{{resolve:ssm:/secrets/DB_PASS:1}}'
+          DATABASE_URL: '{{resolve:ssm:/secrets/DATABASE_URL:1}}'
       Policies:
         - SSMParameterReadPolicy:
             ParameterName: /secrets/*
