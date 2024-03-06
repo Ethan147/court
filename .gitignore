@@ -83,4 +83,4 @@ expo_app/coverage/
 backend/opt/
 
 # Reserved for local testing
-backend/env.json
+backend/*.json
