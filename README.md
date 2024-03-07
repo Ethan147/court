@@ -67,6 +67,17 @@ docker run -d --name db_court -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=pos
     - `docker exec -it db_court bash`
 
 
+## Docker network
+
+Docker running on a local machine and local-run lambdas (which will use Docker) will each be in their isolated Docker network environments and thus will not be able to see or target eachother.
+
+To resolve this:
+- `docker network create network-court`
+- `docker network connect network-court db_court`
+- (when appropriate) `sam local start-api --docker-network network-court --env-vars env.json`
+- (to find ip for env.json) `docker network inspect network-court`
+
+
 ## Database management with dbmate
 
 - install (linux)
@@ -154,15 +165,16 @@ This projcet uses AWS Parameter Store for storing secure, encrypted values for a
 For local testing within the Parameter store framework a file will be kept at `court/backend/env.json` with local db testing environmental variables
 
 NOTE: this may invalidate the "init_env_test" function within the "~/.zshrc setup" area (must investigate)
+ip address of docker can be found via `docker network inspect network-court`
 ```
 {
-    "MyLambdaFunction": {
+    "ApiHelloFunction": {
       "DB_NAME": "court",
-      "DB_HOST": "host.docker.internal",
+      "DB_HOST": "172.19.0.2",
       "DB_PORT": "5432",
       "DB_PASS": "postgres",
       "DB_USER": "postgres",
-      "DATABASE_URL": "postgres://postgres:postgres@host.docker.internal:5432/court?sslmode=disable"
+      "DATABASE_URL": "postgres://postgres:postgres@172.19.0.2:5432/court?sslmode=disable"
     }
 }
 ```
