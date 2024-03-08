@@ -175,6 +175,9 @@ ip address of docker can be found via `docker network inspect network-court`
       "DB_PASS": "postgres",
       "DB_USER": "postgres",
       "DATABASE_URL": "postgres://postgres:postgres@172.19.0.2:5432/court?sslmode=disable"
+    },
+    "ApiGooglePlacesFunction": {
+      "PLACES_KEY": "google_places_api_key_here"
     }
 }
 ```

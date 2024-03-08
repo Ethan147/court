@@ -9,11 +9,6 @@ from pydantic import BaseModel, ValidationError
 class GooglePlacesRequest(BaseModel):
     input_text: str
 
-def get_api_key(parameter_name: str) -> str:
-    ssm = boto3.client('ssm')
-    parameter = ssm.get_parameter(Name=parameter_name, WithDecryption=True)
-    return parameter['Parameter']['Value']
-
 def lambda_google_places_proxy(event, _):
     try:
         if event['httpMethod'] == 'OPTIONS':
@@ -30,7 +25,7 @@ def lambda_google_places_proxy(event, _):
         # Parse request body
         request_data = GooglePlacesRequest(**json.loads(event['body']))
 
-        google_api_key = get_api_key('google_places_api_key')
+        google_api_key = os.environ.get("PLACES_KEY")
         google_places_url = f"https://maps.googleapis.com/maps/api/place/autocomplete/json?input={request_data.input_text}&key={google_api_key}"
 
         response_body = requests.get(google_places_url)

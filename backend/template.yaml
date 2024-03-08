@@ -36,6 +36,24 @@ Resources:
         - python3.10
       Description: "Base layer with common utilities"
 
+  LocationLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: location-layer
+      ContentUri: layers/location/
+      CompatibleRuntimes:
+        - python3.10
+      Description: "Layer with utilities related to location"
+
+  UserLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: user-layer
+      ContentUri: layers/user/
+      CompatibleRuntimes:
+        - python3.10
+      Description: "Layer with utilities related to user"
+
   ApiHelloFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -59,61 +77,49 @@ Resources:
           DB_HOST: '{{resolve:ssm:/secrets/DB_HOST:1}}'
           DB_PORT: '{{resolve:ssm:/secrets/DB_PORT:1}}'
           DB_PASS: '{{resolve:ssm:/secrets/DB_PASS:1}}'
-          DB_PASS: '{{resolve:ssm:/secrets/DB_PASS:1}}'
-          DATABASE_URL: '{{resolve:ssm:/secrets/DATABASE_URL:1}}'
+          DB_USER: '{{resolve:ssm:/secrets/DB_USER:1}}'
       Policies:
         - SSMParameterReadPolicy:
             ParameterName: /secrets/*
 
+  ApiUserFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambdas/api_user/
+      Handler: api_user.lambda_register
+      Runtime: python3.10
+      Layers:
+        - !Ref BaseLayer
+        - !Ref UserLayer
+      Events:
+        Register:
+          Type: Api
+          Properties:
+            Path: /register
+            Method: POST
+      Environment:
+        Variables:
+          DB_NAME: '{{resolve:ssm:/secrets/DB_NAME:1}}'
+          DB_HOST: '{{resolve:ssm:/secrets/DB_HOST:1}}'
+          DB_PORT: '{{resolve:ssm:/secrets/DB_PORT:1}}'
+          DB_PASS: '{{resolve:ssm:/secrets/DB_PASS:1}}'
+          DB_USER: '{{resolve:ssm:/secrets/DB_USER:1}}'
+      Policies:
+        - SSMParameterReadPolicy:
+            ParameterName: /secrets/*
 
-
-
-  # LocationLayer:
-  #   Type: AWS::Serverless::LayerVersion
-  #   Properties:
-  #     LayerName: location-layer
-  #     CodeUri: layers/location/
-  #     CompatibleRuntimes:
-  #       - python3.10
-  #     Description: "Layer with utilities related to location"
-
-  # UserLayer:
-  #   Type: AWS::Serverless::LayerVersion
-  #   Properties:
-  #     LayerName: user-layer
-  #     CodeUri: layers/user/
-  #     CompatibleRuntimes:
-  #       - python3.10
-  #     Description: "Layer with utilities related to user"
-
-  # ApiUserFunction:
-  #   Type: AWS::Serverless::Function
-  #   Properties:
-  #     CodeUri: lambdas/api_user/
-  #     Handler: api_user.lambda_register
-  #     Runtime: python3.10
-  #     Layers:
-  #       - !Ref BaseLayer
-  #       - !Ref UserLayer
-  #     Events:
-  #       Register:
-  #         Type: Api
-  #         Properties:
-  #           Path: /register
-  #           Method: POST
-
-  # ApiLocationFunction:
-  #   Type: AWS::Serverless::Function
-  #   Properties:
-  #     CodeUri: lambdas/api_location/
-  #     Handler: api_location.lambda_google_places_proxy
-  #     Runtime: python3.10
-  #     Layers:
-  #       - !Ref BaseLayer
-  #       - !Ref LocationLayer
-  #     Events:
-  #       GooglePlacesProxy:
-  #         Type: Api
-  #         Properties:
-  #           Path: /google-places
-  #           Method: POST
+  ApiGooglePlacesFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambdas/api_google_places_proxy/
+      Handler: api_google_places_proxy.lambda_google_places_proxy
+      Runtime: python3.10
+      Events:
+        GooglePlacesProxy:
+          Type: Api
+          Properties:
+            Path: /google-places
+            Method: POST
+      Environment:
+        Variables:
+          DB_NAME: '{{resolve:ssm:/secrets/PLACES_KEY:1}}'
