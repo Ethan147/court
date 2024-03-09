@@ -92,7 +92,7 @@ Resources:
         - !Ref BaseLayer
         - !Ref UserLayer
       Events:
-        Register:
+        CatchAll:
           Type: Api
           Properties:
             Path: /register
@@ -115,11 +115,14 @@ Resources:
       Handler: api_google_places_proxy.lambda_google_places_proxy
       Runtime: python3.10
       Events:
-        GooglePlacesProxy:
+        CatchAll:
           Type: Api
           Properties:
             Path: /google-places
             Method: POST
       Environment:
         Variables:
-          DB_NAME: '{{resolve:ssm:/secrets/PLACES_KEY:1}}'
+          PLACES_KEY: '{{resolve:ssm:/secrets/PLACES_KEY:1}}'
+      Policies:
+        - SSMParameterReadPolicy:
+            ParameterName: /secrets/*

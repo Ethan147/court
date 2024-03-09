@@ -496,6 +496,10 @@ const RegisterForm = () => {
 
   const scrollViewRef = useRef<ScrollView>(null);
 
+  const getGender = (selectedGender: string): string => {
+    return selectedGender === "non-binary/other" ? "other" : selectedGender;
+  };
+
   const formik = useFormik({
     initialValues: {
       firstName: "",
@@ -505,20 +509,22 @@ const RegisterForm = () => {
       confirmPassword: "",
       gender: "",
       birthdate: "",
-      placeSelection: "",
+      placeSelection: {
+        description: "",
+        place_id: "",
+      },
       termsAccepted: false,
     },
     validationSchema,
     onSubmit: (values) => {
       fetch(`${process.env.EXPO_PUBLIC_API_URL}/register`, {
-        // stored in .env
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           first_name: values.firstName,
           last_name: values.lastName,
           email: values.email,
-          gender: values.gender,
+          gender: getGender(values.gender),
           password: values.password,
           dob: values.birthdate,
           address: values.placeSelection?.description,
@@ -526,12 +532,7 @@ const RegisterForm = () => {
           device_identifier: "my_identifier_todo",
           google_place_id: values.placeSelection?.place_id,
         }),
-      })
-        // .then((response) => response.json())
-        // .then((data) => {
-        //   setSuggestions(data.predictions);
-        // })
-        .catch((error) => console.error("Error:", error));
+      }).catch((error) => console.error("Error:", error));
     },
   });
 

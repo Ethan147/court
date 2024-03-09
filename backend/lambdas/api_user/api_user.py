@@ -18,7 +18,7 @@ class SignupRequest(BaseModel):
     email: EmailStr
     gender: constr(pattern="^(male|female|other)$")  # type: ignore
     password: str
-    dob: datetime
+    dob: str
     address: constr(min_length=1)  # type: ignore
     terms_consent_version: constr(min_length=1)  # type: ignore
     device_identifier: constr(min_length=1)  # type: ignore
@@ -35,9 +35,15 @@ class SignupRequest(BaseModel):
         return v
 
     @validator('dob')
-    def validate_age(cls, v: datetime) -> datetime:
-        if relativedelta(datetime.now(), v).years < MIN_AGE:
+    def validate_age(cls, v: str) -> str:
+        try:
+            dob_datetime = datetime.strptime(v, '%m/%d/%Y')
+        except ValueError:
+            raise ValueError("Invalid date format. Please use MM/DD/YYYY format.")
+
+        if relativedelta(datetime.now(), dob_datetime).years < MIN_AGE:
             raise ValueError(f"Age must be at least {MIN_AGE} years")
+
         return v
 
     @validator('terms_consent_version')

@@ -107,6 +107,11 @@ create table user_account_terms_consent (
 create index idx_terms_version on terms_and_conditions(version);
 create index idx_user_terms_consent on user_account_terms_consent(user_account_id, terms_and_conditions_id);
 
+insert into public.terms_and_conditions
+    (id, version, terms_text, created_at)
+values
+    (1, 'v1', 'testing term text', now());
+
 ---------------
 -- migrate:down
 ---------------
