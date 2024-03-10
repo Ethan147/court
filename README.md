@@ -85,11 +85,13 @@ To resolve this:
 sudo curl -fsSL -o /usr/local/bin/dbmate https://github.com/amacneil/dbmate/releases/latest/download/dbmate-linux-amd64
 sudo chmod +x /usr/local/bin/dbmate
 ```
-- create a migration `dbmate new create_users_table`
+- create a migration `dbmate --migrations-dir db/base/migrations new create_users_table`
 - migrations
-    - `dbmate up`
-    - `dbmate rollback`
-
+    - `dbmate --migrations-dir db/base/migrations up`
+    - `dbmate --migrations-dir db/base/migrations rollback`
+- migrations for testing
+    - `dbmate --migrations-dir db/dev/migrations up`
+    - `dbmate --migrations-dir db/dev/migrations rollback`
 
 ## Unit testing
 

@@ -4,6 +4,7 @@
 -- todo: how to record skill level?
 -- todo: a table for tennis & pickleball locations?
 -- todo: a table for rating a user or location?
+-- todo: consider user verification to a greater degree? Like, partial allowance on a time-table.
 
 -------------
 -- migrate:up
@@ -26,6 +27,7 @@ create table if not exists user_account (
     first_name text not null,
     last_name text not null,
     email text unique not null,
+    email_verified boolean not null default false,
     gender_category gender_category not null,
     gender_self_specify text default null,
     dob date not null,

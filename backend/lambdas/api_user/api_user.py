@@ -1,5 +1,6 @@
 import json
 import re
+import uuid
 from datetime import datetime
 from typing import Any, Dict, Optional
 
@@ -74,7 +75,8 @@ def lambda_register(event: Dict, _: Any) -> Dict[str, Any]:
 
         signup_request = SignupRequest(**json.loads(event.get("body", "{}")))
 
-        response = cognito_sign_up(signup_request.model_dump())
+        user_uuid = uuid.uuid_generate_v4(),
+        response = cognito_sign_up(user_uuid, signup_request.model_dump())
         cognito_user_id = response["UserSub"]
 
         user_account_id = create_or_update_user(
