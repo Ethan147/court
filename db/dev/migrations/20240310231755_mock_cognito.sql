@@ -6,8 +6,8 @@ create table if not exists mock_cognito (
     user_uuid uuid unique not null default uuid_generate_v4(),
     user_password text not null,  -- plaintext for testing
     user_email text not null,
-    user_phone_number text not null,
-    created_at timestamp not null,
+    user_phone_number text,
+    created_at timestamp not null default now(),
     updated_at timestamp not null default now()
 );
 
