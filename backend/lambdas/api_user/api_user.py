@@ -75,7 +75,7 @@ def lambda_register(event: Dict, _: Any) -> Dict[str, Any]:
 
         signup_request = SignupRequest(**json.loads(event.get("body", "{}")))
 
-        user_uuid = uuid.uuid_generate_v4(),
+        user_uuid = str(uuid.uuid4()),
         response = cognito_sign_up(user_uuid, signup_request.model_dump())
         cognito_user_id = response["UserSub"]
 

@@ -78,6 +78,7 @@ Resources:
           DB_PORT: '{{resolve:ssm:/secrets/DB_PORT:1}}'
           DB_PASS: '{{resolve:ssm:/secrets/DB_PASS:1}}'
           DB_USER: '{{resolve:ssm:/secrets/DB_USER:1}}'
+          ENV: '{{resolve:ssm:/secrets/ENV:1}}'
       Policies:
         - SSMParameterReadPolicy:
             ParameterName: /secrets/*
@@ -104,6 +105,7 @@ Resources:
           DB_PORT: '{{resolve:ssm:/secrets/DB_PORT:1}}'
           DB_PASS: '{{resolve:ssm:/secrets/DB_PASS:1}}'
           DB_USER: '{{resolve:ssm:/secrets/DB_USER:1}}'
+          ENV: '{{resolve:ssm:/secrets/ENV:1}}'
       Policies:
         - SSMParameterReadPolicy:
             ParameterName: /secrets/*
