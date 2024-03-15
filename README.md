@@ -45,6 +45,11 @@ function init_env_test {
 
 ## Docker cheat sheet
 
+- Connecting to a running docker database
+```
+docker exec -it db_court psql -U postgres -d court
+```
+
 - Docker one-time setup
     - using `Docker version 20.10.17, build 100c70180f` installed with snap
     - must download [docker-credential-helpers v0.7.0](https://github.com/docker/docker-credential-helpers/releases)
