@@ -203,7 +203,6 @@ ip address of docker can be found via `docker network inspect network-court`
 
 `aws cloudformation deploy --template-file path/to/iam_ssm_access_role.yaml --stack-name <stack-name> --capabilities CAPABILITY_IAM --profile emiller`
 
-
 ## Expo setup
 
 - nvm install
@@ -226,3 +225,8 @@ To run your project, navigate to the directory and run one of the following npm 
 - npm run ios # requires an iOS device or macOS for access to an iOS simulator
 - npm run web
 ```
+
+## Google APIs
+
+The Google Places API is used to identify an address from predictive input text.
+A Place Details request is made to then get postal gode and latitude and longitude.

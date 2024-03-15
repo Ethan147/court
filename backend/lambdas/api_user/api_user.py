@@ -56,6 +56,8 @@ class SignupRequest(BaseModel):
                 raise ValueError("Terms and conditions version does not match the most recent version.")
             return v
 
+
+# todo Google Places API's Place Details request (google places API to request about this)
 def lambda_register(event: Dict, _: Any) -> Dict[str, Any]:
     """
     As a first request for a user,
@@ -88,6 +90,21 @@ def lambda_register(event: Dict, _: Any) -> Dict[str, Any]:
             signup_request.dob,
             signup_request.terms_consent_version,
         )
+
+        # todo: postal code will have to be gathered from the Googe Places API Place Details request
+        address_line_1, city, state, country = signup_request.address.split(",")
+        insert_user_play_location(
+            user_account_id = user_account_id,
+            address_line_1 = address_line_1,
+            address_line_2 = None,
+            city = city,
+            state = state,
+            country = country,
+            postal_code= None,  # todo this does not seem to be provided by the google places API
+            longitude = 0.0,
+            latitude = 0.0
+        )
+
         get_prune_active_or_create_session(
             user_account_id,
             signup_request.device_identifier

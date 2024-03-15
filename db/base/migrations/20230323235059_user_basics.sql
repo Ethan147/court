@@ -52,8 +52,9 @@ create table user_play_location (
     is_active boolean not null default true
 );
 
-create index idx_user_play_location on user_play_location using gist(location);
 create index idx_user_play_location_user_id on user_play_location(user_account_id);
+create index idx_user_play_location on user_play_location using gist(location);
+create unique index idx_unique_user_play_location on user_play_location(user_account_id, address_line_1, city, state, country, postal_code);
 
 create table user_mailing_address (
     id bigserial primary key,
@@ -70,6 +71,7 @@ create table user_mailing_address (
 );
 
 create index idx_user_mailing_address_user_id on user_mailing_address(user_account_id);
+create unique index idx_unique_user_mailing_address on user_mailing_address(user_account_id, address_line_1, city, state, country, postal_code);
 
 create table interest (
     id bigserial primary key,
