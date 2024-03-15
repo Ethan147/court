@@ -3,7 +3,7 @@ import os
 import re
 import uuid
 from datetime import datetime
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Tuple
 
 import boto3
 import requests
@@ -60,18 +60,25 @@ class SignupRequest(BaseModel):
             return v
 
 
-def _get_place_details(google_place_id: str):
+def _get_place_details(google_place_id: str) -> Tuple[str, float, float]:
     google_api_key = os.environ.get("PLACES_KEY")
-    google_places_detail_url = f"https://maps.googleapis.com/maps/api/place/details/json?place_id={google_place_id}&fields=address_component&key={google_api_key}"
+    google_places_detail_url = f"https://maps.googleapis.com/maps/api/place/details/json?place_id={google_place_id}&fields=address_component,geometry&key={google_api_key}"
 
     response_body = requests.get(google_places_detail_url)
     response_data = response_body.json()
-    serialized_response_data = json.dumps(response_data)
 
-    return serialized_response_data
+    for component in response_data.get("result", {}).get("address_components", []):
+        if "postal_code" in component.get("types", []):
+            _zip = component.get("long_name")
+
+    geometry = response_data.get("result", {}).get("geometry", {}).get("location", {})
+    latitude = geometry.get("lat")
+    longitude = geometry.get("lng")
+
+    return _zip, latitude, longitude
 
 
-# todo Google Places API's Place Details request (google places API to request about this)
+# todo only allow entry entry of this data if there are no errors (to be done in future)
 def lambda_register(event: Dict, _: Any) -> Dict[str, Any]:
     """
     As a first request for a user,
@@ -90,10 +97,7 @@ def lambda_register(event: Dict, _: Any) -> Dict[str, Any]:
             }
 
         signup_request = SignupRequest(**json.loads(event.get("body", "{}")))
-        address_details = _get_place_details(signup_request.google_place_id)
-
-        print('address_details:')
-        print(address_details)
+        address_zip, latitude, longitude = _get_place_details(signup_request.google_place_id)
 
         user_uuid = str(uuid.uuid4()),
         response = cognito_sign_up(user_uuid, signup_request.model_dump())
@@ -109,7 +113,6 @@ def lambda_register(event: Dict, _: Any) -> Dict[str, Any]:
             signup_request.terms_consent_version,
         )
 
-        # todo: postal code will have to be gathered from the Googe Places API Place Details request
         address_line_1, city, state, country = signup_request.address.split(",")
         insert_user_play_location(
             user_account_id = user_account_id,
@@ -118,9 +121,9 @@ def lambda_register(event: Dict, _: Any) -> Dict[str, Any]:
             city = city,
             state = state,
             country = country,
-            postal_code= None,  # todo this does not seem to be provided by the google places API
-            longitude = 0.0,
-            latitude = 0.0
+            postal_code= address_zip,
+            longitude = longitude,
+            latitude = latitude
         )
 
         get_prune_active_or_create_session(

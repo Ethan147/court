@@ -106,6 +106,7 @@ Resources:
           DB_PASS: '{{resolve:ssm:/secrets/DB_PASS:1}}'
           DB_USER: '{{resolve:ssm:/secrets/DB_USER:1}}'
           ENV: '{{resolve:ssm:/secrets/ENV:1}}'
+          PLACES_KEY: '{{resolve:ssm:/secrets/PLACES_KEY:1}}'
       Policies:
         - SSMParameterReadPolicy:
             ParameterName: /secrets/*

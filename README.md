@@ -117,8 +117,8 @@ e.g. `aws sso login --profile emiller`
 
 - to run locally
     - enter `court/backend/`
-    - run `sam build`
-    - in one terminal run `sam local start-api --profile <profile> --env-vars env.json`
+    - run `sam build --parallel`
+    - in one terminal run `sam local start-api --docker-network network-court --env-vars env.json`
     - in a second, run `curl http://127.0.0.1:3000/hello`
         - this will return `{"message": "Hello, World!"}`
 
@@ -139,7 +139,7 @@ and then things must be called as follows to begin the process
 
 ```
 sam build
-sam local start-api --profile <profile> --env-vars env.json
+sam local start-api --docker-network network-court --env-vars env.json
 ```
 
 
