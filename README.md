@@ -177,24 +177,25 @@ ip address of docker can be found via `docker network inspect network-court`
 {
     "ApiHelloFunction": {
       "DB_NAME": "court",
-      "DB_HOST": "172.19.0.2",
+      "DB_HOST": "172.19.0.1",
       "DB_PORT": "5432",
       "DB_PASS": "postgres",
       "DB_USER": "postgres",
-      "DATABASE_URL": "postgres://postgres:postgres@172.19.0.2:5432/court?sslmode=disable",
+      "DATABASE_URL": "postgres://postgres:postgres@172.19.0.1:5432/court?sslmode=disable",
       "ENV": "DEV"
     },
     "ApiUserFunction": {
       "DB_NAME": "court",
-      "DB_HOST": "172.19.0.2",
+      "DB_HOST": "172.19.0.1",
       "DB_PORT": "5432",
       "DB_PASS": "postgres",
       "DB_USER": "postgres",
-      "DATABASE_URL": "postgres://postgres:postgres@172.19.0.2:5432/court?sslmode=disable",
-      "ENV": "DEV"
+      "DATABASE_URL": "postgres://postgres:postgres@172.19.0.1:5432/court?sslmode=disable",
+      "ENV": "DEV",
+      "PLACES_KEY": "AIzaSyClwgKE5HDLlxvktWXNfnvJnRULpOicTcc"
     },
     "ApiGooglePlacesFunction": {
-      "PLACES_KEY": "google_places_api_key_here"
+      "PLACES_KEY": "AIzaSyClwgKE5HDLlxvktWXNfnvJnRULpOicTcc"
     }
 }
 ```

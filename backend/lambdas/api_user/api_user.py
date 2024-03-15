@@ -1,15 +1,18 @@
 import json
+import os
 import re
 import uuid
 from datetime import datetime
 from typing import Any, Dict, Optional
 
+import boto3
+import requests
 from aws_cognito import cognito_sign_up
 from dateutil.relativedelta import relativedelta
 from db_connector import CursorCommit, CursorRollback
 from pydantic import BaseModel, EmailStr, ValidationError, constr, validator
 from session import get_prune_active_or_create_session
-from user import create_or_update_user
+from user import create_or_update_user, insert_user_play_location
 
 MIN_AGE = 16
 
@@ -57,6 +60,17 @@ class SignupRequest(BaseModel):
             return v
 
 
+def _get_place_details(google_place_id: str):
+    google_api_key = os.environ.get("PLACES_KEY")
+    google_places_detail_url = f"https://maps.googleapis.com/maps/api/place/details/json?place_id={google_place_id}&fields=address_component&key={google_api_key}"
+
+    response_body = requests.get(google_places_detail_url)
+    response_data = response_body.json()
+    serialized_response_data = json.dumps(response_data)
+
+    return serialized_response_data
+
+
 # todo Google Places API's Place Details request (google places API to request about this)
 def lambda_register(event: Dict, _: Any) -> Dict[str, Any]:
     """
@@ -76,6 +90,10 @@ def lambda_register(event: Dict, _: Any) -> Dict[str, Any]:
             }
 
         signup_request = SignupRequest(**json.loads(event.get("body", "{}")))
+        address_details = _get_place_details(signup_request.google_place_id)
+
+        print('address_details:')
+        print(address_details)
 
         user_uuid = str(uuid.uuid4()),
         response = cognito_sign_up(user_uuid, signup_request.model_dump())
