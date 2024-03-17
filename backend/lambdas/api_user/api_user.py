@@ -1,6 +1,7 @@
 import json
 import os
 import re
+import traceback
 import uuid
 from datetime import datetime
 from typing import Any, Dict, Optional, Tuple
@@ -9,7 +10,7 @@ import boto3
 import requests
 from aws_cognito import cognito_sign_up
 from dateutil.relativedelta import relativedelta
-from db_connector import CursorCommit, CursorRollback
+from db_connector import Cursor, CursorCommit, CursorRollback
 from pydantic import BaseModel, EmailStr, ValidationError, constr, validator
 from session import get_prune_active_or_create_session
 from user import create_or_update_user, insert_user_play_location
@@ -77,64 +78,72 @@ def _get_place_details(google_place_id: str) -> Tuple[str, float, float]:
 
     return _zip, latitude, longitude
 
-
-# todo only allow entry entry of this data if there are no errors (to be done in future)
 def lambda_register(event: Dict, _: Any) -> Dict[str, Any]:
     """
     As a first request for a user,
     only gather the expected primary play location for the user
     """
-    try:
-        if event.get('httpMethod') == 'OPTIONS':
-            return {
-                'statusCode': 200,
-                'headers': {
-                    'Access-Control-Allow-Origin': '*',  # or specify your domain
-                    'Access-Control-Allow-Methods': 'POST',
-                    'Access-Control-Allow-Headers': 'Content-Type, Authorization'
-                },
-                'body': None
-            }
+    with Cursor() as curs:
+        try:
+            if event.get('httpMethod') == 'OPTIONS':
+                return {
+                    'statusCode': 200,
+                    'headers': {
+                        'Access-Control-Allow-Origin': '*',  # or specify your domain
+                        'Access-Control-Allow-Methods': 'POST',
+                        'Access-Control-Allow-Headers': 'Content-Type, Authorization'
+                    },
+                    'body': None
+                }
 
-        signup_request = SignupRequest(**json.loads(event.get("body", "{}")))
-        address_zip, latitude, longitude = _get_place_details(signup_request.google_place_id)
+            signup_request = SignupRequest(**json.loads(event.get("body", "{}")))
+            address_zip, latitude, longitude = _get_place_details(signup_request.google_place_id)
 
-        user_uuid = str(uuid.uuid4()),
-        response = cognito_sign_up(user_uuid, signup_request.model_dump())
-        cognito_user_id = response["UserSub"]
+            # todo transaction start here
+            user_uuid = str(uuid.uuid4()),
+            response = cognito_sign_up(user_uuid, signup_request.model_dump())
+            cognito_user_id = response["UserSub"]
 
-        user_account_id = create_or_update_user(
-            cognito_user_id,
-            signup_request.first_name,
-            signup_request.last_name,
-            signup_request.email,
-            signup_request.gender,
-            signup_request.dob,
-            signup_request.terms_consent_version,
-        )
+            user_account_id = create_or_update_user(
+                curs,
+                cognito_user_id,
+                signup_request.first_name,
+                signup_request.last_name,
+                signup_request.email,
+                signup_request.gender,
+                signup_request.dob,
+                signup_request.terms_consent_version,
+            )
 
-        address_line_1, city, state, country = signup_request.address.split(",")
-        insert_user_play_location(
-            user_account_id = user_account_id,
-            address_line_1 = address_line_1,
-            address_line_2 = None,
-            city = city,
-            state = state,
-            country = country,
-            postal_code= address_zip,
-            longitude = longitude,
-            latitude = latitude
-        )
+            address_line_1, city, state, country = signup_request.address.split(",")
+            insert_user_play_location(
+                curs = curs,
+                user_account_id = user_account_id,
+                address_line_1 = address_line_1,
+                address_line_2 = None,
+                city = city,
+                state = state,
+                country = country,
+                postal_code= address_zip,
+                longitude = longitude,
+                latitude = latitude
+            )
 
-        get_prune_active_or_create_session(
-            user_account_id,
-            signup_request.device_identifier
-        )
+            get_prune_active_or_create_session(
+                curs,
+                user_account_id,
+                signup_request.device_identifier
+            )
+            # curs.commit()
 
-    except ValidationError as e:
-        return {"statusCode": 400, "body": json.dumps({"message": str(e)})}
+        except ValidationError as e:
+            # curs.rollback()
+            print(traceback.print_exc())
+            return {"statusCode": 400, "body": json.dumps({"message": str(e)})}
 
-    except Exception as e:
-        return {"statusCode": 500, "body": json.dumps({"message": str(e)})}
+        except Exception as e:
+            # curs.rollback()
+            print(traceback.print_exc())
+            return {"statusCode": 500, "body": json.dumps({"message": str(e)})}
 
     return {"statusCode": 201, "body": json.dumps({"message": "User registered successfully!"})}
