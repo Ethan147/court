@@ -99,7 +99,6 @@ def lambda_register(event: Dict, _: Any) -> Dict[str, Any]:
             signup_request = SignupRequest(**json.loads(event.get("body", "{}")))
             address_zip, latitude, longitude = _get_place_details(signup_request.google_place_id)
 
-            # todo transaction start here
             user_uuid = str(uuid.uuid4()),
             response = cognito_sign_up(user_uuid, signup_request.model_dump())
             cognito_user_id = response["UserSub"]
@@ -134,7 +133,7 @@ def lambda_register(event: Dict, _: Any) -> Dict[str, Any]:
                 user_account_id,
                 signup_request.device_identifier
             )
-            # curs.commit()
+            curs.commit()
 
         except ValidationError as e:
             # curs.rollback()
