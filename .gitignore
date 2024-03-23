@@ -75,3 +75,12 @@ expo_app/.metro-health-check*
 
 # Coverage report files
 expo_app/coverage/
+
+# AWS SAM build folder
+.aws-sam/
+
+# Redundant code for local testing
+backend/opt/
+
+# Reserved for local testing
+backend/*.json

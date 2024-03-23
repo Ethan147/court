@@ -98,7 +98,6 @@ const DatePickerComp: React.FC<DatePickerCompProps> = ({
     // only call onDateChange and handleBlur if new unique numeric entry has been provided
     else if (newText !== value && /^[\d/]+$/.test(newText)) {
       onDateChange(newText);
-      console.warn("A date has been picked: ", newText);
       handleBlur();
     }
   };

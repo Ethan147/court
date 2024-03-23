@@ -1,0 +1,3 @@
+-- this will be the home of sql seed files to fill in users for a testing environment
+-- these should be idempotent
+-- these should also eventually be called by some .sh or .py script to populate the requisite data

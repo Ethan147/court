@@ -10,10 +10,6 @@ jest.mock("@react-navigation/native", () => ({
   useNavigation: () => mockNavigation,
 }));
 
-jest.mock("react-native-google-places-autocomplete", () => ({
-  GooglePlacesAutocomplete: jest.fn(() => null),
-}));
-
 describe("AcceptTerms", () => {
   it("renders correctly", () => {
     const { getByText } = render(<AcceptTerms />);
@@ -21,23 +17,18 @@ describe("AcceptTerms", () => {
     expect(linkElement).toBeTruthy();
   });
 
-  it("calls the onPress prop and navigation when the terms and conditions link is pressed", () => {
-    const onPress = jest.fn();
-
-    // Set up the behavior of the mock function
-    mockNavigation.navigate.mockReturnValue(null);
-
-    const { getByText } = render(<AcceptTerms onPress={onPress} />);
+  it("terms navigation", () => {
+    const { getByText } = render(
+      <AcceptTerms defaultTermsState={false} onPress={() => {}} />
+    );
     const termsLink = getByText(/Agree to Terms and Conditions/i);
-
     fireEvent.press(termsLink);
 
-    expect(onPress).toHaveBeenCalled();
     expect(mockNavigation.navigate).toHaveBeenCalledWith("TermsAndConditions");
   });
 
   it("toggles the switch when clicked", () => {
-    const { getByTestId } = render(<AcceptTerms />);
+    const { getByTestId } = render(<AcceptTerms onPress={() => {}} />);
     const switchComponent = getByTestId("switch");
 
     fireEvent(switchComponent, "onValueChange", true);

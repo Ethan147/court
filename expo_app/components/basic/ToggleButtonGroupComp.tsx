@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import {
   View,
   Text,
-  TouchableOpacity,
+  Pressable,
   StyleProp,
   TextStyle,
   ViewStyle,
@@ -60,7 +60,7 @@ export const ToggleButtonGroupComp: React.FC<ToggleButtonGroupCompProps> = ({
       <Text style={styles.toggleButtonGroupCompLabel}>{label}</Text>
       <View style={styles.toggleButtonGroupCompButtons}>
         {buttons.map((buttonName) => (
-          <TouchableOpacity
+          <Pressable
             key={buttonName}
             testID="button"
             style={[
@@ -79,7 +79,7 @@ export const ToggleButtonGroupComp: React.FC<ToggleButtonGroupCompProps> = ({
             >
               {buttonName}
             </Text>
-          </TouchableOpacity>
+          </Pressable>
         ))}
       </View>
     </View>

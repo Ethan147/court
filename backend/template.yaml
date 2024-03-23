@@ -1,0 +1,131 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Lambda project for use with court lambda-functions
+
+Globals:
+  Function:
+    Timeout: 20
+  Api:
+    Cors:
+      AllowMethods: "'GET,POST,OPTIONS'"
+      AllowHeaders: "'content-type'"
+      AllowOrigin: "'*'"
+      AllowCredentials: true
+
+Resources:
+  HelloApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: dev
+
+  TestLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: test-layer
+      ContentUri: layers/test/
+      CompatibleRuntimes:
+        - python3.10
+      Description: "Test layer"
+
+  BaseLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: base-layer
+      ContentUri: layers/base/
+      CompatibleRuntimes:
+        - python3.10
+      Description: "Base layer with common utilities"
+
+  LocationLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: location-layer
+      ContentUri: layers/location/
+      CompatibleRuntimes:
+        - python3.10
+      Description: "Layer with utilities related to location"
+
+  UserLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: user-layer
+      ContentUri: layers/user/
+      CompatibleRuntimes:
+        - python3.10
+      Description: "Layer with utilities related to user"
+
+  ApiHelloFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambdas/api_hello/
+      Handler: api_hello.lambda_hello
+      Runtime: python3.10
+      Layers:
+        - !Ref TestLayer
+        - !Ref BaseLayer
+      Events:
+        CatchAll:
+          Type: Api
+          Properties:
+            Path: /hello
+            Method: GET
+            RestApiId:
+              Ref: HelloApi
+      Environment:
+        Variables:
+          DB_NAME: '{{resolve:ssm:/secrets/DB_NAME:1}}'
+          DB_HOST: '{{resolve:ssm:/secrets/DB_HOST:1}}'
+          DB_PORT: '{{resolve:ssm:/secrets/DB_PORT:1}}'
+          DB_PASS: '{{resolve:ssm:/secrets/DB_PASS:1}}'
+          DB_USER: '{{resolve:ssm:/secrets/DB_USER:1}}'
+          ENV: '{{resolve:ssm:/secrets/ENV:1}}'
+      Policies:
+        - SSMParameterReadPolicy:
+            ParameterName: /secrets/*
+
+  ApiUserFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambdas/api_user/
+      Handler: api_user.lambda_register
+      Runtime: python3.10
+      Layers:
+        - !Ref BaseLayer
+        - !Ref UserLayer
+      Events:
+        CatchAll:
+          Type: Api
+          Properties:
+            Path: /register
+            Method: POST
+      Environment:
+        Variables:
+          DB_NAME: '{{resolve:ssm:/secrets/DB_NAME:1}}'
+          DB_HOST: '{{resolve:ssm:/secrets/DB_HOST:1}}'
+          DB_PORT: '{{resolve:ssm:/secrets/DB_PORT:1}}'
+          DB_PASS: '{{resolve:ssm:/secrets/DB_PASS:1}}'
+          DB_USER: '{{resolve:ssm:/secrets/DB_USER:1}}'
+          ENV: '{{resolve:ssm:/secrets/ENV:1}}'
+          PLACES_KEY: '{{resolve:ssm:/secrets/PLACES_KEY:1}}'
+      Policies:
+        - SSMParameterReadPolicy:
+            ParameterName: /secrets/*
+
+  ApiGooglePlacesFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambdas/api_google_places_proxy/
+      Handler: api_google_places_proxy.lambda_google_places_proxy
+      Runtime: python3.10
+      Events:
+        CatchAll:
+          Type: Api
+          Properties:
+            Path: /google-places
+            Method: POST
+      Environment:
+        Variables:
+          PLACES_KEY: '{{resolve:ssm:/secrets/PLACES_KEY:1}}'
+      Policies:
+        - SSMParameterReadPolicy:
+            ParameterName: /secrets/*

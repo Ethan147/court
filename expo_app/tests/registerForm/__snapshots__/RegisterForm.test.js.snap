@@ -16,7 +16,7 @@ exports[`RegisterForm snapshot 1`] = `
         "marginTop": 30,
       }
     }
-    keyboardShouldPersistTaps="never"
+    keyboardShouldPersistTaps="handled"
   >
     <View>
       <View
@@ -45,7 +45,7 @@ exports[`RegisterForm snapshot 1`] = `
               style={
                 [
                   {
-                    "backgroundColor": "rgb(228, 228, 228)",
+                    "backgroundColor": "rgba(231, 224, 236, 1)",
                     "borderTopLeftRadius": 4,
                     "borderTopRightRadius": 4,
                   },
@@ -62,9 +62,9 @@ exports[`RegisterForm snapshot 1`] = `
                 collapsable={false}
                 style={
                   {
-                    "backgroundColor": "rgba(0, 0, 0, 0.26)",
+                    "backgroundColor": "rgba(28, 27, 31, 1)",
                     "bottom": 0,
-                    "height": 2,
+                    "height": 1,
                     "left": 0,
                     "position": "absolute",
                     "right": 0,
@@ -76,6 +76,7 @@ exports[`RegisterForm snapshot 1`] = `
                     "zIndex": 1,
                   }
                 }
+                testID="text-input-underline"
               />
               <View
                 style={
@@ -106,6 +107,7 @@ exports[`RegisterForm snapshot 1`] = `
                           "translateX": 0,
                         },
                       ],
+                      "width": 750,
                       "zIndex": 3,
                     }
                   }
@@ -115,6 +117,7 @@ exports[`RegisterForm snapshot 1`] = `
                     maxFontSizeMultiplier={1.5}
                     numberOfLines={1}
                     onLayout={[Function]}
+                    onTextLayout={[Function]}
                     style={
                       {
                         "color": "#40916C",
@@ -122,9 +125,11 @@ exports[`RegisterForm snapshot 1`] = `
                         "fontSize": 16,
                         "fontWeight": undefined,
                         "left": 0,
+                        "letterSpacing": 0.15,
+                        "lineHeight": 19.2,
                         "opacity": 0,
-                        "paddingLeft": 12,
-                        "paddingRight": 12,
+                        "paddingLeft": 16,
+                        "paddingRight": 16,
                         "position": "absolute",
                         "textAlign": "left",
                         "top": 30,
@@ -142,6 +147,7 @@ exports[`RegisterForm snapshot 1`] = `
                         "writingDirection": "ltr",
                       }
                     }
+                    testID="textInputComp-label-active"
                   >
                     first name
                   </Text>
@@ -151,14 +157,16 @@ exports[`RegisterForm snapshot 1`] = `
                     numberOfLines={1}
                     style={
                       {
-                        "color": "#333333",
+                        "color": "rgba(73, 69, 79, 1)",
                         "fontFamily": "System",
                         "fontSize": 16,
                         "fontWeight": undefined,
                         "left": 0,
+                        "letterSpacing": 0.15,
+                        "lineHeight": 19.2,
                         "opacity": 0,
-                        "paddingLeft": 12,
-                        "paddingRight": 12,
+                        "paddingLeft": 16,
+                        "paddingRight": 16,
                         "position": "absolute",
                         "textAlign": "left",
                         "top": 30,
@@ -176,11 +184,13 @@ exports[`RegisterForm snapshot 1`] = `
                         "writingDirection": "ltr",
                       }
                     }
+                    testID="textInputComp-label-inactive"
                   >
                     first name
                   </Text>
                 </View>
                 <TextInput
+                  cursorColor="#40916C"
                   editable={true}
                   maxFontSizeMultiplier={1.5}
                   multiline={false}
@@ -188,17 +198,12 @@ exports[`RegisterForm snapshot 1`] = `
                   onChangeText={[Function]}
                   onFocus={[Function]}
                   placeholder=" "
-                  placeholderTextColor="#333333"
+                  placeholderTextColor="rgba(73, 69, 79, 1)"
                   selectionColor="#40916C"
                   style={
                     [
                       {
-                        "flexGrow": 1,
                         "margin": 0,
-                      },
-                      {
-                        "paddingLeft": 12,
-                        "paddingRight": 12,
                       },
                       {
                         "height": 60,
@@ -208,11 +213,15 @@ exports[`RegisterForm snapshot 1`] = `
                         "paddingTop": 24,
                       },
                       {
-                        "color": "#333333",
+                        "color": "rgba(73, 69, 79, 1)",
                         "fontFamily": "System",
                         "fontSize": 16,
-                        "fontVariant": undefined,
                         "fontWeight": undefined,
+                        "letterSpacing": 0.15,
+                        "lineHeight": 19.2,
+                        "minWidth": 65,
+                        "paddingLeft": 16,
+                        "paddingRight": 16,
                         "textAlign": "left",
                         "textAlignVertical": "center",
                       },
@@ -220,6 +229,7 @@ exports[`RegisterForm snapshot 1`] = `
                       [
                         {},
                       ],
+                      undefined,
                     ]
                   }
                   testID="textInputComp"
@@ -256,7 +266,7 @@ exports[`RegisterForm snapshot 1`] = `
               style={
                 [
                   {
-                    "backgroundColor": "rgb(228, 228, 228)",
+                    "backgroundColor": "rgba(231, 224, 236, 1)",
                     "borderTopLeftRadius": 4,
                     "borderTopRightRadius": 4,
                   },
@@ -273,9 +283,9 @@ exports[`RegisterForm snapshot 1`] = `
                 collapsable={false}
                 style={
                   {
-                    "backgroundColor": "rgba(0, 0, 0, 0.26)",
+                    "backgroundColor": "rgba(28, 27, 31, 1)",
                     "bottom": 0,
-                    "height": 2,
+                    "height": 1,
                     "left": 0,
                     "position": "absolute",
                     "right": 0,
@@ -287,6 +297,7 @@ exports[`RegisterForm snapshot 1`] = `
                     "zIndex": 1,
                   }
                 }
+                testID="text-input-underline"
               />
               <View
                 style={
@@ -317,6 +328,7 @@ exports[`RegisterForm snapshot 1`] = `
                           "translateX": 0,
                         },
                       ],
+                      "width": 750,
                       "zIndex": 3,
                     }
                   }
@@ -326,6 +338,7 @@ exports[`RegisterForm snapshot 1`] = `
                     maxFontSizeMultiplier={1.5}
                     numberOfLines={1}
                     onLayout={[Function]}
+                    onTextLayout={[Function]}
                     style={
                       {
                         "color": "#40916C",
@@ -333,9 +346,11 @@ exports[`RegisterForm snapshot 1`] = `
                         "fontSize": 16,
                         "fontWeight": undefined,
                         "left": 0,
+                        "letterSpacing": 0.15,
+                        "lineHeight": 19.2,
                         "opacity": 0,
-                        "paddingLeft": 12,
-                        "paddingRight": 12,
+                        "paddingLeft": 16,
+                        "paddingRight": 16,
                         "position": "absolute",
                         "textAlign": "left",
                         "top": 30,
@@ -353,6 +368,7 @@ exports[`RegisterForm snapshot 1`] = `
                         "writingDirection": "ltr",
                       }
                     }
+                    testID="textInputComp-label-active"
                   >
                     last name
                   </Text>
@@ -362,14 +378,16 @@ exports[`RegisterForm snapshot 1`] = `
                     numberOfLines={1}
                     style={
                       {
-                        "color": "#333333",
+                        "color": "rgba(73, 69, 79, 1)",
                         "fontFamily": "System",
                         "fontSize": 16,
                         "fontWeight": undefined,
                         "left": 0,
+                        "letterSpacing": 0.15,
+                        "lineHeight": 19.2,
                         "opacity": 0,
-                        "paddingLeft": 12,
-                        "paddingRight": 12,
+                        "paddingLeft": 16,
+                        "paddingRight": 16,
                         "position": "absolute",
                         "textAlign": "left",
                         "top": 30,
@@ -387,11 +405,13 @@ exports[`RegisterForm snapshot 1`] = `
                         "writingDirection": "ltr",
                       }
                     }
+                    testID="textInputComp-label-inactive"
                   >
                     last name
                   </Text>
                 </View>
                 <TextInput
+                  cursorColor="#40916C"
                   editable={true}
                   maxFontSizeMultiplier={1.5}
                   multiline={false}
@@ -399,17 +419,12 @@ exports[`RegisterForm snapshot 1`] = `
                   onChangeText={[Function]}
                   onFocus={[Function]}
                   placeholder=" "
-                  placeholderTextColor="#333333"
+                  placeholderTextColor="rgba(73, 69, 79, 1)"
                   selectionColor="#40916C"
                   style={
                     [
                       {
-                        "flexGrow": 1,
                         "margin": 0,
-                      },
-                      {
-                        "paddingLeft": 12,
-                        "paddingRight": 12,
                       },
                       {
                         "height": 60,
@@ -419,11 +434,15 @@ exports[`RegisterForm snapshot 1`] = `
                         "paddingTop": 24,
                       },
                       {
-                        "color": "#333333",
+                        "color": "rgba(73, 69, 79, 1)",
                         "fontFamily": "System",
                         "fontSize": 16,
-                        "fontVariant": undefined,
                         "fontWeight": undefined,
+                        "letterSpacing": 0.15,
+                        "lineHeight": 19.2,
+                        "minWidth": 65,
+                        "paddingLeft": 16,
+                        "paddingRight": 16,
                         "textAlign": "left",
                         "textAlignVertical": "center",
                       },
@@ -431,6 +450,7 @@ exports[`RegisterForm snapshot 1`] = `
                       [
                         {},
                       ],
+                      undefined,
                     ]
                   }
                   testID="textInputComp"
@@ -467,7 +487,7 @@ exports[`RegisterForm snapshot 1`] = `
               style={
                 [
                   {
-                    "backgroundColor": "rgb(228, 228, 228)",
+                    "backgroundColor": "rgba(231, 224, 236, 1)",
                     "borderTopLeftRadius": 4,
                     "borderTopRightRadius": 4,
                   },
@@ -484,9 +504,9 @@ exports[`RegisterForm snapshot 1`] = `
                 collapsable={false}
                 style={
                   {
-                    "backgroundColor": "rgba(0, 0, 0, 0.26)",
+                    "backgroundColor": "rgba(28, 27, 31, 1)",
                     "bottom": 0,
-                    "height": 2,
+                    "height": 1,
                     "left": 0,
                     "position": "absolute",
                     "right": 0,
@@ -498,6 +518,7 @@ exports[`RegisterForm snapshot 1`] = `
                     "zIndex": 1,
                   }
                 }
+                testID="text-input-underline"
               />
               <View
                 style={
@@ -528,6 +549,7 @@ exports[`RegisterForm snapshot 1`] = `
                           "translateX": 0,
                         },
                       ],
+                      "width": 750,
                       "zIndex": 3,
                     }
                   }
@@ -537,6 +559,7 @@ exports[`RegisterForm snapshot 1`] = `
                     maxFontSizeMultiplier={1.5}
                     numberOfLines={1}
                     onLayout={[Function]}
+                    onTextLayout={[Function]}
                     style={
                       {
                         "color": "#40916C",
@@ -544,9 +567,11 @@ exports[`RegisterForm snapshot 1`] = `
                         "fontSize": 16,
                         "fontWeight": undefined,
                         "left": 0,
+                        "letterSpacing": 0.15,
+                        "lineHeight": 19.2,
                         "opacity": 0,
-                        "paddingLeft": 12,
-                        "paddingRight": 12,
+                        "paddingLeft": 16,
+                        "paddingRight": 16,
                         "position": "absolute",
                         "textAlign": "left",
                         "top": 30,
@@ -564,6 +589,7 @@ exports[`RegisterForm snapshot 1`] = `
                         "writingDirection": "ltr",
                       }
                     }
+                    testID="textInputComp-label-active"
                   >
                     email
                   </Text>
@@ -573,14 +599,16 @@ exports[`RegisterForm snapshot 1`] = `
                     numberOfLines={1}
                     style={
                       {
-                        "color": "#333333",
+                        "color": "rgba(73, 69, 79, 1)",
                         "fontFamily": "System",
                         "fontSize": 16,
                         "fontWeight": undefined,
                         "left": 0,
+                        "letterSpacing": 0.15,
+                        "lineHeight": 19.2,
                         "opacity": 0,
-                        "paddingLeft": 12,
-                        "paddingRight": 12,
+                        "paddingLeft": 16,
+                        "paddingRight": 16,
                         "position": "absolute",
                         "textAlign": "left",
                         "top": 30,
@@ -598,11 +626,13 @@ exports[`RegisterForm snapshot 1`] = `
                         "writingDirection": "ltr",
                       }
                     }
+                    testID="textInputComp-label-inactive"
                   >
                     email
                   </Text>
                 </View>
                 <TextInput
+                  cursorColor="#40916C"
                   editable={true}
                   maxFontSizeMultiplier={1.5}
                   multiline={false}
@@ -610,17 +640,12 @@ exports[`RegisterForm snapshot 1`] = `
                   onChangeText={[Function]}
                   onFocus={[Function]}
                   placeholder=" "
-                  placeholderTextColor="#333333"
+                  placeholderTextColor="rgba(73, 69, 79, 1)"
                   selectionColor="#40916C"
                   style={
                     [
                       {
-                        "flexGrow": 1,
                         "margin": 0,
-                      },
-                      {
-                        "paddingLeft": 12,
-                        "paddingRight": 12,
                       },
                       {
                         "height": 60,
@@ -630,11 +655,15 @@ exports[`RegisterForm snapshot 1`] = `
                         "paddingTop": 24,
                       },
                       {
-                        "color": "#333333",
+                        "color": "rgba(73, 69, 79, 1)",
                         "fontFamily": "System",
                         "fontSize": 16,
-                        "fontVariant": undefined,
                         "fontWeight": undefined,
+                        "letterSpacing": 0.15,
+                        "lineHeight": 19.2,
+                        "minWidth": 65,
+                        "paddingLeft": 16,
+                        "paddingRight": 16,
                         "textAlign": "left",
                         "textAlignVertical": "center",
                       },
@@ -642,6 +671,7 @@ exports[`RegisterForm snapshot 1`] = `
                       [
                         {},
                       ],
+                      undefined,
                     ]
                   }
                   testID="textInputComp"
@@ -661,204 +691,241 @@ exports[`RegisterForm snapshot 1`] = `
         }
       >
         <View
-          style={
-            {
-              "backgroundColor": "#F4EDE6",
-              "borderRadius": 12,
-              "justifyContent": "center",
-              "marginRight": 7.5,
-              "paddingHorizontal": 7.5,
-              "paddingVertical": 7.5,
-              "width": 600,
-            }
-          }
+          style={{}}
         >
-          <Text
-            style={
-              {
-                "color": "#333333",
-                "fontSize": 16,
-                "marginBottom": 30,
-                "marginLeft": 7.5,
-                "marginTop": 7.5,
-              }
-            }
-          >
-            please select your gender
-          </Text>
           <View
             style={
               {
-                "flexDirection": "row",
+                "backgroundColor": "#F4EDE6",
+                "borderRadius": 12,
                 "justifyContent": "center",
+                "marginRight": 7.5,
+                "paddingHorizontal": 7.5,
+                "paddingVertical": 7.5,
+                "width": 600,
               }
             }
           >
-            <View
-              accessibilityState={
-                {
-                  "busy": undefined,
-                  "checked": undefined,
-                  "disabled": undefined,
-                  "expanded": undefined,
-                  "selected": undefined,
-                }
-              }
-              accessibilityValue={
-                {
-                  "max": undefined,
-                  "min": undefined,
-                  "now": undefined,
-                  "text": undefined,
-                }
-              }
-              accessible={true}
-              collapsable={false}
-              focusable={true}
-              onClick={[Function]}
-              onResponderGrant={[Function]}
-              onResponderMove={[Function]}
-              onResponderRelease={[Function]}
-              onResponderTerminate={[Function]}
-              onResponderTerminationRequest={[Function]}
-              onStartShouldSetResponder={[Function]}
+            <Text
               style={
                 {
-                  "alignItems": "center",
-                  "borderRadius": 12,
-                  "justifyContent": "center",
-                  "marginRight": 7.5,
-                  "opacity": 1,
-                  "paddingHorizontal": 7.5,
-                  "paddingVertical": 7.5,
+                  "color": "#333333",
+                  "fontSize": 16,
+                  "marginBottom": 30,
+                  "marginLeft": 7.5,
+                  "marginTop": 7.5,
                 }
               }
-              testID="button"
             >
-              <Text
+              please select your gender
+            </Text>
+            <View
+              style={
+                {
+                  "flexDirection": "row",
+                  "justifyContent": "center",
+                }
+              }
+            >
+              <View
+                accessibilityState={
+                  {
+                    "busy": undefined,
+                    "checked": undefined,
+                    "disabled": undefined,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
+                accessible={true}
+                collapsable={false}
+                focusable={true}
+                onBlur={[Function]}
+                onClick={[Function]}
+                onFocus={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
                 style={
                   [
                     {
-                      "color": "#333333",
-                      "fontSize": 16,
+                      "alignItems": "center",
+                      "borderRadius": 12,
+                      "justifyContent": "center",
+                      "marginRight": 7.5,
+                      "paddingHorizontal": 7.5,
+                      "paddingVertical": 7.5,
                     },
                     false,
                   ]
                 }
+                testID="button"
               >
-                male
-              </Text>
-            </View>
-            <View
-              accessibilityState={
-                {
-                  "busy": undefined,
-                  "checked": undefined,
-                  "disabled": undefined,
-                  "expanded": undefined,
-                  "selected": undefined,
+                <Text
+                  style={
+                    [
+                      {
+                        "color": "#333333",
+                        "fontSize": 16,
+                      },
+                      false,
+                    ]
+                  }
+                >
+                  male
+                </Text>
+              </View>
+              <View
+                accessibilityState={
+                  {
+                    "busy": undefined,
+                    "checked": undefined,
+                    "disabled": undefined,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
                 }
-              }
-              accessibilityValue={
-                {
-                  "max": undefined,
-                  "min": undefined,
-                  "now": undefined,
-                  "text": undefined,
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
                 }
-              }
-              accessible={true}
-              collapsable={false}
-              focusable={true}
-              onClick={[Function]}
-              onResponderGrant={[Function]}
-              onResponderMove={[Function]}
-              onResponderRelease={[Function]}
-              onResponderTerminate={[Function]}
-              onResponderTerminationRequest={[Function]}
-              onStartShouldSetResponder={[Function]}
-              style={
-                {
-                  "alignItems": "center",
-                  "borderRadius": 12,
-                  "justifyContent": "center",
-                  "marginRight": 7.5,
-                  "opacity": 1,
-                  "paddingHorizontal": 7.5,
-                  "paddingVertical": 7.5,
-                }
-              }
-              testID="button"
-            >
-              <Text
+                accessible={true}
+                collapsable={false}
+                focusable={true}
+                onBlur={[Function]}
+                onClick={[Function]}
+                onFocus={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
                 style={
                   [
                     {
-                      "color": "#333333",
-                      "fontSize": 16,
+                      "alignItems": "center",
+                      "borderRadius": 12,
+                      "justifyContent": "center",
+                      "marginRight": 7.5,
+                      "paddingHorizontal": 7.5,
+                      "paddingVertical": 7.5,
                     },
                     false,
                   ]
                 }
+                testID="button"
               >
-                female
-              </Text>
-            </View>
-            <View
-              accessibilityState={
-                {
-                  "busy": undefined,
-                  "checked": undefined,
-                  "disabled": undefined,
-                  "expanded": undefined,
-                  "selected": undefined,
+                <Text
+                  style={
+                    [
+                      {
+                        "color": "#333333",
+                        "fontSize": 16,
+                      },
+                      false,
+                    ]
+                  }
+                >
+                  female
+                </Text>
+              </View>
+              <View
+                accessibilityState={
+                  {
+                    "busy": undefined,
+                    "checked": undefined,
+                    "disabled": undefined,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
                 }
-              }
-              accessibilityValue={
-                {
-                  "max": undefined,
-                  "min": undefined,
-                  "now": undefined,
-                  "text": undefined,
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
                 }
-              }
-              accessible={true}
-              collapsable={false}
-              focusable={true}
-              onClick={[Function]}
-              onResponderGrant={[Function]}
-              onResponderMove={[Function]}
-              onResponderRelease={[Function]}
-              onResponderTerminate={[Function]}
-              onResponderTerminationRequest={[Function]}
-              onStartShouldSetResponder={[Function]}
-              style={
-                {
-                  "alignItems": "center",
-                  "borderRadius": 12,
-                  "justifyContent": "center",
-                  "marginRight": 7.5,
-                  "opacity": 1,
-                  "paddingHorizontal": 7.5,
-                  "paddingVertical": 7.5,
-                }
-              }
-              testID="button"
-            >
-              <Text
+                accessible={true}
+                collapsable={false}
+                focusable={true}
+                onBlur={[Function]}
+                onClick={[Function]}
+                onFocus={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
                 style={
                   [
                     {
-                      "color": "#333333",
-                      "fontSize": 16,
+                      "alignItems": "center",
+                      "borderRadius": 12,
+                      "justifyContent": "center",
+                      "marginRight": 7.5,
+                      "paddingHorizontal": 7.5,
+                      "paddingVertical": 7.5,
                     },
                     false,
                   ]
                 }
+                testID="button"
               >
-                other / unspecified
-              </Text>
+                <Text
+                  style={
+                    [
+                      {
+                        "color": "#333333",
+                        "fontSize": 16,
+                      },
+                      false,
+                    ]
+                  }
+                >
+                  non-binary/other
+                </Text>
+              </View>
             </View>
+          </View>
+          <View
+            style={
+              {
+                "alignSelf": "flex-start",
+                "color": "#B22222",
+                "marginTop": 1.5,
+                "width": 600,
+              }
+            }
+          >
+            <Text
+              style={
+                {
+                  "color": "#F4EDE6",
+                  "fontSize": 14,
+                }
+              }
+            >
+              Select your gender to ensure proper league placement and fair play. This affects available events and your sporting experience.
+            </Text>
           </View>
         </View>
       </View>
@@ -890,7 +957,7 @@ exports[`RegisterForm snapshot 1`] = `
                 style={
                   [
                     {
-                      "backgroundColor": "rgb(228, 228, 228)",
+                      "backgroundColor": "rgba(231, 224, 236, 1)",
                       "borderTopLeftRadius": 4,
                       "borderTopRightRadius": 4,
                     },
@@ -907,9 +974,9 @@ exports[`RegisterForm snapshot 1`] = `
                   collapsable={false}
                   style={
                     {
-                      "backgroundColor": "rgba(0, 0, 0, 0.26)",
+                      "backgroundColor": "rgba(28, 27, 31, 1)",
                       "bottom": 0,
-                      "height": 2,
+                      "height": 1,
                       "left": 0,
                       "position": "absolute",
                       "right": 0,
@@ -921,6 +988,7 @@ exports[`RegisterForm snapshot 1`] = `
                       "zIndex": 1,
                     }
                   }
+                  testID="text-input-underline"
                 />
                 <View
                   style={
@@ -951,6 +1019,7 @@ exports[`RegisterForm snapshot 1`] = `
                             "translateX": 0,
                           },
                         ],
+                        "width": 750,
                         "zIndex": 3,
                       }
                     }
@@ -960,6 +1029,7 @@ exports[`RegisterForm snapshot 1`] = `
                       maxFontSizeMultiplier={1.5}
                       numberOfLines={1}
                       onLayout={[Function]}
+                      onTextLayout={[Function]}
                       style={
                         {
                           "color": "#40916C",
@@ -967,9 +1037,11 @@ exports[`RegisterForm snapshot 1`] = `
                           "fontSize": 16,
                           "fontWeight": undefined,
                           "left": 0,
+                          "letterSpacing": 0.15,
+                          "lineHeight": 19.2,
                           "opacity": 0,
-                          "paddingLeft": 12,
-                          "paddingRight": 12,
+                          "paddingLeft": 16,
+                          "paddingRight": 16,
                           "position": "absolute",
                           "textAlign": "left",
                           "top": 30,
@@ -987,6 +1059,7 @@ exports[`RegisterForm snapshot 1`] = `
                           "writingDirection": "ltr",
                         }
                       }
+                      testID="textInputComp-label-active"
                     >
                       password
                     </Text>
@@ -996,14 +1069,16 @@ exports[`RegisterForm snapshot 1`] = `
                       numberOfLines={1}
                       style={
                         {
-                          "color": "#333333",
+                          "color": "rgba(73, 69, 79, 1)",
                           "fontFamily": "System",
                           "fontSize": 16,
                           "fontWeight": undefined,
                           "left": 0,
+                          "letterSpacing": 0.15,
+                          "lineHeight": 19.2,
                           "opacity": 0,
-                          "paddingLeft": 12,
-                          "paddingRight": 12,
+                          "paddingLeft": 16,
+                          "paddingRight": 16,
                           "position": "absolute",
                           "textAlign": "left",
                           "top": 30,
@@ -1021,11 +1096,13 @@ exports[`RegisterForm snapshot 1`] = `
                           "writingDirection": "ltr",
                         }
                       }
+                      testID="textInputComp-label-inactive"
                     >
                       password
                     </Text>
                   </View>
                   <TextInput
+                    cursorColor="#40916C"
                     editable={true}
                     maxFontSizeMultiplier={1.5}
                     multiline={false}
@@ -1033,18 +1110,13 @@ exports[`RegisterForm snapshot 1`] = `
                     onChangeText={[Function]}
                     onFocus={[Function]}
                     placeholder=" "
-                    placeholderTextColor="#333333"
+                    placeholderTextColor="rgba(73, 69, 79, 1)"
                     secureTextEntry={true}
                     selectionColor="#40916C"
                     style={
                       [
                         {
-                          "flexGrow": 1,
                           "margin": 0,
-                        },
-                        {
-                          "paddingLeft": 12,
-                          "paddingRight": 12,
                         },
                         {
                           "height": 60,
@@ -1054,11 +1126,15 @@ exports[`RegisterForm snapshot 1`] = `
                           "paddingTop": 24,
                         },
                         {
-                          "color": "#333333",
+                          "color": "rgba(73, 69, 79, 1)",
                           "fontFamily": "System",
                           "fontSize": 16,
-                          "fontVariant": undefined,
                           "fontWeight": undefined,
+                          "letterSpacing": 0.15,
+                          "lineHeight": 19.2,
+                          "minWidth": 65,
+                          "paddingLeft": 16,
+                          "paddingRight": 16,
                           "textAlign": "left",
                           "textAlignVertical": "center",
                         },
@@ -1066,6 +1142,7 @@ exports[`RegisterForm snapshot 1`] = `
                         [
                           {},
                         ],
+                        undefined,
                       ]
                     }
                     testID="textInputComp"
@@ -1095,7 +1172,9 @@ exports[`RegisterForm snapshot 1`] = `
                 accessible={true}
                 collapsable={false}
                 focusable={true}
+                onBlur={[Function]}
                 onClick={[Function]}
+                onFocus={[Function]}
                 onResponderGrant={[Function]}
                 onResponderMove={[Function]}
                 onResponderRelease={[Function]}
@@ -1106,7 +1185,6 @@ exports[`RegisterForm snapshot 1`] = `
                   {
                     "bottom": 0,
                     "justifyContent": "center",
-                    "opacity": 1,
                     "position": "absolute",
                     "right": 13,
                     "top": 0,
@@ -1285,7 +1363,7 @@ exports[`RegisterForm snapshot 1`] = `
                   }
                 }
               >
-                Your address will be used solely to match you with nearby tennis, racquetball, and/or pickleball partners.
+                Enter an address as your play hub for tennis or pickleball - it could be home, work, or anywhere in between. Your address will be used solely to match you with nearby tennis and/or pickleball partners.
               </Text>
             </View>
           </View>
@@ -1307,7 +1385,7 @@ exports[`RegisterForm snapshot 1`] = `
                 }
               }
             >
-              We're committed to helping you find the perfect match within your community!
+              You can always expand your play zone by adding more locations later!
             </Text>
           </View>
         </View>
@@ -1378,18 +1456,15 @@ exports[`RegisterForm snapshot 1`] = `
               accessible={true}
               collapsable={false}
               focusable={true}
+              onBlur={[Function]}
               onClick={[Function]}
+              onFocus={[Function]}
               onResponderGrant={[Function]}
               onResponderMove={[Function]}
               onResponderRelease={[Function]}
               onResponderTerminate={[Function]}
               onResponderTerminationRequest={[Function]}
               onStartShouldSetResponder={[Function]}
-              style={
-                {
-                  "opacity": 1,
-                }
-              }
             >
               <Text
                 style={
@@ -1435,18 +1510,15 @@ exports[`RegisterForm snapshot 1`] = `
             accessible={true}
             collapsable={false}
             focusable={true}
+            onBlur={[Function]}
             onClick={[Function]}
+            onFocus={[Function]}
             onResponderGrant={[Function]}
             onResponderMove={[Function]}
             onResponderRelease={[Function]}
             onResponderTerminate={[Function]}
             onResponderTerminationRequest={[Function]}
             onStartShouldSetResponder={[Function]}
-            style={
-              {
-                "opacity": 1,
-              }
-            }
           >
             <Text
               style={
@@ -1482,7 +1554,9 @@ exports[`RegisterForm snapshot 1`] = `
         accessible={true}
         collapsable={false}
         focusable={true}
+        onBlur={[Function]}
         onClick={[Function]}
+        onFocus={[Function]}
         onResponderGrant={[Function]}
         onResponderMove={[Function]}
         onResponderRelease={[Function]}
@@ -1494,7 +1568,6 @@ exports[`RegisterForm snapshot 1`] = `
             "backgroundColor": "#FFD700",
             "borderRadius": 30,
             "marginBottom": 37.5,
-            "opacity": 1,
             "paddingHorizontal": 75,
             "paddingVertical": 30,
           }

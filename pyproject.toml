@@ -17,10 +17,17 @@ aws-sam-cli = "^1.78.0"
 faker = "^18.4.0"
 geopy = "^2.3.0"
 glicko2 = "^2.0.0"
+connexion = "^3.0.2"
+pydantic = "^2.5.2"
+python-dateutil = "^2.8.2"
+types-python-dateutil = "^2.8.19.14"
+email-validator = "^2.1.0.post1"
+requests = "^2.31.0"
 
 
 [tool.poetry.group.dev.dependencies]
 mypy = "^1.1.1"
+types-python-dateutil = "^2.8.19.14"
 
 [build-system]
 requires = ["poetry-core"]

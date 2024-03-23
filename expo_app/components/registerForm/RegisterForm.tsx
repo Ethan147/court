@@ -204,14 +204,9 @@ const RegisterForm = () => {
     toggleButtonGroupCompContainer: {
       ...Platform.select({
         web: {
-          paddingVertical: windowDimensions.width * 0.01,
-          paddingHorizontal: windowDimensions.width * 0.01,
-          marginRight: windowDimensions.width * 0.01,
+          width: windowDimensions.width * formInputWidthWeb,
         },
         ios: {
-          paddingVertical: wp("1%"),
-          paddingHorizontal: wp("1%"),
-          marginRight: wp("1%"),
           width: wp(formInputWidthApp),
         },
         android: {
@@ -225,7 +220,7 @@ const RegisterForm = () => {
     toggleButtonGroupCompLabel: {
       ...Platform.select({
         web: {
-          marginLeft: windowDimensions.width * 0.001,
+          marginLeft: windowDimensions.width * 0.005,
           marginTop: windowDimensions.width * 0.005,
           marginBottom: windowDimensions.width * 0.005,
           fontSize: theme.font.size.small,
@@ -312,12 +307,45 @@ const RegisterForm = () => {
         },
       }),
     },
-    addressInputCompGooglePlacesAutoCompete: {
-      height: textInputHeight,
+    textInputDropdownCompContainer: {},
+    textInputDropdownCompOuterView: {},
+    textInputDropdownCompPressable: {
+      ...Platform.select({
+        web: {
+          paddingVertical: windowDimensions.width * 0.002,
+          paddingLeft: windowDimensions.width * 0.005,
+          width: windowDimensions.width * formInputWidthWeb * 0.9,
+        },
+        ios: {
+          width: wp(formInputWidthApp),
+        },
+        android: {
+          // todo
+        },
+      }),
+    },
+    textInputDropdownCompOptionText: {
+      ...Platform.select({
+        web: {
+          paddingLeft: windowDimensions.width * 0.005,
+          paddingTop: windowDimensions.width * 0.00085,
+        },
+        ios: {
+          // width: wp(formInputWidthApp), // will need to update ios in this area
+        },
+        android: {
+          // todo
+        },
+      }),
+      backgroundColor: colors.setting,
+      borderRadius: 3,
       fontSize: theme.font.size.medium,
       color: colors.text,
-      backgroundColor: colors.setting,
     },
+    textInputCompOuterView: {},
+    // textInputCompTextContainer: {},
+    // textInputCompIconContainer: {},
+    // textInputCompText: {},
     // accept terms
     termsSwitchOuterView: {
       flexDirection: "row",
@@ -361,7 +389,7 @@ const RegisterForm = () => {
       textDecorationLine: "underline",
     },
     // submit button
-    buttonCompTouchableOpacity: {
+    buttonCompPressable: {
       ...Platform.select({
         web: {
           borderRadius: windowDimensions.width * 0.04,
@@ -443,8 +471,14 @@ const RegisterForm = () => {
   };
   const passAddressInputStyles = {
     addressInputCompViewContainer: styles.addressInputCompViewContainer,
-    addressInputCompGooglePlacesAutoCompete:
-      styles.addressInputCompGooglePlacesAutoCompete,
+    textInputDropdownCompOuterView: styles.textInputDropdownCompOuterView,
+    textInputDropdownCompContainer: styles.textInputDropdownCompContainer,
+    textInputDropdownCompPressable: styles.textInputDropdownCompPressable,
+    textInputDropdownCompOptionText: styles.textInputDropdownCompOptionText,
+    textInputCompOuterView: styles.textInputCompOuterView,
+    textInputCompTextContainer: styles.textInputCompTextContainer,
+    textInputCompIconContainer: styles.textInputCompIconContainer,
+    textInputCompText: styles.textInputCompText,
   };
   const passAcceptTermsStyles = {
     acceptTermsSwitchOuterView: styles.termsSwitchOuterView,
@@ -456,11 +490,15 @@ const RegisterForm = () => {
     viewPrivacyPolicyText: styles.viewPrivacyPolicyText,
   };
   const passSubmitStyles = {
-    buttonCompTouchableOpacity: styles.buttonCompTouchableOpacity,
+    buttonCompPressable: styles.buttonCompPressable,
     buttonCompText: styles.buttonCompText,
   };
 
   const scrollViewRef = useRef<ScrollView>(null);
+
+  const getGender = (selectedGender: string): string => {
+    return selectedGender === "non-binary/other" ? "other" : selectedGender;
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -470,14 +508,31 @@ const RegisterForm = () => {
       password: "",
       confirmPassword: "",
       gender: "",
-      age: "",
       birthdate: "",
-      address: "",
+      placeSelection: {
+        description: "",
+        place_id: "",
+      },
       termsAccepted: false,
     },
     validationSchema,
     onSubmit: (values) => {
-      console.log("Submitted values:", values);
+      fetch(`${process.env.EXPO_PUBLIC_API_URL}/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          first_name: values.firstName,
+          last_name: values.lastName,
+          email: values.email,
+          gender: getGender(values.gender),
+          password: values.password,
+          dob: values.birthdate,
+          address: values.placeSelection?.description,
+          terms_consent_version: "v1",
+          device_identifier: "my_identifier_todo",
+          google_place_id: values.placeSelection?.place_id,
+        }),
+      }).catch((error) => console.error("Error:", error));
     },
   });
 
@@ -503,7 +558,7 @@ const RegisterForm = () => {
       <FormikProvider value={formik}>
         <ScrollView
           contentContainerStyle={styles.container}
-          keyboardShouldPersistTaps="never"
+          keyboardShouldPersistTaps="handled"
           ref={scrollViewRef}
         >
           {/*First name entry*/}
@@ -557,11 +612,20 @@ const RegisterForm = () => {
           {/*Gender entry*/}
           <TextAddOn
             component={
-              <ToggleButtonGroupComp
-                label="please select your gender"
-                buttons={["male", "female", "other / unspecified"]}
-                onValueChange={(value) => console.log("Selected value:", value)}
-                passStyles={passToggleButtonGroupCompStyles}
+              <TextAddOn
+                component={
+                  <ToggleButtonGroupComp
+                    label="please select your gender"
+                    buttons={["male", "female", "non-binary/other"]}
+                    onValueChange={formik.handleChange("gender")}
+                    passStyles={passToggleButtonGroupCompStyles}
+                  />
+                }
+                value={
+                  "Select your gender to ensure proper league placement and fair play. This affects available events and your sporting experience."
+                }
+                display={true}
+                passStyles={passFormInputTextAddOnHintStyles}
               />
             }
             value={formik.errors.gender}
@@ -655,44 +719,40 @@ const RegisterForm = () => {
                 component={
                   <TextAddOn
                     component={
-                      <AddressInputComp // TODO - get API set up & continue from there
-                        onPlaceSelected={(data, details) =>
-                          formik.setFieldValue("address", {
-                            place_id: data.place_id,
-                            formatted_address: details.formatted_address,
-                          })
-                        }
+                      <AddressInputComp
+                        onPlaceSelected={(selection) => {
+                          formik.setFieldValue("placeSelection", selection);
+                        }}
                         passStyles={passAddressInputStyles}
                       />
                     }
                     value={
-                      "Your address will be used solely to match you with nearby tennis, racquetball, and/or pickleball partners."
+                      "Enter an address as your play hub for tennis or pickleball - it could be home, work, or anywhere in between. Your address will be used solely to match you with nearby tennis and/or pickleball partners."
                     }
                     display={true}
                     passStyles={passFormInputTextAddOnHintStyles}
                   />
                 }
                 value={
-                  "We're committed to helping you find the perfect match within your community!"
+                  "You can always expand your play zone by adding more locations later!"
                 }
                 display={true}
                 passStyles={passFormInputTextAddOnHintStyles}
               />
             }
-            value={formik.errors.address}
-            display={!!formik.touched.address && !!formik.errors.address}
+            value={"A valid selected address is required"}
+            display={
+              !!formik.touched.placeSelection && !!formik.errors.placeSelection
+            }
             passStyles={passTextAddOnErrorStyles}
           />
           {/*Terms, Private Policy, Submit*/}
           <TextAddOn
             component={
               <AcceptTerms
-                acceptTerms={formik.values.termsAccepted}
-                onPress={() =>
-                  formik.setFieldValue(
-                    "termsAccepted",
-                    !formik.values.termsAccepted
-                  )
+                defaultTermsState={formik.values.termsAccepted}
+                onPress={(isAccepted) =>
+                  formik.setFieldValue("termsAccepted", isAccepted)
                 }
                 passStyles={passAcceptTermsStyles}
               />

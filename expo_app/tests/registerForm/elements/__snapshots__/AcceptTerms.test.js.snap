@@ -54,18 +54,15 @@ exports[`AcceptTerms snapshot 1`] = `
       accessible={true}
       collapsable={false}
       focusable={true}
+      onBlur={[Function]}
       onClick={[Function]}
+      onFocus={[Function]}
       onResponderGrant={[Function]}
       onResponderMove={[Function]}
       onResponderRelease={[Function]}
       onResponderTerminate={[Function]}
       onResponderTerminationRequest={[Function]}
       onStartShouldSetResponder={[Function]}
-      style={
-        {
-          "opacity": 1,
-        }
-      }
     >
       <Text
         style={{}}

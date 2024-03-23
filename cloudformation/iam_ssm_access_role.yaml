@@ -1,0 +1,30 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'IAM Role with SSM GetParameter permissions'
+
+Resources:
+
+  SsmParameterAccessRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: [lambda.amazonaws.com] # Assuming Lambda, adjust as needed
+            Action: 'sts:AssumeRole'
+      Path: "/"
+      Policies:
+        - PolicyName: 'SSMParameterAccessPolicy'
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: 'ssm:GetParameter'
+                Resource: !Sub 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/<parameter-name>'
+
+Outputs:
+
+  RoleArn:
+    Description: "ARN of the IAM Role with SSM access"
+    Value: !GetAtt SsmParameterAccessRole.Arn

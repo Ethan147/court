@@ -11,7 +11,7 @@ exports[`<TextInputComp /> snapshot 1`] = `
       style={
         [
           {
-            "backgroundColor": "rgb(228, 228, 228)",
+            "backgroundColor": "rgba(231, 224, 236, 1)",
             "borderTopLeftRadius": 4,
             "borderTopRightRadius": 4,
           },
@@ -23,9 +23,9 @@ exports[`<TextInputComp /> snapshot 1`] = `
         collapsable={false}
         style={
           {
-            "backgroundColor": "rgba(0, 0, 0, 0.26)",
+            "backgroundColor": "rgba(28, 27, 31, 1)",
             "bottom": 0,
-            "height": 2,
+            "height": 1,
             "left": 0,
             "position": "absolute",
             "right": 0,
@@ -37,6 +37,7 @@ exports[`<TextInputComp /> snapshot 1`] = `
             "zIndex": 1,
           }
         }
+        testID="text-input-underline"
       />
       <View
         style={
@@ -46,43 +47,43 @@ exports[`<TextInputComp /> snapshot 1`] = `
               "paddingTop": 0,
             },
             {
-              "minHeight": 64,
+              "minHeight": 56,
             },
           ]
         }
       >
         <TextInput
+          cursorColor="#40916C"
           editable={true}
           maxFontSizeMultiplier={1.5}
           multiline={false}
           onBlur={[Function]}
           onChangeText={[Function]}
           onFocus={[Function]}
-          placeholderTextColor="#333333"
+          placeholderTextColor="rgba(73, 69, 79, 1)"
           selectionColor="#40916C"
           style={
             [
               {
-                "flexGrow": 1,
                 "margin": 0,
               },
               {
-                "paddingLeft": 12,
-                "paddingRight": 12,
-              },
-              {
-                "height": 64,
+                "height": 56,
               },
               {
                 "paddingBottom": 0,
                 "paddingTop": 0,
               },
               {
-                "color": "#333333",
+                "color": "rgba(73, 69, 79, 1)",
                 "fontFamily": "System",
                 "fontSize": 16,
-                "fontVariant": undefined,
                 "fontWeight": undefined,
+                "letterSpacing": 0.15,
+                "lineHeight": 19.2,
+                "minWidth": 65,
+                "paddingLeft": 16,
+                "paddingRight": 16,
                 "textAlign": "left",
                 "textAlignVertical": "center",
               },
@@ -90,6 +91,7 @@ exports[`<TextInputComp /> snapshot 1`] = `
               [
                 {},
               ],
+              undefined,
             ]
           }
           testID="textInputComp"

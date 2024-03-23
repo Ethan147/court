@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import {
   NativeSyntheticEvent,
   TextInputFocusEventData,
-  TouchableOpacity,
+  Pressable,
   View,
   StyleProp,
   ViewStyle,
@@ -68,7 +68,7 @@ const TextInputComp = ({
           testID="textInputComp"
         />
         {secureTextEntry && (
-          <TouchableOpacity
+          <Pressable
             onPress={() => setShowPassword(!showPassword)}
             style={styles.textInputCompIconContainer}
             testID="togglePasswordVisibility"
@@ -78,7 +78,7 @@ const TextInputComp = ({
               size={theme.font.size.large}
               color={"gray"}
             />
-          </TouchableOpacity>
+          </Pressable>
         )}
       </View>
     </View>
